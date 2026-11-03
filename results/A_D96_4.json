@@ -209,13 +209,13 @@
  ],
  "kind": "pwlinear",
  "exact_note": "the profile is DEFINED by these exact rational breaks and decimal phases",
- "Fx_opt_levels": 0.686360747410168,
+ "Fx_opt_levels": 0.6863607474105016,
  "opt_levels": [
   147456,
   294912,
   589824
  ],
- "evals": 16,
- "start": "results/A96_q.json",
+ "evals": 2,
+ "start": "results/A_D96_4_ckpt.json",
  "stage": "optimising"
 }
