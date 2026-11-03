@@ -4,3 +4,9 @@
 {"stage": "residual: d coefficients", "seconds": 169.55, "Q": "11"}
 {"stage": "residual: U product", "seconds": 224.62}
 {"stage": "residual: V product", "seconds": 275.74}
+{"stage": "residual: certified", "seconds": 281.96, "sup": "[3.5367e-12 +/- 1.02e-17]", "worst": "8"}
+{"stage": "propagation", "seconds": 282.52, "eps_inf": "[1.1276e-11 +/- 3.01e-16]", "EN": "[4.8831e-14 +/- 7.82e-20]", "ED": "[2.0942e-14 +/- 3.32e-19]"}
+{"stage": "numerator", "seconds": 286.16, "p1": "[0.14845497659625386716 +/- 4.02e-21] + [-0.19796138004008783738 +/- 1.05e-22]j"}
+{"stage": "denominator: kernel U product", "seconds": 326.84}
+{"stage": "denominator: kernel V product", "seconds": 368.25}
+{"stage": "denominator: certified", "seconds": 388.02, "n_geo": "59", "D_low": "[0.360513174018039 +/- 1.40e-17]", "err": "[1.122e-12 +/- 2.13e-16]", "E_kern": "[1.619e-12 +/- 3.93e-16]"}

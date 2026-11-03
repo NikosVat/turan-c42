@@ -210,6 +210,30 @@ the sqrt inequality to |q_0| with the weight θ^{−a}, using the exact moments 
 with the denominator checked positive. Every quantity is an Arb ball, and the program takes upper endpoints for
 the numerator and lower endpoints for the denominator.
 
+## 6b. Two-sided enclosure (diagnostic, also used by the corruption tests)
+
+**Upper bound for the denominator.**
+- On every regular piece put s = u·sqrt(X). Then sqrt(X) − f = s(s−1)²(s+2)/(2u).
+- If η := sup|u²X − 1| < 1 (certified by coefficient sums), then |s−1| ≤ η and s ≤ 1+η. Hence
+  sqrt(X) ≤ f + η²(1+η)(3+η)/(2u_min).
+- With |p̃| ≤ |A_m| + errors, and the dropped knot-cell piece [0, 2^{−40}] bounded by its length times
+  sup(|A_m| + |S_m|) times sup w, this gives D̃_up ≥ ∫_0^½ |p̃|/(1−t).
+- Then D ≤ D̃_up + ED and |p(1)| ≥ |p̃(1)| − EN, so
+
+  F ≥ F_lower := (|p̃(1)| − EN)/(D̃_up + ED).
+
+The claim never uses F_lower. It is reported to show the width of the enclosure.
+
+## 6c. Witness refinement (not a proof step)
+
+`--refine k` repeats k times:
+1. compute the nodal values R/t at the collocation nodes of the current exact trial, using the same Arb products;
+2. solve the float collocation operator for a correction;
+3. add the correction to the nodal values.
+
+The final trial coefficients are the midpoints of an Arb interpolation of the summed nodal values at the exact
+dyadic nodes. This changes only which trial function is certified.
+
 ## 7. What is new and unreviewed
 
 New and unreviewed:
