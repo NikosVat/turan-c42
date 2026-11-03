@@ -264,3 +264,14 @@ Pinho C42_compact_best.json (`logs/cert/sweep_pinho_*.json`; 36864/73728 rows pe
 | pinho_T76_claim_1e-9_above_F (C = 0.686360787754 = F_upper + 1e-9, rounded up; resolution control) | 18432, 8, 1 | PASS | PASS | same |
 - A first attempt "Bakeas phase0 + 0.01" PASSed *correctly* (F ≤ 0.68636150 < T: Bakeas has 1e-5 margin) and
   was replaced by +0.05; "Pinho phase3 + 0.002" was replaced by +0.01 for the same reason (float F < T).
+
+### 18:55 Record feasibility test (checker #1 only; NOT a claim)
+- Profile: S1's 96-piece float candidate (`results/best_profile.json`, phases optimized at T = 0.686360795,
+  knots exactly j²/18432), with T lowered: `certificate/candidates/s1_96piece_T0.68636076.json`.
+- `rigorous_check.py --N 73728 --P 8 --refine 1`: **PASS, F ∈ [0.6863607347625, 0.6863607351611]**
+  (width 4.0e-10; sup|R/t| = 3.7e-9, EN = 4.8e-11, ED = 2.0e-11), margin T − F_upper = 2.48e-8.
+  621 s, **6.29 GB**. I.e. by this checker C42 ≤ 0.68636076, 3.5e-8 below Pinho's 0.6863607950.
+- Implied float fixed point of this phase vector: T* ≈ T − (T − F)/(1 + 1.22) ≈ 0.6863607487.
+- Pinho rerun (with F_lower): N=36864 P=8 r=1: F ∈ [0.6863607439470, 0.6863607439516], width 4.6e-12, 283 s.
+- Status per CLAUDE.md rules: one checker, new method, unreviewed; no second independent checker yet; phases
+  not re-optimized at the lower T; no finite-n check at this precision. Not a claim.
