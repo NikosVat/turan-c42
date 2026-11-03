@@ -1,0 +1,7 @@
+(1) 2000 random tuples, n in [2,60): max relative |identity residual| = 3.5e-16; min of max_(k>K)|s_k| / F_n - 1 = -4.441e-16 (must be >= 0 up to rounding)
+(2) n=2: direct multistart min_z max_k|s_k| = 0.87403205   first-half min = 0.87403205
+(2) n=3: direct multistart min_z max_k|s_k| = 0.82478303   first-half min = 0.82478303
+(2) n=4: direct multistart min_z max_k|s_k| = 0.79787184   first-half min = 0.79787184
+(2) n=5: direct multistart min_z max_k|s_k| = 0.78068751   first-half min = 0.78068751
+(2) n=6: direct multistart min_z max_k|s_k| = 0.76866240   first-half min = 0.76866240
+(2) n=7: direct multistart min_z max_k|s_k| = 0.75972275   first-half min = 0.75972275
