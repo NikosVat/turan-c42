@@ -7,6 +7,7 @@ from fractions import Fraction
 import numpy as np
 
 TARGET = 0.6863607950
+PINHO_TSTAR = 0.6863607720381  # Pinho's published 48-piece profile, float T* (this project, S2)
 rows = []
 for p in sorted(sys.argv[1:] or glob.glob("results/A*.json")):
     d = json.load(open(p))
@@ -21,6 +22,6 @@ for p in sorted(sys.argv[1:] or glob.glob("results/A*.json")):
                  TARGET - fp["T_star"], v["levels"][0]))
 rows.sort()
 print(f"{'file':34s} {'pcs':>4s} {'1st knot':>9s} {'max|slope|':>10s} {'T* (float)':>15s} {'err(T*)':>8s} "
-      f"{'margin':>9s} {'N0':>7s}")
+      f"{'margin':>9s} {'gain vs Pinho':>13s} {'N0':>7s}")
 for T, p, m, k1, sl, eT, eF, mg, N0 in rows:
-    print(f"{p:34s} {m:4d} {k1:>9s} {sl:10.1f} {T:.13f} {eT:8.1e} {mg:9.3e} {N0:7d}")
+    print(f"{p:34s} {m:4d} {k1:>9s} {sl:10.1f} {T:.13f} {eT:8.1e} {mg:9.3e} {PINHO_TSTAR - T:13.3e} {N0:7d}")

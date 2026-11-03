@@ -230,3 +230,16 @@ no gain; A has ~5e-8 of float room at fixed T, and certification is the bottlene
   q24_g4 −0.82e-7 (limit differences −0.53, −0.64, −0.17e-7). The excess shrinks by a factor of 0.56–0.63 per
   4× in n. That is consistent with slow convergence (steep first pieces: only ~54 indices in A192's first piece
   at n = 4e6). A precision match needs n ≫ 1e7.
+- **Finite-n consistency** (common T = 0.68636075; F_lim from the limit evaluator at that T):
+  - F_n − F_lim at n = 1e6 / 4e6 / 8e6:
+    - Pinho: 1.580e-5 / 4.836e-6 / 2.667e-6;
+    - A96: 1.568e-5 / 4.770e-6;
+    - A192: 1.565e-5 / 4.742e-6 / 2.600e-6;
+    - q24_g4: 1.568e-5 / 4.771e-6.
+  - Every profile approaches **its own** limit with the same law n^{−0.86} (ratio 1e6→4e6 = 3.27–3.30). The
+    constants agree within 2%.
+  - The A192 − Pinho difference is −2.13e-7 / −1.58e-7 / −1.32e-7 at n = 1e6 / 4e6 / 8e6, moving toward the
+    limit difference −6.4e-8.
+  - No sign of a limit-formula bug.
+- `levels_study` on A192_q up to N = 2,359,296: the 3-fit over 589824..2359296 = 0.6863607470035, vs 0.6863607470004
+  on the verification levels (4-fit …0040). **The reported err (4.7e-11) is conservative; the true error is ~5e-12.**

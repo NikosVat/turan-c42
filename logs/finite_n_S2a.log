@@ -4,3 +4,5 @@ n =  1000000: C42_compact_best.json: F_n = 0.6863765938 (T=0.68636075)  A96_q.js
             differences to C42_compact_best.json: -1.705e-07  -2.134e-07  -1.307e-07
 n =  4000000: C42_compact_best.json: F_n = 0.6863656349 (T=0.68636075)  A96_q.json: F_n = 0.6863655158 (T=0.68636075)  A192_q.json: F_n = 0.6863654768 (T=0.68636075)  A_q24_g4.json: F_n = 0.6863655533 (T=0.68636075)
             differences to C42_compact_best.json: -1.191e-07  -1.581e-07  -8.158e-08
+n =  8000000: C42_compact_best.json: F_n = 0.6863634659 (T=0.68636075)  A192_q.json: F_n = 0.6863633344 (T=0.68636075)
+            differences to C42_compact_best.json: -1.315e-07
