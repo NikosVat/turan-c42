@@ -200,3 +200,18 @@ no gain; A has ~5e-8 of float room at fixed T, and certification is the bottlene
 - The residual is now float-noise-limited near t = 0 (mpmath direct quadrature on cells 0–9:
   2e-10 … 9e-10; |ρ| ≈ 134 there, P = 8 monomial conditioning), not approximation-limited.
   Next: iterative refinement of the witness with Arb-computed nodal residuals.
+
+### 18:45 Witness refinement + rigorous lower bound F_lower
+- Trial coefficients are now obtained by Arb interpolation of the float nodal values at the (exact dyadic)
+  collocation nodes (midpoints taken as exact), which removes the float Vandermonde conditioning loss.
+- `--refine k`: k passes of (Arb nodal residual → float GMRES correction → add to nodal values).
+  Only the trial changes; every proof step is unchanged.
+- Pinho, N=36864, P=8, refine=1: **PASS, F ≤ 0.6863607439516052**; sup|R/t| = 3.5e-12 (was 1.7e-9),
+  EN = 4.9e-14, ED = 2.1e-14, denominator slack 1.1e-12 + kernel remainder 1.6e-12. 388 s (CPU shared),
+  3.19 GB. This is *below* the float spectral estimate 0.6863607439536: the float quadrature drops
+  θ ∈ [0, 2^-30] on cell 0, inflating its F by ~2e-12 (checked by size estimate). The Arb value is the reliable one.
+- Added a rigorous **upper** bound for the denominator: sqrt(X) − f = s(s−1)²(s+2)/(2u) ≤ η²(1+η)(3+η)/(2u_min)
+  with η = sup|u²X − 1| < 1 (certified per cell), plus the dropped geometric piece bounded by its sup.
+  This gives F_lower = (|p̃(1)| − EN)/(D_up + ED), i.e. a two-sided enclosure of F.
+  - Harcos exact 0.69368452670658 ∈ [0.69368452670057, 0.69368452670886] (N=256), width 8.3e-12. ✓
+  - Bakeas N=1536 P=6 r=1: F ∈ [0.6863600829150, 0.6863600829174], width 2.4e-12, 8.1 s.

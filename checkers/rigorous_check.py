@@ -459,9 +459,11 @@ def wterms(ew):
     return max(4, int(math.ceil(-22 * math.log(10) / math.log(e))))
 
 
-def sqrt_lower_integral(Ap, wser, wrem, rad, u_coef):
-    """Lower bound for int_{-rad}^{rad} |A(x)| w(x) dx given w = wser(x) + r(x), |r| <= wrem, rad = 1/2.
-    Uses sqrt(X) >= (3/2) X u - (1/2) X^2 u^3 for u > 0 (X = |A|^2).  Returns (lower, ok)."""
+def sqrt_lower_integral(Ap, wser, wrem, rad, u_coef, wsup=None):
+    """Bounds for int_{-rad}^{rad} |A(x)| w(x) dx given w = wser(x) + r(x), |r| <= wrem, rad = 1/2.
+    Lower: sqrt(X) >= f := (3/2) X u - (1/2) X^2 u^3 for u > 0 (X = |A|^2).
+    Upper (if wsup >= sup w is given): sqrt(X) - f = s(s-1)^2(s+2)/(2u), s = u sqrt(X); with
+    eta = sup|u^2 X - 1| < 1 this is <= eta^2 (1+eta)(3+eta)/(2 u_min).  Returns lower, or (lower, upper)."""
     u = acb_poly([acb(c) for c in u_coef])
     # certify u > 0 on [-rad, rad]
     u0 = u.coeffs()[0].real
@@ -470,14 +472,22 @@ def sqrt_lower_integral(Ap, wser, wrem, rad, u_coef):
     for c in u.coeffs()[1:]:
         rp = rp * rad
         rest += abs(c) * rp
-    if not (u0 - rest > 0):
+    umin = u0 - rest
+    if not (umin > 0):
         return None
     X = Ap * poly_conj(Ap)
     u3 = u * u * u
     f = X * u * acb(1.5) - X * X * u3 * acb(0.5)
     val = integrate_sym(f * wser).real
     err = poly_absmax(f, rad) * wrem  # times length 1
-    return lo(val - err)
+    low = lo(val - err)
+    if wsup is None:
+        return low
+    eta = poly_absmax(u * u * X - acb(1), rad)
+    if not (eta < 1):
+        return low, None
+    ex = eta ** 2 * (1 + eta) * (3 + eta) / (2 * lo(umin))
+    return low, up(val + err + ex * wsup)
 
 
 def denominator_lower(pr, hy, N, P, res, Pk, log, geo_J=40, budget=1e-12):
@@ -571,6 +581,7 @@ def denominator_lower(pr, hy, N, P, res, Pk, log, geo_J=40, budget=1e-12):
         bsT.append(bsT[-1] * (-gamma - k + 1) / k)  # binom(-gamma, k)
     # ---- loop over cells
     total = arb(0)
+    total_up = arb(0)
     err_total = arb(0)
     n_geo = 0
     worst_loss = []
@@ -622,21 +633,27 @@ def denominator_lower(pr, hy, N, P, res, Pk, log, geo_J=40, budget=1e-12):
                 err_cell = err_cell + sig
                 Af = np.array([complex(float(c.real.mid()), float(c.imag.mid())) for c in coeffs[:Kt + 1]])
                 ucoef = fit_u_sym(Af, 8 if m < 16 else (6 if m < 256 else 3))
-                lb = sqrt_lower_integral(Ap, wser, wrem, half, ucoef)
-                if lb is None:
+                bb = sqrt_lower_integral(Ap, wser, wrem, half, ucoef, wsup=up(w0 / (1 - ew / 2)))
+                if bb is None:
                     raise ArithmeticError(f"u not positive on cell {m}")
-                total += lb
+                total += bb[0]
+                total_up = None if (total_up is None or bb[1] is None) else total_up + bb[1]
             else:
                 n_geo += 1
-                total += knot_cell_lower(Ap, Bb, Delta, h1g, m, h, half, geo_J, gamma)
+                kl, ku = knot_cell_lower(Ap, Bb, Delta, h1g, m, h, half, geo_J, gamma)
+                total += kl
+                total_up = None if (total_up is None or ku is None) else total_up + ku
             err_total += err_cell * wint
     # ---- cell 0: p~ = h^-gamma theta^-gamma q0(theta), q0 = 1 + h sum_b Bb c_{0,b} theta^{b+1}
     q0 = [acb(1)] + [h * Bb[b] * Crows[0][b] for b in range(P + 1)]
-    total += cell0_lower(q0, a, h)
+    c0l, c0u = cell0_lower(q0, a, h)
+    total += c0l
+    total_up = None if (total_up is None or c0u is None) else total_up + c0u
     D_low = lo(total - err_total)
+    D_up = None if total_up is None else up(total_up + err_total)
     log("denominator: certified", n_geo=n_geo, D_low=D_low.str(15), err=up(err_total).str(4),
         E_kern=E_kern.str(4))
-    return dict(D_low=D_low, err=up(err_total), n_geo=n_geo, E_kern=E_kern)
+    return dict(D_low=D_low, D_up=D_up, err=up(err_total), n_geo=n_geo, E_kern=E_kern)
 
 
 def knot_cell_lower(Ap, Bb, Delta, h1g, m, h, half, J, gamma):
@@ -653,6 +670,7 @@ def knot_cell_lower(Ap, Bb, Delta, h1g, m, h, half, J, gamma):
     x3 = arb(1) / 3
     tail_ser = x3 ** (Ks + 1) * ((Ks + 2) - (Ks + 1) * x3) / (1 - x3) ** 2
     total = arb(0)
+    total_up = arb(0)
     for j in range(J):
         al = R(Fraction(1, 2 ** (j + 1)))
         be = R(Fraction(1, 2 ** j))
@@ -674,12 +692,16 @@ def knot_cell_lower(Ap, Bb, Delta, h1g, m, h, half, J, gamma):
         wser = acb_poly([acb(w0 * ew ** k) for k in range(nw)])
         wrem = up(w0 * (ew / 2) ** nw / (1 - ew / 2))
         Af = np.array([complex(float(c.real.mid()), float(c.imag.mid())) for c in fpoly.coeffs()])
-        lb = sqrt_lower_integral(fpoly, wser, wrem, half, fit_u_sym(Af, 8))
-        if lb is None:
-            raise ArithmeticError(f"u not positive on knot cell {m} piece {j}")
         wsup = up(h / (1 - (m + 1) * h))
-        total += ell * (lb - err * wsup)
-    return lo(total)
+        bb = sqrt_lower_integral(fpoly, wser, wrem, half, fit_u_sym(Af, 8), wsup=wsup)
+        if bb is None:
+            raise ArithmeticError(f"u not positive on knot cell {m} piece {j}")
+        total += ell * (bb[0] - err * wsup)
+        total_up = None if (total_up is None or bb[1] is None) else total_up + ell * (bb[1] + err * wsup)
+    if total_up is not None:  # the dropped piece [0, 2^-J]: |p~| <= sup|A| + sup|S| there
+        supc = poly_absmax(Ap, half) + sum((abs(c) for c in Spoly.coeffs()), arb(0))
+        total_up = up(total_up + R(Fraction(1, 2 ** J)) * supc * up(h / (1 - (m + 1) * h)))
+    return lo(total), total_up
 
 
 def cell0_lower(q0, a, h):
@@ -705,7 +727,13 @@ def cell0_lower(q0, a, h):
     supf = sum((abs(c) for c in f.coeffs()), arb(0))
     wrem = h * h ** nw / (1 - h)
     lb = (val.real - supf * wrem / (1 - a)) * h ** (-a)
-    return lo(lb)
+    # upper: sqrt(X) - f <= eta^2 (1+eta)(3+eta)/(2 u_min), eta = sup_[0,1] |u^2 X - 1|
+    eta = sum((abs(c) for c in (u * u * X - acb(1)).coeffs()), arb(0))
+    if not (eta < 1):
+        return lo(lb), None
+    ex = eta ** 2 * (1 + eta) * (3 + eta) / (2 * lo(u0 - rest))
+    ub = (val.real + supf * wrem / (1 - a) + ex * h / (1 - h) / (1 - a)) * h ** (-a)
+    return lo(lb), up(ub)
 
 
 def exact_coefficients(parts, nodes, P):
@@ -772,6 +800,9 @@ def verify(data, N, P, Pk=20, bits=256, verbose=True, refine=0):
     if not D > 0:
         raise ArithmeticError("denominator lower bound not positive")
     Fup = up(num_up / D)
+    F_low = None
+    if den["D_up"] is not None:
+        F_low = lo((abs(p1) - prop["EN"]) / (den["D_up"] + prop["ED"]))
     Fq = Fraction(str(Fup.fmpq())) if hasattr(Fup, "fmpq") else None
     verdict = "PASS" if Fup < R(pr.Cq) else "FAIL"
     out = dict(verdict=verdict, C=str(pr.Cq), T=str(pr.Tq), N=N, P=P, Q=res["Q"], Pk=Pk, bits=bits, refine=refine,
@@ -782,7 +813,8 @@ def verify(data, N, P, Pk=20, bits=256, verbose=True, refine=0):
                ED_int=prop["ED_int"].str(4),
                p_tilde_1=p1.str(30), numerator_upper=num_up.str(25), denominator_trial_lower=den["D_low"].str(25),
                denominator_lower=D.str(25), denominator_err=den["err"].str(6), knot_cells=den["n_geo"],
-               F_upper=Fup.str(25), trial_sha256=trial_hash, seconds=round(time.time() - t0, 1), log=logs)
+               F_upper=Fup.str(25), F_lower=(F_low.str(25) if F_low is not None else None),
+               enclosure_width=(up(Fup - F_low).str(6) if F_low is not None else None), trial_sha256=trial_hash, seconds=round(time.time() - t0, 1), log=logs)
     return out
 
 
