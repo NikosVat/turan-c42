@@ -140,3 +140,21 @@ repo `teorth/optimizationproblems@87b4ebb` (constants/42a.md), and PRs were foun
 
 **S1 wall time ≈ 1 h; S1 verdict: reproduction OK; evaluator OK (≤ 3e-9 vs exact Harcos); B, C, D, E show
 no gain; A has ~5e-8 of float room at fixed T, and certification is the bottleneck.**
+
+## S2 — 2026-11-03, branch search-A (direction A; extrapolated objective only)
+
+### 17:15 Fast solver (`src/fastsolve.py`)
+- Divide-and-conquer FFT ("online convolution") for the forward and adjoint product-trapezoid recursions:
+  O(N log² N) instead of O(N²). Same discretisation as `evaluator.py`; agreement on Pinho's profile:
+  F to 2e-16, q to 7e-16, adjoint to 3e-13 relative (N = 4608, 18432).
+- Timing (forward + adjoint, 1 thread): N = 73728: 0.5 + 0.75 s (was ~16 + 16 s); N = 589824: 6.6 + 7.1 s.
+
+### 17:17 Extrapolation study, Pinho 48-piece profile at T = 0.6863607950 (`logs/levels_study_pinho.log`)
+- F_N for N = 4608·2^k, k = 0..7, and 3-level fits (exponents 2−a, 2):
+  base 4608 (= knot denominator): 0.6863607374; 9216: 0.6863607433; 18432: 0.6863607439463;
+  36864: …9580; 73728: …9492; 147456: …9484. 4-level fits (extra N^{−(3−a)}): …9478–…9482.
+- **F(Pinho) = 0.68636074395 ± 1e-11.** Rule: base ≥ 2× (better 4×) the lcm of the knot denominators.
+  At base = 1× the error is ~6e-9 (first piece resolved by a single cell).
+
+### 17:20 Driver `src/opt2.py` (exact rational knots, decimal phases, extrapolated objective, fixed point)
+- Pinho's profile, verify only: Fx_ind = 0.6863607439580, **T* = 0.6863607720381** (err est 5e-12).
