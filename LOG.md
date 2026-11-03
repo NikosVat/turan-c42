@@ -303,3 +303,143 @@ versus Pinho's one-sided gap of 3.0e-8 with 95 GB. That is ~6000× tighter at ~3
 pass. With it, S1's 96-piece phase vector at T = 0.68636075 PASSes (margin 2.6e-9). A record ≈ 4.5e-8 below
 Pinho is certifiable *by this checker*. The remaining steps before any claim are a second checker written
 independently in a separate session, review of NOTES_CERTIFIER.md, and re-optimisation at the lower T.
+
+## S2 — 2026-11-03, branch search-A (direction A; extrapolated objective only)
+
+### 17:15 Fast solver (`src/fastsolve.py`)
+- Divide-and-conquer FFT ("online convolution") for the forward and adjoint product-trapezoid recursions:
+  O(N log² N) instead of O(N²). Same discretisation as `evaluator.py`; agreement on Pinho's profile:
+  F to 2e-16, q to 7e-16, adjoint to 3e-13 relative (N = 4608, 18432).
+- Timing (forward + adjoint, 1 thread): N = 73728: 0.5 + 0.75 s (was ~16 + 16 s); N = 589824: 6.6 + 7.1 s.
+
+### 17:17 Extrapolation study, Pinho 48-piece profile at T = 0.6863607950 (`logs/levels_study_pinho.log`)
+- F_N for N = 4608·2^k, k = 0..7, and 3-level fits (exponents 2−a, 2):
+  base 4608 (= knot denominator): 0.6863607374; 9216: 0.6863607433; 18432: 0.6863607439463;
+  36864: …9580; 73728: …9492; 147456: …9484. 4-level fits (extra N^{−(3−a)}): …9478–…9482.
+- **F(Pinho) = 0.68636074395 ± 1e-11.** Rule: base ≥ 2× (better 4×) the lcm of the knot denominators.
+  At base = 1× the error is ~6e-9 (first piece resolved by a single cell).
+
+### 17:20 Driver `src/opt2.py` (exact rational knots, decimal phases, extrapolated objective, fixed point)
+- Pinho's profile, verify only: Fx_ind = 0.6863607439580, **T* = 0.6863607720381** (err est 5e-12).
+- All runs: L-BFGS-B on the 3-level extrapolated F (exponents 2−a, 2) at fixed T, then verification on
+  independent levels (2N0, 4N0, 8N0) and a 4-level fit; T* solved with phases frozen (secant, dF/dT = −1.2229).
+  err(T*) = max(|Fx_opt − Fx_ind|, |Fx_ind − Fx_4fit|)/(1 − dF/dT).
+
+### 17:20 Quadratic-knot family quad:m (u_j = j²/(2m²)), float T* (search only)
+| run | pieces | T used | base N0 | evals | T* | err(T*) |
+|---|---|---|---|---|---|---|
+| A24_q (start: Pinho restricted) | 24 | 0.6863610 | 9216 | ~30 | 0.6863608822895 | 1.2e-10 |
+| A48_q (start: Pinho) | 48 | 0.68636077 | 18432 | ~30 | 0.6863607718846 | 5e-12 |
+| Pinho as published | 48 | 0.6863607950 | 18432 | — | 0.6863607720381 | 5e-12 |
+| A96_q (start: S1 eval-11 probe) | 96 | 0.68636075 | 36864 | 36 | **0.6863607482663** | 9e-11 |
+- The S1 96-piece probe (stopped at eval 11) was already within 3e-10 of this.
+- Knot gradient (`src/knotgrad.py`) on A24_q: dF/dx_j·h_j = 2.9e-7 for the first knot vs ≤ 1.3e-8 for all
+  others. Knots j ≤ 16 want to move toward 0 and j ≥ 17 toward ½. **The first interval dominates.**
+- Near 0 the optimal phase behaves like φ − φ(0) ∝ u^ν with local exponent ν ≈ 0.28–0.34 (A96_q knots),
+  so the slope is unbounded at 0 and resolution there is what matters.
+
+### 17:24 Near-0 refinements of quad:48 (T = 0.68636076, base 36864)
+- q48_h4 (first 4 intervals halved, 52 pieces): Fx 0.6863607511850 → T* ≈ 0.686360756.
+- q48_g1 (two geometric knots 1/18432, 1/9216 below 1/4608, 50 pieces): Fx 0.6863607405335 → T* ≈ 0.6863607512.
+- **Geometric refinement at u → 0 beats uniform refinement.** 2 extra knots give 88% of the 48 → 96 gain.
+- Added a stall stop to opt2 (12 evals without a 1e-13 improvement).
+- q24_g4 (quad:24 + 4 geometric knots 1/18432..1/2304 below 1/1152, 28 pieces; base 36864):
+  **T* = 0.6863607644762** (err 8.7e-11). It beats the 48-piece quadratic profile.
+- Knot gradient on q48_g1: bulk knots are stationary (|dF/dx·h| ≲ 3e-11). The remaining signal sits at the
+  geometric → quadratic transition: the ratio-4 gap 1/4608 → 1/1152 wants an extra knot.
+  → New family D(m,K): dyadic knots x_2/2^k (k = 1..K) below x_2 = 2/m², plus quad:m knots for j ≥ 2.
+
+### 17:45 OOM incident
+- Four runs at base 147456 (top level N = 589824) were killed by the memory cgroup (4–7 GB RSS each).
+- Cause: in `fastsolve._online_solve` the recursive closure referenced itself. The cycle kept x, E and K of
+  every call alive until a full GC, a leak of ~55 MB per call at N = 147456. Fixed by breaking the cycle;
+  RSS is now flat at 0.39 GB.
+- Runs resumed from their 5-eval checkpoints, losing the L-BFGS memory only.
+
+### 17:48–18:00 Results (all float, verified on independent levels; T* with phases frozen)
+| run | pieces | first knot | base N0 | T* | err(T*) |
+|---|---|---|---|---|---|
+| A192_q (quad:192, polished at base 147456 from the base-73728 run) | 192 | 1/73728 | 147456 | **0.6863607431492** | 2.1e-11 |
+| A_D96_4 (quad:96 + 1/9216, 1/36864, 1/73728) | 99 | 1/73728 | 147456 | 0.6863607433391 | 2.0e-11 |
+| A_Rs2_24 (ratio-√2 lattice knots 1/18432..1/288 + quad:24) | 34 | 1/18432 | 36864 | 0.6863607534227 | 8.8e-11 |
+| A_D24_6 (dyadic 1/18432..1/576 + quad:24 from 1/288) | 29 | 1/18432 | 36864 | 0.6863607538339 | 8.6e-11 |
+| A_R4_24 (quad:24 + 1/18432, 1/4608) | 26 | 1/18432 | 36864 | 0.6863607650046 | 8.7e-11 |
+- Base 73728 (1× the knot denominator) had underestimated quad:192 by 3.7e-10. The polish at base 147456 moved it
+  only 6e-13.
+- Finite n (`logs/finite_n_S2a.log`, common T = 0.68636075; F_n − F_n(Pinho)):
+  - n = 2.5e5: A96 −1.85e-7, A192 −1.81e-7, q24_g4 −1.40e-7;
+  - n = 1e6: −1.71e-7, −2.13e-7, −1.31e-7;
+  - the limit differences are −5.3e-8, −6.4e-8, −1.7e-8.
+  - F_n − F(Pinho) = 5.1e-5 → 1.6e-5 (exponent ≈ 0.85). Every candidate is below Pinho at every n, but the
+    differences are dominated by small-k finite-size effects. That is consistent with S1 (a near-0 boundary layer
+    with advantage decaying like n^{−0.8}). **Not a precision test of the limit.**
+- **Lessons:**
+  - The near-0 ratio (2 vs 4 vs √2 below 1/1152) hardly matters.
+  - A ratio-4 gap at u ~ 1e-3 (quad:24's 1/1152 → 1/288) costs ~1.1e-8 in T*.
+  - Insertion scores on D24_6 (`knotgrad.py --lattice`): the top candidate is [1/288, 1/128] at 7e-9,
+    10× the next one. The region u ≈ 3e-3 to 2e-2 is the bottleneck for small bulks.
+
+### 18:00–18:06 Greedy knot insertion (free-knot search on the lattice) and depth
+| run | pieces | first knot | base | T* | err |
+|---|---|---|---|---|---|
+| A_G1_24 = D24_6 + 13/2304 | 30 | 1/18432 | 36864 | 0.6863607517785 | 8.6e-11 |
+| A_G4_24 = D24_6 + 13/2304, 25/2304, 41/2304, 1/768 | 33 | 1/18432 | 36864 | 0.6863607502855 | 8.6e-11 |
+| A_q24_g6 (quad:24 + 6 dyadic below 1/1152; keeps the 1/1152→1/288 gap) | 30 | 1/73728 | 147456 | 0.6863607595812 | 2.0e-11 |
+| A_q48_g4 (quad:48 + 4 dyadic below 1/4608) | 52 | 1/73728 | 147456 | 0.6863607465193 | 2.0e-11 |
+- Greedy rule: insert knots at the lattice midpoints with the largest score g_new²/width, where g_new is the
+  adjoint gradient with respect to the value of a new knot inserted at its PL value; then re-optimise.
+  Round 2 on G4_24 → G8_24 (+1/384, 61/2304, 1/1536, 1/6144; 37 pieces).
+- Finite n at n = 4e6 (`logs/finite_n_S2a.log`), F_n − F_n(Pinho): A96 −1.19e-7, A192 −1.58e-7,
+  q24_g4 −0.82e-7 (limit differences −0.53, −0.64, −0.17e-7). The excess shrinks by a factor of 0.56–0.63 per
+  4× in n. That is consistent with slow convergence (steep first pieces: only ~54 indices in A192's first piece
+  at n = 4e6). A precision match needs n ≫ 1e7.
+- **Finite-n consistency** (common T = 0.68636075; F_lim from the limit evaluator at that T):
+  - F_n − F_lim at n = 1e6 / 4e6 / 8e6:
+    - Pinho: 1.580e-5 / 4.836e-6 / 2.667e-6;
+    - A96: 1.568e-5 / 4.770e-6;
+    - A192: 1.565e-5 / 4.742e-6 / 2.600e-6;
+    - q24_g4: 1.568e-5 / 4.771e-6.
+  - Every profile approaches **its own** limit with the same law n^{−0.86} (ratio 1e6→4e6 = 3.27–3.30). The
+    constants agree within 2%.
+  - The A192 − Pinho difference is −2.13e-7 / −1.58e-7 / −1.32e-7 at n = 1e6 / 4e6 / 8e6, moving toward the
+    limit difference −6.4e-8.
+  - No sign of a limit-formula bug.
+- `levels_study` on A192_q up to N = 2,359,296: the 3-fit over 589824..2359296 = 0.6863607470035, vs 0.6863607470004
+  on the verification levels (4-fit …0040). **The reported err (4.7e-11) is conservative; the true error is ~5e-12.**
+
+### 18:05–18:55 Deep near-0 refinement (first knot 1/73728 … 1/294912) and small greedy profiles
+| run | pieces | first knot | base | T* | err | max |slope| |
+|---|---|---|---|---|---|---|
+| A_G8_24 = G4_24 + 1/384, 61/2304, 1/1536, 1/6144 | 37 | 1/18432 | 36864 | 0.6863607494011 | 8.7e-11 | 617 |
+| A_S35 = G4_24 + 1/36864, 1/73728 | 35 | 1/73728 | 147456 | 0.6863607453798 | 2.0e-11 | ~2000 |
+| A_S36 = S35 + 1/147456 | 36 | 1/147456 | 294912 | 0.6863607446461 | 9.6e-12 | ~3600 |
+| A_S39 = G8_24 + 1/36864, 1/73728 | 39 | 1/73728 | 147456 | 0.6863607445336 | 2.0e-11 | 2009 |
+| A_D96_5 = D96_4 + 1/147456 | 100 | 1/147456 | 294912 | 0.6863607426060 | 9.7e-12 | 3658 |
+| **A_D96_6 = D96_5 + 1/294912** (base 1×; Fx_opt − Fx_ind = 8e-11) | 101 | 1/294912 | 294912 | **0.6863607422566** | 3.7e-11 | 6817 |
+- Depth series at bulk quad:96 (T*): 1/18432 …7482663 → 1/73728 …7433391 → 1/147456 …7426060 →
+  1/294912 …7422566.
+  - Gains: 4.9e-9 (for two halvings), then 7.3e-10, then 3.5e-10. The ratio is ~0.48 per halving.
+  - Estimated remaining depth gain: ≈ 3e-10.
+  - Bulk beyond 96 is worth ≤ 2e-10 (quad:192 vs D96_4 at equal depth).
+  - **Float infimum of the PL-phase family ≈ 0.686360742 ± 3e-10.**
+- Insertion scores on S39: max 7e-10, down from 7e-9 (D24_6) and 2e-9 (G4_24). The small profile is near
+  saturation.
+- `results/best_profile.json` ← A_D96_6 (float only).
+- Candidate exports: `results/candidate_101pc.json`, `results/candidate_33pc.json`.
+- Certification arithmetic: a claim at T_c needs F_upper(T_c) ≤ T_c, i.e. the gap F_upper − F ≤ 2.2229·(T_c − T*).
+  To beat 0.6863607950, the allowed certifier gap is 2.2229·margin: 1.17e-7 for D96_6 and 9.9e-8 for G4_24.
+  Pinho's certificate lost 3.3e-8 on his profile, but his first slope was 196, not 600–6800.
+
+### 19:01 S40 and wrap-up
+- A_S40 = S39 + 1/147456 (40 pieces, base 294912): **T* = 0.6863607438010** (err 9.6e-12).
+- Candidates: `results/candidate_101pc.json` (D96_6), `candidate_40pc.json` (S40), `candidate_33pc.json` (G4_24).
+  Each contains exact rational breaks, decimal phases, T, float F with error, T* and float Theorem A inputs.
+  For all three: a ≈ 0.086–0.102, κ = T, min slope ≈ 1.2 > 0, phase range < 0.9.
+- `results/SATURATION.md` and `results/summary_table.txt` written; PLAN.md has an "S2 outcome" section.
+- Search stopped at 19:01 (1 h 46 min). The family is saturated: ~3e-10 of estimated depth gain remains, and the
+  next depth level (first knot 1/589824) would cost ~80 min of compute.
+
+**S2 verdict.** Direction A in float:
+- best T* = 0.6863607422566 ± 4e-11 (101 pieces), 5.27e-8 below the target 0.6863607950;
+- 40 pieces reach 0.6863607438 (95% of the gain over Pinho), 33 pieces reach 0.6863607503 (73%);
+- nothing is certified.
