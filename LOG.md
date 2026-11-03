@@ -281,3 +281,25 @@ Pinho C42_compact_best.json (`logs/cert/sweep_pinho_*.json`; 36864/73728 rows pe
   T = 0.68636075, i.e. 4.5e-8 below Pinho. Still NOT a claim (same caveats as above).
 - Doubling check on Pinho: N=73728 P=6 r=1: F ∈ [0.6863607439463, 0.6863607439522] (width 5.9e-12, 530 s,
   5.03 GB), overlapping the N=36864 P=8 enclosure [0.6863607439470, 0.6863607439516]. Stable.
+
+### 19:10 Gate (c), final Pinho table (all with F_lower)
+
+| N | P | refine | verdict | sup R/t | EN | ED | F_upper | F_lower | width | s | GB |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 9216 | 6 | 0 | FAIL | 2.29e-05 | 8.17e-07 | 3.50e-07 | 0.68636367644701533 | 0.68635781145728377 | 5.86e-06 | 54.2 | 0.864 |
+| 9216 | 8 | 1 | PASS | 2.34e-07 | 8.10e-09 | 3.47e-09 | 0.68636077302774936 | 0.68636071487079846 | 5.82e-08 | 75.6 | 0.945 |
+| 18432 | 6 | 0 | PASS | 3.56e-07 | 7.89e-09 | 3.39e-09 | 0.68636077229099971 | 0.68636071560755823 | 5.67e-08 | 89.5 | 1.461 |
+| 18432 | 6 | 1 | PASS | 3.56e-07 | 7.89e-09 | 3.38e-09 | 0.68636077226801144 | 0.68636071563054958 | 5.66e-08 | 130.7 | 1.605 |
+| 18432 | 8 | 1 | PASS | 1.10e-09 | 2.27e-11 | 9.73e-12 | 0.68636074403471125 | 0.68636074386384734 | 1.71e-10 | 132.9 | 1.682 |
+| 36864 | 8 | 0 | PASS | 2.94e-10 | 4.10e-11 | 1.75e-11 | 0.68636074409860560 | 0.68636074379999257 | 2.99e-10 | 208.5 | 3.165 |
+| 36864 | 8 | 1 | PASS | 3.54e-12 | 4.88e-14 | 2.09e-14 | 0.68636074395160519 | 0.68636074394696189 | 4.64e-12 | 283.2 | 3.188 |
+| 73728 | 6 | 1 | PASS | 3.92e-11 | 5.02e-13 | 2.15e-13 | 0.68636074395224924 | 0.68636074394632366 | 5.93e-12 | 530.3 | 5.034 |
+- Candidate T = 0.68636076 at a different discretisation (N=36864, P=10, r=1): F ∈ [0.6863607342526,
+  0.6863607356709] (width 1.4e-9, 312 s, 3.65 GB), which contains the N=73728 P=8 enclosure. Consistent.
+
+**S3 verdict.** The spectral a-posteriori certifier (`checkers/rigorous_check.py`, derivation in
+NOTES_CERTIFIER.md) certifies Pinho's profile to a two-sided enclosure of width 4.6e-12 with 3.2 GB in ~5 min,
+versus Pinho's one-sided gap of 3.0e-8 with 95 GB. That is ~6000× tighter at ~30× less memory. All four gates
+pass. With it, S1's 96-piece phase vector at T = 0.68636075 PASSes (margin 2.6e-9). A record ≈ 4.5e-8 below
+Pinho is certifiable *by this checker*. The remaining steps before any claim are a second checker written
+independently in a separate session, review of NOTES_CERTIFIER.md, and re-optimisation at the lower T.
