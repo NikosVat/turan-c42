@@ -85,3 +85,12 @@ The Bakeas–Pinho family is very close to saturated. A new certified record is 
 significant digit, roughly 0.68636076–0.68636079, and only if S3 delivers a much tighter certifier. If S2 cannot
 get the float fixed point below ~0.68636076, or S3 cannot certify within ~2e-8 of the float value, the right
 outcome is to write up the negative results (B, C, D, E) and stop.
+
+## S3 update (certifier, branch `certifier`)
+
+Certification is no longer the bottleneck. `checkers/rigorous_check.py` (spectral a-posteriori, Arb):
+- Pinho's profile: F ∈ [0.6863607439470, 0.6863607439516] at N=36864, P=8 (3.2 GB, ~5 min);
+- S1's 96-piece candidate at T = 0.68636076 PASSes with F ≤ 0.68636073516 (6.3 GB, 10 min).
+
+The remaining work for a record is: re-optimize at the lower T (search), a second independently written checker
+(separate session, from NOTES_CERTIFIER.md only), review, and packaging.
