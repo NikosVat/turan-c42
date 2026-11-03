@@ -89,5 +89,25 @@ if __name__ == "__main__":
     for j in range(len(knf)):
         hl = hs[j - 1] if j > 0 else 0.0
         print(f"{j:3d} {knf[j]:.8f} {hl:.3e} {dx[j]: .3e} {dx[j] * hl: .3e} {dphi[j]: .3e}")
+    # insertion scores: gradient w.r.t. the value of a NEW knot at the (lattice-rounded) midpoint of each
+    # interval, inserted with the PL value (F unchanged).  score = g_new^2 / width (diagonal-Hessian proxy).
+    L = int(sys.argv[sys.argv.index("--lattice") + 1]) if "--lattice" in sys.argv else N0
+    ins = []
+    for i in range(len(knf) - 1):
+        a_, b_ = knf[i], knf[i + 1]
+        mid = np.rint(0.5 * (a_ + b_) * L) / L if i > 0 else np.rint(0.5 * b_ * L) / L
+        if not (a_ < mid < b_):
+            continue
+        g = 0.0
+        for N, c, r in zip(Ns, coef, res):
+            u = np.arange(N // 2 + 1) / N
+            sel = (u > a_) & (u < b_)
+            hat = np.where(u[sel] <= mid, (u[sel] - a_) / (mid - a_), (b_ - u[sel]) / (b_ - mid))
+            g += c * np.sum(r[3][sel] * hat)
+        ins.append((g * g / (b_ - a_), i, mid, g))
+    ins.sort(reverse=True)
+    print("insertion candidates (score = g^2/width):  interval  [a, b]  mid  g_new")
+    for sc, i, mid, g in ins[:15]:
+        print(f"  {sc:.3e}  {i:3d} [{knf[i]:.6e}, {knf[i + 1]:.6e}] mid {mid:.6e} ({Fraction(mid).limit_denominator(L)})  g {g: .3e}")
     if "--out" in sys.argv:
         np.savez(sys.argv[sys.argv.index("--out") + 1], knots=knf, phases=ph, dx=dx, dphi=dphi, F=F)

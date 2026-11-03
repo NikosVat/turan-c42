@@ -217,7 +217,10 @@ def main():
         SCALE = 1e6
         state = {"n": 0, "best": np.inf, "bestx": x0.copy(), "f0": None, "stop": False}
 
-        def fg(x):
+        XS = 1e-3  # optimise y with x = x0 + XS*y, so L-BFGS-B's unit first step moves phases by ~1e-3 rad
+
+        def fg(y):
+            x = x0 + XS * np.asarray(y)
             if state["stop"]:
                 return state["best_scaled"], np.zeros_like(x)
             vs = [o.value_and_grad(x) for o in objs]
@@ -239,9 +242,9 @@ def main():
                             "start": args.start, "stage": "optimising"})
             if time.time() - t0 > args.maxtime or state["n"] - state.get("last_improve", 0) >= args.stall:
                 state["stop"] = True
-            return (f - state["f0"]) * SCALE, g * SCALE
+            return (f - state["f0"]) * SCALE, g * SCALE * XS
 
-        res = minimize(fg, x0, jac=True, method="L-BFGS-B",
+        res = minimize(fg, np.zeros_like(x0), jac=True, method="L-BFGS-B",
                        options={"maxiter": args.iters, "maxfun": int(args.iters * 1.5), "ftol": 1e-14,
                                 "gtol": 1e-14, "maxcor": 30})
         x = state["bestx"]
