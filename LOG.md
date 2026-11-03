@@ -158,3 +158,25 @@ no gain; A has ~5e-8 of float room at fixed T, and certification is the bottlene
 
 ### 17:20 Driver `src/opt2.py` (exact rational knots, decimal phases, extrapolated objective, fixed point)
 - Pinho's profile, verify only: Fx_ind = 0.6863607439580, **T* = 0.6863607720381** (err est 5e-12).
+- All runs: L-BFGS-B on the 3-level extrapolated F (exponents 2−a, 2) at fixed T, then verification on
+  independent levels (2N0, 4N0, 8N0) and a 4-level fit; T* solved with phases frozen (secant, dF/dT = −1.2229).
+  err(T*) = max(|Fx_opt − Fx_ind|, |Fx_ind − Fx_4fit|)/(1 − dF/dT).
+
+### 17:20 Quadratic-knot family quad:m (u_j = j²/(2m²)), float T* (search only)
+| run | pieces | T used | base N0 | evals | T* | err(T*) |
+|---|---|---|---|---|---|---|
+| A24_q (start: Pinho restricted) | 24 | 0.6863610 | 9216 | ~30 | 0.6863608822895 | 1.2e-10 |
+| A48_q (start: Pinho) | 48 | 0.68636077 | 18432 | ~30 | 0.6863607718846 | 5e-12 |
+| Pinho as published | 48 | 0.6863607950 | 18432 | — | 0.6863607720381 | 5e-12 |
+| A96_q (start: S1 eval-11 probe) | 96 | 0.68636075 | 36864 | 36 | **0.6863607482663** | 9e-11 |
+- The S1 96-piece probe (stopped at eval 11) was already within 3e-10 of this.
+- Knot gradient (`src/knotgrad.py`) on A24_q: dF/dx_j·h_j = 2.9e-7 for the first knot vs ≤ 1.3e-8 for all
+  others. Knots j ≤ 16 want to move toward 0 and j ≥ 17 toward ½. **The first interval dominates.**
+- Near 0 the optimal phase behaves like φ − φ(0) ∝ u^ν with local exponent ν ≈ 0.28–0.34 (A96_q knots),
+  so the slope is unbounded at 0 and resolution there is what matters.
+
+### 17:24 Near-0 refinements of quad:48 (T = 0.68636076, base 36864)
+- q48_h4 (first 4 intervals halved, 52 pieces): Fx 0.6863607511850 → T* ≈ 0.686360756.
+- q48_g1 (two geometric knots 1/18432, 1/9216 below 1/4608, 50 pieces): Fx 0.6863607405335 → T* ≈ 0.6863607512.
+- **Geometric refinement at u → 0 beats uniform refinement.** 2 extra knots give 88% of the 48 → 96 gain.
+- Added a stall stop to opt2 (12 evals without a 1e-13 improvement).

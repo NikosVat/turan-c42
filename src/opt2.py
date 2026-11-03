@@ -190,6 +190,7 @@ def main():
     ap.add_argument("--iters", type=int, default=300)
     ap.add_argument("--maxtime", type=float, default=1e9, help="seconds; stop optimisation after this")
     ap.add_argument("--out", required=True)
+    ap.add_argument("--stall", type=int, default=12, help="stop after this many evals without a 1e-13 improvement")
     ap.add_argument("--verify-only", action="store_true")
     ap.add_argument("--no-fixed-point", action="store_true")
     args = ap.parse_args()
@@ -225,6 +226,8 @@ def main():
             state["n"] += 1
             if state["f0"] is None:
                 state["f0"] = f
+            if f < state["best"] - 1e-13:
+                state["last_improve"] = state["n"]
             if f < state["best"]:
                 state["best"], state["bestx"] = f, np.array(x)
                 state["best_scaled"] = (f - state["f0"]) * SCALE
@@ -234,7 +237,7 @@ def main():
                 write_json(args.out, kn, state["bestx"], Tstr,
                            {"Fx_opt_levels": state["best"], "opt_levels": Ns, "evals": state["n"],
                             "start": args.start, "stage": "optimising"})
-            if time.time() - t0 > args.maxtime:
+            if time.time() - t0 > args.maxtime or state["n"] - state.get("last_improve", 0) >= args.stall:
                 state["stop"] = True
             return (f - state["f0"]) * SCALE, g * SCALE
 
