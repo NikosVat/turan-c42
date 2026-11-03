@@ -243,3 +243,40 @@ no gain; A has ~5e-8 of float room at fixed T, and certification is the bottlene
   - No sign of a limit-formula bug.
 - `levels_study` on A192_q up to N = 2,359,296: the 3-fit over 589824..2359296 = 0.6863607470035, vs 0.6863607470004
   on the verification levels (4-fit …0040). **The reported err (4.7e-11) is conservative; the true error is ~5e-12.**
+
+### 18:05–18:55 Deep near-0 refinement (first knot 1/73728 … 1/294912) and small greedy profiles
+| run | pieces | first knot | base | T* | err | max |slope| |
+|---|---|---|---|---|---|---|
+| A_G8_24 = G4_24 + 1/384, 61/2304, 1/1536, 1/6144 | 37 | 1/18432 | 36864 | 0.6863607494011 | 8.7e-11 | 617 |
+| A_S35 = G4_24 + 1/36864, 1/73728 | 35 | 1/73728 | 147456 | 0.6863607453798 | 2.0e-11 | ~2000 |
+| A_S36 = S35 + 1/147456 | 36 | 1/147456 | 294912 | 0.6863607446461 | 9.6e-12 | ~3600 |
+| A_S39 = G8_24 + 1/36864, 1/73728 | 39 | 1/73728 | 147456 | 0.6863607445336 | 2.0e-11 | 2009 |
+| A_D96_5 = D96_4 + 1/147456 | 100 | 1/147456 | 294912 | 0.6863607426060 | 9.7e-12 | 3658 |
+| **A_D96_6 = D96_5 + 1/294912** (base 1×; Fx_opt − Fx_ind = 8e-11) | 101 | 1/294912 | 294912 | **0.6863607422566** | 3.7e-11 | 6817 |
+- Depth series at bulk quad:96 (T*): 1/18432 …7482663 → 1/73728 …7433391 → 1/147456 …7426060 →
+  1/294912 …7422566.
+  - Gains: 4.9e-9 (for two halvings), then 7.3e-10, then 3.5e-10. The ratio is ~0.48 per halving.
+  - Estimated remaining depth gain: ≈ 3e-10.
+  - Bulk beyond 96 is worth ≤ 2e-10 (quad:192 vs D96_4 at equal depth).
+  - **Float infimum of the PL-phase family ≈ 0.686360742 ± 3e-10.**
+- Insertion scores on S39: max 7e-10, down from 7e-9 (D24_6) and 2e-9 (G4_24). The small profile is near
+  saturation.
+- `results/best_profile.json` ← A_D96_6 (float only).
+- Candidate exports: `results/candidate_101pc.json`, `results/candidate_33pc.json`.
+- Certification arithmetic: a claim at T_c needs F_upper(T_c) ≤ T_c, i.e. the gap F_upper − F ≤ 2.2229·(T_c − T*).
+  To beat 0.6863607950, the allowed certifier gap is 2.2229·margin: 1.17e-7 for D96_6 and 9.9e-8 for G4_24.
+  Pinho's certificate lost 3.3e-8 on his profile, but his first slope was 196, not 600–6800.
+
+### 19:01 S40 and wrap-up
+- A_S40 = S39 + 1/147456 (40 pieces, base 294912): **T* = 0.6863607438010** (err 9.6e-12).
+- Candidates: `results/candidate_101pc.json` (D96_6), `candidate_40pc.json` (S40), `candidate_33pc.json` (G4_24).
+  Each contains exact rational breaks, decimal phases, T, float F with error, T* and float Theorem A inputs.
+  For all three: a ≈ 0.086–0.102, κ = T, min slope ≈ 1.2 > 0, phase range < 0.9.
+- `results/SATURATION.md` and `results/summary_table.txt` written; PLAN.md has an "S2 outcome" section.
+- Search stopped at 19:01 (1 h 46 min). The family is saturated: ~3e-10 of estimated depth gain remains, and the
+  next depth level (first knot 1/589824) would cost ~80 min of compute.
+
+**S2 verdict.** Direction A in float:
+- best T* = 0.6863607422566 ± 4e-11 (101 pieces), 5.27e-8 below the target 0.6863607950;
+- 40 pieces reach 0.6863607438 (95% of the gain over Pinho), 33 pieces reach 0.6863607503 (73%);
+- nothing is certified.

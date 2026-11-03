@@ -45,7 +45,21 @@ The bulk u > 0.05 is stationary: knot gradients are ≲ 3e-11.
 
 ## 3. T* by piece count and first-knot depth (best runs)
 
-FILLED IN BELOW (Section 5) FROM `python src/summarize.py`.
+Rows: depth of the first knot. Entries: pieces → float T*. err(T*) ≤ 1e-10 everywhere, ≤ 4e-11 for the deep runs.
+The full table is in `results/summary_table.txt`.
+
+| first knot | small (greedy / dyadic, quad:24 bulk) | quad:48 bulk | quad:96 bulk | quad:192 |
+|---|---|---|---|---|
+| 1/18432 | 29 → 0.6863607538 (D24_6); 33 → 0.6863607503 (G4_24); 37 → 0.6863607494 (G8_24) | 50 → 0.6863607513 (q48_g1) | 96 → 0.6863607483 | — |
+| 1/73728 | 35 → 0.6863607454 (S35); 39 → 0.6863607445 (S39) | 52 → 0.6863607465 (q48_g4) | 99 → 0.6863607433 (D96_4) | 192 → 0.6863607431 |
+| 1/147456 | 36 → 0.6863607446 (S36); 40 → 0.6863607438 (S40) | — | 100 → 0.6863607426 (D96_5) | — |
+| 1/294912 | — | — | **101 → 0.6863607423 (D96_6)** | — |
+
+Pinho's published profile (48 pieces, first knot 1/4608) has T* = 0.6863607720. Measured against the best value
+found, 0.6863607423 (a total gain of 2.98e-8):
+- **33 pieces / 1/18432** capture 73% of the gain;
+- **35 pieces / 1/73728** capture 89%;
+- **40 pieces / 1/147456** capture 95%.
 
 ## 4. Conclusions
 
@@ -54,9 +68,15 @@ FILLED IN BELOW (Section 5) FROM `python src/summarize.py`.
 - **First-knot depth keeps mattering, with diminishing returns.** At bulk quad:96 (D96_k):
   - 1/18432 → 1/73728 gains 5.0e-9;
   - 1/73728 → 1/147456 gains 0.7e-9;
-  - the remaining room is estimated at ≲ 0.5e-9.
-- **The float infimum of this family is ≈ 0.686360742.** The best run (D96_5, 100 pieces) is within ~1e-9 of it.
+  - 1/147456 → 1/294912 gains 0.35e-9;
+  - the remaining room is estimated at ≈ 3e-10.
+- **The float infimum of this family is ≈ 0.686360742 ± 3e-10.**
+  - Depth gains at bulk 96 per halving of the first knot: 7.3e-10, then 3.5e-10 (ratio ~0.48).
+  - Bulk beyond 96 is worth ≤ 2e-10.
+  - The best run, D96_6 with 101 pieces (0.6863607423), is within ~3e-10 of the infimum.
+- **Candidates exported** (`results/candidate_{101,40,33}pc.json`): exact rational breaks, decimal phases,
+  float F with error, T*, and float values of the Theorem A inputs (a, κ, slopes).
 - **Certification cost.** Deeper first knots mean steeper first pieces: max |slope| is ≈ 615 at a first knot of
-  1/18432, ≈ 2000 at 1/73728 and ≈ 3000 at 1/147456 (Pinho: 196). Pinho's error budget is dominated by the
+  1/18432, ≈ 2000 at 1/73728, ≈ 3650 at 1/147456 and ≈ 6800 at 1/294912 (Pinho: 196). Pinho's error budget is dominated by the
   first-knot cell. A certifier with a graded grid near 0 should therefore care about the first-knot depth much
   more than about the piece count.

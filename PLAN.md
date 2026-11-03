@@ -85,3 +85,26 @@ The Bakeas–Pinho family is very close to saturated. A new certified record is 
 significant digit, roughly 0.68636076–0.68636079, and only if S3 delivers a much tighter certifier. If S2 cannot
 get the float fixed point below ~0.68636076, or S3 cannot certify within ~2e-8 of the float value, the right
 outcome is to write up the negative results (B, C, D, E) and stop.
+
+## S2 outcome (direction A search, branch `search-A`, 2026-11-03). Float only, not certified.
+
+- **Best float fixed point: T* = 0.6863607422566 ± 4e-11** (D96_6, 101 pieces), i.e. **5.27e-8 below 0.6863607950**.
+- **Saturation.** See `results/SATURATION.md`.
+  - The family's float infimum is ≈ 0.686360742 ± 3e-10, so direction A is exhausted in float.
+  - Piece count saturates at ~35–40 with adjoint-greedy knots. What still matters is the first-knot depth:
+    the optimal phase has a u^0.28 singularity at 0.
+- **Candidates** (`results/candidate_{101,40,33}pc.json`):
+  - 101 pieces: T* = 0.6863607423, first break 1/294912, max slope 6817;
+  - 40 pieces: T* = 0.6863607438, first break 1/147456, max slope 3653;
+  - 33 pieces: T* = 0.6863607503, first break 1/18432, max slope 615.
+- **Correction to the S1 estimate above.** A claim at T_c needs F_upper(T_c) ≤ T_c. Since dF/dT = −1.2229, the
+  certifier may lose up to **2.2229 × margin**:
+  - 1.17e-7 (101 pieces), 1.14e-7 (40 pieces), 9.9e-8 (33 pieces).
+  - So the allowed gap is not "≲ 2e-8". Pinho's certifier lost 3.3e-8 on his profile.
+  - The difficulty for S3 is the steep first pieces (slopes 600–6800 vs Pinho's 196). The requirement is not
+    an extra-tight certifier.
+  - Suggested S3 order: certify the 33-piece candidate first (first break 1/18432), then try the 40- and 101-piece
+    ones with a graded near-0 grid.
+- Tools added: `src/fastsolve.py` (O(N log² N) forward/adjoint), `src/opt2.py` (driver + fixed point),
+  `src/knotgrad.py` (knot gradients and insertion scores), `src/finite_n_check.py`, `src/export_candidate.py`,
+  `src/summarize.py`.
