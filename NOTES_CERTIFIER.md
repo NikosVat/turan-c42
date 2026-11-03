@@ -251,3 +251,26 @@ Validation done (logs in LOG.md, S3):
 4. Corruption tests (checkers/corruptions/).
 
 A second, independently written checker has **not** been written yet. CLAUDE.md requires one before any claim.
+
+## 8. How to run
+
+```
+pip install python-flint==0.9.0 numpy scipy mpmath
+python checkers/rigorous_check.py <profile.json> --N <grid> --P <degree> [--refine 1] [--bits 256]
+```
+- Profile format: Bakeas's (25 phases, knots j/48) or Pinho's (explicit rational "breaks"). An optional "C" sets a
+  claim with T ≤ C < 1.
+- Exit code 0 iff PASS. The output JSON has F_upper, F_lower, every error term, the SHA-256 of the certificate and
+  the checker, and max RSS.
+- Recommended settings (4 vCPU / 15 GB machine):
+  - Bakeas: `--N 768 --P 6 --refine 1` (6 s, 0.14 GB).
+  - Pinho (knots j²/4608): `--N 36864 --P 8 --refine 1` (5–6 min, 3.2 GB).
+  - Knots j²/18432: N = 73728 (s = 4 cells per first knot spacing) with P = 8.
+- Rule of thumb: about 8 cells per first-knot spacing at P = 8, or 4 at P = 10.
+
+Tests:
+- `checkers/tests/mp_pointwise.py <profile> N P` checks R and p̃ against direct mpmath quadrature.
+- `checkers/tests/profiles/harcos_const.json` is the exactly solvable case; `checkers/tests/harcos_exact.py` gives
+  its exact value.
+- `checkers/corruptions/*.json` must FAIL or be REFUSED, except `*_claim_1e-9_above_F.json`, a resolution test that
+  should PASS.
