@@ -213,13 +213,33 @@
  ],
  "kind": "pwlinear",
  "exact_note": "the profile is DEFINED by these exact rational breaks and decimal phases",
- "Fx_opt_levels": 0.6863607449331047,
- "opt_levels": [
-  294912,
-  589824,
-  1179648
- ],
- "evals": 46,
+ "T_used": "0.68636074",
+ "verify": {
+  "levels": [
+   294912,
+   589824,
+   1179648,
+   2359296
+  ],
+  "F_N": [
+   0.6863607585333358,
+   0.6863607486680506,
+   0.6863607459559361,
+   0.6863607452582923
+  ],
+  "Fx_opt": 0.6863607449335489,
+  "Fx_ind": 0.6863607450162996,
+  "Fx_4fit": 0.6863607450289559,
+  "err": 8.275069518504097e-11
+ },
  "start": "results/A_D96_5_snap.json",
- "stage": "optimising"
+ "knot_spec": "file:results/knots/D96_6.json",
+ "fixed_point": {
+  "T_star": 0.6863607422566446,
+  "dF_dT": -1.222899984609782,
+  "F_at_Tstar_minus_Tstar": -4.440892098500626e-15,
+  "T_star_err": 3.7226459021082496e-11,
+  "margin_below_0.6863607950": 5.2743355460904695e-08
+ },
+ "stage": "final"
 }
