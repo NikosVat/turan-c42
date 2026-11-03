@@ -189,3 +189,14 @@ no gain; A has ~5e-8 of float room at fixed T, and certification is the bottlene
 - Error budget: residual peak 3.6e-7 in cell 4 (first cell after the knot 1/4608: the continued piece has
   a 1/t pole one knot-cell away, so convergence there is only (4s+2)^-P); EN = 7.9e-9, ED = 3.4e-9.
   Denominator slack 2.1e-12. So the gap 2.8e-8 is all residual; fix = larger s or P.
+
+### 18:20 Gate (b): Pinho PR #305 profile — PASS, far tighter and with 2.6 GB
+- `python checkers/rigorous_check.py third_party/pinho/volterra-quadratic-knots/certificates/C42_compact_best.json --N 36864 --P 8`
+- **PASS, F ≤ 0.6863607448924165** (Arb), 155.5 s single-threaded, **max RSS 2.62 GB**.
+  Float F of the same family (spectral float pipeline, N=18432/36864): 0.6863607439575 / 0.6863607439536.
+  **Gap F_upper − F_float = 9.4e-10** (Pinho's certificate: 3.0e-8 with N = 14.2M, 95 GB, 1110 s × 3 threads).
+- Budget: residual sup|R/t| = 1.74e-9 (cell 1); EN = 2.6e-10 (integrated form), ED = 1.1e-10;
+  denominator slack 1.1e-12 + kernel remainder 1.6e-12; 63 knot cells by geometric subdivision.
+- The residual is now float-noise-limited near t = 0 (mpmath direct quadrature on cells 0–9:
+  2e-10 … 9e-10; |ρ| ≈ 134 there, P = 8 monomial conditioning), not approximation-limited.
+  Next: iterative refinement of the witness with Arb-computed nodal residuals.
