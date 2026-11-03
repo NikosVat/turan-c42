@@ -1,0 +1,2 @@
+{"constant": "C_42", "T": "0.69367", "phases": ["0.8977", "0.8977"], "breaks": ["0", "1/2"], "C": "0.99",
+ "note": "constant phase (Harcos); exact F known in closed form; test profile only"}
