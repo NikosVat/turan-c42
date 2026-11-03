@@ -18,7 +18,8 @@ limits, so N must be even.  The resulting lower-triangular system is solved
   * in JAX (dense matrix + triangular solve; differentiable; N up to ~4096), or
   * in numpy (O(N^2) forward recursion; any N; forward only).
 The denominator uses the same product rule with weight s^{-a}, a = Re gamma, on |q(s)|/(1-s).
-Discretisation error is ~ C N^{-2}; `F_extrapolated` does Richardson extrapolation over N, 2N, 4N.
+Discretisation error ~ A N^{-(2-a)} + B N^{-2}; `F_extrapolated` fits both terms over N, 2N, 4N.
+Optimising F_N at a fixed N overfits this error: optimise the extrapolated value instead (optimize.py --extrap).
 
 This file was written for this project (it is not copied from Bakeas's crosscheck/limit_direct.py,
 although it uses the same product-integration idea, which is credited to that script).
@@ -364,18 +365,20 @@ def F(profile: Profile, N: int = 2048, backend: str = "auto") -> float:
 _F_jit = jax.jit(F_from_gnodes_jax, static_argnums=1)
 
 
-def F_extrapolated(profile: Profile, N0: int = 2048, levels: int = 3, backend: str = "auto"):
-    """Richardson extrapolation over N0, 2N0, 4N0...; returns (F_extrap, list of (N, F_N), observed order)."""
-    vals = [(N0 * 2**l, F(profile, N0 * 2**l, backend)) for l in range(levels)]
-    Fs = np.array([v for _, v in vals])
-    if levels >= 3:
-        d1, d2 = Fs[1] - Fs[0], Fs[2] - Fs[1]
-        order = np.log2(d1 / d2) if d1 * d2 > 0 else float("nan")
-        p = order if np.isfinite(order) and 1.0 < order < 3.0 else 2.0
-        Fx = Fs[2] + (Fs[2] - Fs[1]) / (2**p - 1)
-        return Fx, vals, order
-    Fx = Fs[-1] + (Fs[-1] - Fs[-2]) / 3.0
-    return Fx, vals, float("nan")
+def F_extrapolated(profile: Profile, N0: int = 4608, levels: int = 3, backend: str = "auto"):
+    """Two-exponent Richardson extrapolation over N0, 2N0, 4N0: fits F_N = F + A N^{-(2-a)} + B N^{-2}
+    (a = Re gamma; the N^{-(2-a)} term comes from the (t-1/2)^{1-gamma} singularity of q caused by the jump
+    of c at 1/2).  Validated on Harcos's closed form: error ~3e-9 at N0 = 4096.  Choose N0 so that all knots
+    are grid points.  Returns (F_extrap, [(N, F_N)])."""
+    Ns = [N0 * 2**l for l in range(levels)]
+    Fs = np.array([F(profile, N, backend) for N in Ns])
+    a = float(np.real(profile.g(0.0)))
+    if levels == 3:
+        A = np.array([[1.0, N ** -(2 - a), N ** -2.0] for N in Ns])
+        Fx = float(np.linalg.solve(A, Fs)[0])
+    else:
+        Fx = float(Fs[-1] + (Fs[-1] - Fs[-2]) / (2 ** (2 - a) - 1))
+    return Fx, list(zip(Ns, Fs.tolist()))
 
 
 # ----------------------------------------------------------------------------------------------
@@ -407,14 +410,21 @@ if __name__ == "__main__":
     import sys
     import time
 
-    paths = sys.argv[1:]
     t0 = time.time()
-    Fx, vals, order = F_extrapolated(harcos_profile(), 1024, 3)
-    print(f"Harcos constant phase: F_N = {[f'{v:.9f}' for _, v in vals]}  extrap = {Fx:.9f}  order ~ {order:.2f}"
-          f"   (expected 0.693676)   [{time.time() - t0:.1f}s]")
-    for p in paths:
+    Fx, vals = F_extrapolated(harcos_profile(), 4096, 3)
+    print(f"Harcos constant phase: F_N = {[(n, round(v, 10)) for n, v in vals]}  extrap = {Fx:.10f}"
+          f"   (exact 0.6936763031)   [{time.time() - t0:.1f}s]")
+    for p in sys.argv[1:]:
         prof = load_profile(p)
+        # smallest N0 >= 4096 that is a multiple of every knot denominator (knots must be grid points)
+        from math import lcm
+        den = 2
+        for x in json.load(open(p)).get("breaks", []):
+            den = lcm(den, Fraction(x).denominator)
+        if "breaks" not in json.load(open(p)):
+            den = lcm(den, 2 * (len(prof.knots) - 1))
+        N0 = den * max(1, -(-4096 // den))
         t0 = time.time()
-        Fx, vals, order = F_extrapolated(prof, 2048, 3)
-        print(f"{p}: T = {prof.T}, F_N = {[(n, round(v, 10)) for n, v in vals]}, extrap F = {Fx:.10f}, "
-              f"order ~ {order:.2f} [{time.time() - t0:.1f}s]")
+        Fx, vals = F_extrapolated(prof, N0, 3)
+        print(f"{p}: T = {prof.T}, F_N = {[(n, round(v, 12)) for n, v in vals]}, extrap F = {Fx:.10f} "
+              f"[{time.time() - t0:.1f}s]")

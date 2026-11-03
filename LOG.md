@@ -78,3 +78,37 @@ repo `teorth/optimizationproblems@87b4ebb` (constants/42a.md), and PRs were foun
 - The power sums recomputed from the roots match the σ_k: the construction works.
 - F_n = 0.70128, 0.69527, 0.69164, 0.68947, decreasing towards F ≈ 0.68636.
 - Verdict: no free gain.
+
+### 16:15 Direction E probes: exact finite-n first half, `src/finite_n_free.py`
+- Setup: Harcos's reduction is exact (PLAN.md §1), so R_n = min over s_1..s_{n/2} of max(max|s_k|, F_n).
+- Constant modulus T = 0.68637, all n/2 phases free, L-BFGS/BFGS from the smooth Bakeas profile:
+
+  | n | smooth F_n | free optimum | Δ |
+  |---|---|---|---|
+  | 200 | 0.70127916 | 0.70020743 | −1.07e-3 |
+  | 400 | 0.69526940 | 0.69465442 | −6.15e-4 |
+  | 800 | 0.69163889 | 0.69128953 | −3.49e-4 |
+
+  - Δ ∝ n^{−0.8}: a finite-size effect.
+  - The difference is a boundary layer at k ≲ 20 (≈ −0.12 rad at k ≤ 4) plus a smooth correction that shrinks
+    with n at fixed u.
+- Multistart at n = 400, constant modulus, 120 starts (iid uniform, random smooth, random linear phases): **all**
+  reach F_400 = 0.69465442. One basin. (`logs/finite_n_multistart.log`)
+- Multistart at n = 400, free modulus 0 ≤ |s_k| ≤ T, 60 starts:
+  - best F_400 = 0.69465442 with ρ ≡ 1, reached by 2 of 60 starts;
+  - the rest are stuck at 0.736–1.12 with some ρ_k = 0;
+  - nothing beats ρ ≡ 1.
+- Verdict: no evidence for non-smooth first halves (E) or varying modulus (B).
+
+### 16:20 Pinho's certification error budget (from his receipts, N = 14,155,776, 224 bits, 1110 s on 3 threads)
+- sup|R/t| = 2.85e-6, with the worst cell at index 3072, i.e. t = 1/4608, the first knot. The global
+  B3 = |R'''| bound is 1.49e8, dominated by the steep first pieces (first slope ≈ 195).
+- The integrated and local-contraction bounds reduce the errors to: numerator 7.3e-9, denominator 3.8e-9. This
+  gives F_upper = 0.6863607742 against float 0.686360744, a gap of 3.0e-8.
+- Lesson for any tighter certifier: replace the global B3 by per-cell R''' bounds, and/or use a higher-order trial
+  function or a graded grid near 0.
+
+### 16:25 Evaluator `F_extrapolated` switched to the validated two-exponent fit
+- Output: `logs/evaluator_validation.txt`.
+- Harcos 0.6936763062 (exact 0.6936763031); Bakeas 0.6863600848; Pinho 0.6863607374 at base 4608.
+- Pinho at base 9216 or 18432 gives 0.6863607433 / 0.6863607439. **Use base ≥ 9216 for profiles with knots near 1/4608.**

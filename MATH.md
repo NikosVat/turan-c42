@@ -193,3 +193,17 @@ So lowering |g| anywhere raises F to first order, and ρ ≡ 1 satisfies the KKT
 replaceable by "d bounded and Lipschitz at 0". The discrete Step 3 and Lemma 3 need the same weights. This
 matters only for profiles with |γ − g(u)| ≥ 1 somewhere, which the current optima are far from
 (κ = T = 0.686). Unproved; listed only as a possible tool.
+
+**O5. Harcos's reduction loses nothing at finite n.** Take any tuple with z_1 = 1. Its power sums satisfy
+W(1) = P_n − Σ_{k>⌊n/2⌋}(s_k/k)P_{n−k} = 0, by the same degree count as in Lemma 2. Hence
+max_{k>⌊n/2⌋}|s_k| ≥ |P_n|/D_n = F_n(s_1..s_{⌊n/2⌋}). Lemma 2 gives the reverse inequality. So
+
+  R_n = min over (s_1..s_{⌊n/2⌋}) ∈ ℂ^{⌊n/2⌋} of max( max_{k≤n/2}|s_k| , F_n ).
+
+Koshta's §2 states an equivalent fact. Consequences:
+- every construction is a choice of the first half;
+- Bakeas's limit family restricts only by the ansatz s_k = g(k/n);
+- directions C (any β) and D are reparametrisations within B, or non-smooth first halves.
+
+The finite-n experiments in LOG.md (S1, 16:15) find a single basin at constant modulus for n = 400. They also find
+that the advantage of a free first half over the smooth one decays like n^{−0.8}.
