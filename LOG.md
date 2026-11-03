@@ -180,3 +180,15 @@ no gain; A has ~5e-8 of float room at fixed T, and certification is the bottlene
 - q48_g1 (two geometric knots 1/18432, 1/9216 below 1/4608, 50 pieces): Fx 0.6863607405335 → T* ≈ 0.6863607512.
 - **Geometric refinement at u → 0 beats uniform refinement.** 2 extra knots give 88% of the 48 → 96 gain.
 - Added a stall stop to opt2 (12 evals without a 1e-13 improvement).
+- q24_g4 (quad:24 + 4 geometric knots 1/18432..1/2304 below 1/1152, 28 pieces; base 36864):
+  **T* = 0.6863607644762** (err 8.7e-11). It beats the 48-piece quadratic profile.
+- Knot gradient on q48_g1: bulk knots are stationary (|dF/dx·h| ≲ 3e-11). The remaining signal sits at the
+  geometric → quadratic transition: the ratio-4 gap 1/4608 → 1/1152 wants an extra knot.
+  → New family D(m,K): dyadic knots x_2/2^k (k = 1..K) below x_2 = 2/m², plus quad:m knots for j ≥ 2.
+
+### 17:45 OOM incident
+- Four runs at base 147456 (top level N = 589824) were killed by the memory cgroup (4–7 GB RSS each).
+- Cause: in `fastsolve._online_solve` the recursive closure referenced itself. The cycle kept x, E and K of
+  every call alive until a full GC, a leak of ~55 MB per call at N = 147456. Fixed by breaking the cycle;
+  RSS is now flat at 0.39 GB.
+- Runs resumed from their 5-eval checkpoints, losing the L-BFGS memory only.

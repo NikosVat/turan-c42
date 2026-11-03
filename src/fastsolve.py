@@ -69,6 +69,8 @@ def _online_solve(G, D, K, a, b):
         rec(mid, hi)
 
     rec(0, n)
+    rec = None  # break the self-referential closure cycle (it kept x, E, K alive: ~55 MB/call leak at N=147456)
+    base = None
     return x
 
 
