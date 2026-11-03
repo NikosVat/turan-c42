@@ -192,3 +192,41 @@ no gain; A has ~5e-8 of float room at fixed T, and certification is the bottlene
   every call alive until a full GC, a leak of ~55 MB per call at N = 147456. Fixed by breaking the cycle;
   RSS is now flat at 0.39 GB.
 - Runs resumed from their 5-eval checkpoints, losing the L-BFGS memory only.
+
+### 17:48–18:00 Results (all float, verified on independent levels; T* with phases frozen)
+| run | pieces | first knot | base N0 | T* | err(T*) |
+|---|---|---|---|---|---|
+| A192_q (quad:192, polished at base 147456 from the base-73728 run) | 192 | 1/73728 | 147456 | **0.6863607431492** | 2.1e-11 |
+| A_D96_4 (quad:96 + 1/9216, 1/36864, 1/73728) | 99 | 1/73728 | 147456 | 0.6863607433391 | 2.0e-11 |
+| A_Rs2_24 (ratio-√2 lattice knots 1/18432..1/288 + quad:24) | 34 | 1/18432 | 36864 | 0.6863607534227 | 8.8e-11 |
+| A_D24_6 (dyadic 1/18432..1/576 + quad:24 from 1/288) | 29 | 1/18432 | 36864 | 0.6863607538339 | 8.6e-11 |
+| A_R4_24 (quad:24 + 1/18432, 1/4608) | 26 | 1/18432 | 36864 | 0.6863607650046 | 8.7e-11 |
+- Base 73728 (1× the knot denominator) had underestimated quad:192 by 3.7e-10. The polish at base 147456 moved it
+  only 6e-13.
+- Finite n (`logs/finite_n_S2a.log`, common T = 0.68636075; F_n − F_n(Pinho)):
+  - n = 2.5e5: A96 −1.85e-7, A192 −1.81e-7, q24_g4 −1.40e-7;
+  - n = 1e6: −1.71e-7, −2.13e-7, −1.31e-7;
+  - the limit differences are −5.3e-8, −6.4e-8, −1.7e-8.
+  - F_n − F(Pinho) = 5.1e-5 → 1.6e-5 (exponent ≈ 0.85). Every candidate is below Pinho at every n, but the
+    differences are dominated by small-k finite-size effects. That is consistent with S1 (a near-0 boundary layer
+    with advantage decaying like n^{−0.8}). **Not a precision test of the limit.**
+- **Lessons:**
+  - The near-0 ratio (2 vs 4 vs √2 below 1/1152) hardly matters.
+  - A ratio-4 gap at u ~ 1e-3 (quad:24's 1/1152 → 1/288) costs ~1.1e-8 in T*.
+  - Insertion scores on D24_6 (`knotgrad.py --lattice`): the top candidate is [1/288, 1/128] at 7e-9,
+    10× the next one. The region u ≈ 3e-3 to 2e-2 is the bottleneck for small bulks.
+
+### 18:00–18:06 Greedy knot insertion (free-knot search on the lattice) and depth
+| run | pieces | first knot | base | T* | err |
+|---|---|---|---|---|---|
+| A_G1_24 = D24_6 + 13/2304 | 30 | 1/18432 | 36864 | 0.6863607517785 | 8.6e-11 |
+| A_G4_24 = D24_6 + 13/2304, 25/2304, 41/2304, 1/768 | 33 | 1/18432 | 36864 | 0.6863607502855 | 8.6e-11 |
+| A_q24_g6 (quad:24 + 6 dyadic below 1/1152; keeps the 1/1152→1/288 gap) | 30 | 1/73728 | 147456 | 0.6863607595812 | 2.0e-11 |
+| A_q48_g4 (quad:48 + 4 dyadic below 1/4608) | 52 | 1/73728 | 147456 | 0.6863607465193 | 2.0e-11 |
+- Greedy rule: insert knots at the lattice midpoints with the largest score g_new²/width, where g_new is the
+  adjoint gradient with respect to the value of a new knot inserted at its PL value; then re-optimise.
+  Round 2 on G4_24 → G8_24 (+1/384, 61/2304, 1/1536, 1/6144; 37 pieces).
+- Finite n at n = 4e6 (`logs/finite_n_S2a.log`), F_n − F_n(Pinho): A96 −1.19e-7, A192 −1.58e-7,
+  q24_g4 −0.82e-7 (limit differences −0.53, −0.64, −0.17e-7). The excess shrinks by a factor of 0.56–0.63 per
+  4× in n. That is consistent with slow convergence (steep first pieces: only ~54 indices in A192's first piece
+  at n = 4e6). A precision match needs n ≫ 1e7.
