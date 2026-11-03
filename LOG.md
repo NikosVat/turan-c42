@@ -140,3 +140,9 @@ repo `teorth/optimizationproblems@87b4ebb` (constants/42a.md), and PRs were foun
 
 **S1 wall time ≈ 1 h; S1 verdict: reproduction OK; evaluator OK (≤ 3e-9 vs exact Harcos); B, C, D, E show
 no gain; A has ~5e-8 of float room at fixed T, and certification is the bottleneck.**
+
+## S3 — 2026-11-03 (A-certifier, branch `certifier`)
+
+### 17:15 Machine
+- `nproc` = 4; `free -g`: 15 GB total, 14 GB free, no swap; `df -h /`: 30 GB available.
+- Everything built in this session must fit 4 vCPU / 15 GB. Pinho's N = 14.2M run needed 95 GB and 32 vCPU.
