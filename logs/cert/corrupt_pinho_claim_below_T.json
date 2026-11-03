@@ -1,0 +1,7 @@
+{
+ "verdict": "REFUSED",
+ "reason": "ValueError: claim C must satisfy T <= C < 1",
+ "max_rss_GB": 0.075,
+ "certificate_sha256": "98a073d18763eedbb1b7ddcd0d8c5e8d4871433713deb185ff1c0a2e942f7be1",
+ "checker_sha256": "253e56784cd7030dff72765046098f636609b423033c0a75ecdf7bdcd0a7f10d"
+}

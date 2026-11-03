@@ -5,7 +5,7 @@
   "-1.4071399246822238",
   "-1.3646879649986372",
   "-1.3380454823602546",
-  "-6572854411317961/5000000000000000",
+  "-6532854411317961/5000000000000000",
   "-1.2981500289667554",
   "-1.2819368985283617",
   "-1.2664659445139459",
@@ -104,5 +104,5 @@
   "1/2"
  ],
  "method": "Bakeas continuous first-phase Volterra criterion; optimized phase profile",
- "note": "Pinho profile with phases[3] += 0.002: must FAIL"
+ "note": "Pinho profile with phases[3] += 0.01 (float F ~ T + 2e-7): must FAIL"
 }

@@ -190,6 +190,20 @@ class Witness:
         r = mv(x) - b
         self.coll_res = np.abs(r).max()
 
+    def correct(self, rhs, tol=1e-7):
+        """Solve the (float) collocation operator for a correction: A delta = rhs (nodal values, [m, l])."""
+        N, P1 = self.N, self.P + 1
+
+        def mv(x):
+            X = x.reshape(N, P1)
+            coef = X @ self.Vinv.T
+            return (X - self.conv_at(coef, self.Bu, self.Bv) / self.tn).ravel()
+
+        A = LinearOperator((N * P1, N * P1), matvec=mv, dtype=complex)
+        b = np.asarray(rhs, complex).ravel()
+        x, info = gmres(A, b, x0=b.copy(), rtol=tol, atol=0, restart=80, maxiter=1)
+        return x.reshape(N, P1)
+
     def residual_float(self, npts=16):
         """Float residual R = d + d*rho~ - t rho~ divided by t, sampled at npts points per cell."""
         th = (np.arange(npts) + 0.5) / npts

@@ -189,7 +189,7 @@ def hypotheses(pr):
 # ------------------------------------------------------------------------------------------------
 # 1. residual
 # ------------------------------------------------------------------------------------------------
-def residual_bounds(pr, hy, N, P, coef, log):
+def residual_bounds(pr, hy, N, P, Crows, log, nodes=None):
     T, gamma = hy["T"], hy["gamma"]
     h = R(Fraction(1, N))
     H = N // 2
@@ -237,7 +237,6 @@ def residual_bounds(pr, hy, N, P, coef, log):
     eps_max = amax(eps)
     log("residual: d coefficients", Q=Q)
     # exact trial coefficients and their reversed / factorial-scaled versions
-    Crows = [[exact_acb(z) for z in coef[m]] for m in range(N)]
     rev = [[Fraction((-1) ** a * math.comb(b, a)) for b in range(P + 1)] for a in range(P + 1)]
     revT = mat_from([[R(rev[a][b]) for a in range(P + 1)] for b in range(P + 1)])  # (P+1)x(P+1) = Rev^T
     Crev = []
@@ -275,10 +274,26 @@ def residual_bounds(pr, hy, N, P, coef, log):
         LT.append([-h * MD(n, b) for n in range(D + 1)] + [arb(0)] * (P + 1))
     for b in range(P + 1):
         LT.append([-h * MD(n, b + 1) for n in range(D + 1)] + [MD(n, b) for n in range(P + 1)])
+    nn = 0
+    if nodes is not None:  # extra columns: R_m(theta_l) at the collocation nodes (exact dyadic nodes)
+        nn = len(nodes)
+        th = [R(Fraction(float(x))) for x in nodes]
+        k = 0
+        for q in range(Q + 1):
+            LT[k] += [t_ ** q for t_ in th]; k += 1
+        for c in range(C):
+            LT[k] += [h * t_ ** (c + 1) / math.factorial(c + 1) for t_ in th]; k += 1
+        for c in range(C):
+            LT[k] += [h * (1 - t_) ** (c + 1) / math.factorial(c + 1) for t_ in th]; k += 1
+        for b in range(P + 1):
+            LT[k] += [-h * t_ ** b for t_ in th]; k += 1
+        for b in range(P + 1):
+            LT[k] += [-h * t_ ** (b + 1) for t_ in th]; k += 1
     LT = mat_from(LT)
+    node_res = np.zeros((N, nn), complex)
     chebR = [None] * N
     rho_sup = [None] * N
-    W = D + 1 + P + 1
+    W = D + 1 + P + 1 + nn
     for m0 in range(0, N, 2048):
         rows = []
         for m in range(m0, min(N, m0 + 2048)):
@@ -288,7 +303,13 @@ def residual_bounds(pr, hy, N, P, coef, log):
         for r in range(len(rows)):
             row = ent[r * W:(r + 1) * W]
             chebR[m0 + r] = sum((abs(x) for x in row[:D + 1]), arb(0))
-            rho_sup[m0 + r] = sum((abs(x) for x in row[D + 1:]), arb(0))
+            rho_sup[m0 + r] = sum((abs(x) for x in row[D + 1:D + 2 + P]), arb(0))
+            if nn:
+                m = m0 + r
+                node_res[m] = [complex(float(z.real.mid()), float(z.imag.mid())) / (float(h.mid()) * (m + float(x)))
+                               for z, x in zip(row[D + 2 + P:], nodes)]
+    if nodes is not None:
+        return node_res
     rho_norm = amax(rho_sup)
     # cell 0: R_0(theta)/theta (constant term of R_0 is exactly 0)
     mono = [arb(0)] * (D + 1)
@@ -687,10 +708,29 @@ def cell0_lower(q0, a, h):
     return lo(lb)
 
 
+def exact_coefficients(parts, nodes, P):
+    """Trial coefficients (powers of theta) from nodal values sum(parts), interpolation at the exact dyadic
+    nodes done in Arb; the MIDPOINTS are taken as the (exact) trial coefficients.  This only defines the
+    trial function; no proof step depends on how it was obtained."""
+    th = [R(Fraction(float(x))) for x in nodes]
+    Vm = mat_from([[t_ ** b for b in range(P + 1)] for t_ in th])
+    ViT = Vm.inv().transpose()
+    N = parts[0].shape[0]
+    out = []
+    for m0 in range(0, N, 4096):
+        rows = []
+        for m in range(m0, min(N, m0 + 4096)):
+            rows.append([sum((exact_acb(p[m, l]) for p in parts), acb(0)) for l in range(P + 1)])
+        ent = rows_times(rows, ViT)
+        for r_ in range(len(rows)):
+            out.append([z.mid() for z in ent[r_ * (P + 1):(r_ + 1) * (P + 1)]])
+    return out
+
+
 # ------------------------------------------------------------------------------------------------
 # driver
 # ------------------------------------------------------------------------------------------------
-def verify(data, N, P, Pk=20, bits=256, verbose=True):
+def verify(data, N, P, Pk=20, bits=256, verbose=True, refine=0):
     t0 = time.time()
     ctx.prec = bits
     logs = []
@@ -706,10 +746,22 @@ def verify(data, N, P, Pk=20, bits=256, verbose=True):
     hy = hypotheses(pr)
     log("hypotheses", a=hy["a"].str(12), kappa=hy["kappa"].str(12))
     wit = SW.Witness(data["T"], [str(u) for u in pr.kn], [str(p) for p in pr.ph], N, P)
-    coef = wit.coef
-    trial_hash = hashlib.sha256(np.ascontiguousarray(coef, dtype="<c16").tobytes()).hexdigest()
     log("witness", gmres=wit.gmres_iters, coll=f"{wit.coll_res:.2e}")
-    res = residual_bounds(pr, hy, N, P, coef, log)
+    parts = [wit.vals]
+    for it in range(refine):
+        ctx.prec = 128
+        Crows = exact_coefficients(parts, wit.nodes, P)
+        nres = residual_bounds(pr, hy, N, P, Crows, lambda *a, **k: None, nodes=wit.nodes)
+        log("refine", it=it, max_nodal_R_over_t=f"{np.abs(nres).max():.3e}")
+        parts.append(wit.correct(nres))
+        ctx.prec = bits
+    Crows = exact_coefficients(parts, wit.nodes, P)
+    hsh = hashlib.sha256()
+    for row in Crows:
+        for z in row:
+            hsh.update((z.real.mid().str(80) + z.imag.mid().str(80)).encode())
+    trial_hash = hsh.hexdigest()
+    res = residual_bounds(pr, hy, N, P, Crows, log)
     prop = propagation(hy, N, res)
     log("propagation", eps_inf=prop["eps_inf"].str(5), EN=prop["EN"].str(5), ED=prop["ED"].str(5))
     p1 = numerator(hy, N, P, res)
@@ -722,7 +774,7 @@ def verify(data, N, P, Pk=20, bits=256, verbose=True):
     Fup = up(num_up / D)
     Fq = Fraction(str(Fup.fmpq())) if hasattr(Fup, "fmpq") else None
     verdict = "PASS" if Fup < R(pr.Cq) else "FAIL"
-    out = dict(verdict=verdict, C=str(pr.Cq), T=str(pr.Tq), N=N, P=P, Q=res["Q"], Pk=Pk, bits=bits,
+    out = dict(verdict=verdict, C=str(pr.Cq), T=str(pr.Tq), N=N, P=P, Q=res["Q"], Pk=Pk, bits=bits, refine=refine,
                a=hy["a"].str(20), kappa=hy["kappa"].str(20), hypotheses=hy["checks"],
                residual_sup=res["sup"].str(6), residual_worst_cell=res["worst"], rho_norm=res["rho_norm"].str(6),
                eps_inf=prop["eps_inf"].str(6), EN=prop["EN"].str(6), ED=prop["ED"].str(6),
@@ -742,10 +794,11 @@ def main():
     ap.add_argument("--Pk", type=int, default=20)
     ap.add_argument("--bits", type=int, default=256)
     ap.add_argument("--quiet", action="store_true")
+    ap.add_argument("--refine", type=int, default=0, help="witness refinement passes (Arb nodal residuals)")
     args = ap.parse_args()
     raw = open(args.certificate, "rb").read()
     try:
-        out = verify(json.loads(raw), args.N, args.P, args.Pk, args.bits, not args.quiet)
+        out = verify(json.loads(raw), args.N, args.P, args.Pk, args.bits, not args.quiet, args.refine)
     except Exception as e:  # any failure is a refusal
         out = dict(verdict="REFUSED", reason=f"{type(e).__name__}: {e}")
     import resource

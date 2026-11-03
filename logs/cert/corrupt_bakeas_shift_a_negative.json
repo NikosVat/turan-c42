@@ -1,0 +1,7 @@
+{
+ "verdict": "REFUSED",
+ "reason": "ArithmeticError: hypothesis of Theorem A not certified: {'0 < a = Re gamma': False, 'a < 1': True, 'kappa < 1': True, 'T < 1': True}",
+ "max_rss_GB": 0.077,
+ "certificate_sha256": "91ad21e61dc87c96aae3c1e67d64633a97d77b7ca7259bc1b34a054e953b01df",
+ "checker_sha256": "253e56784cd7030dff72765046098f636609b423033c0a75ecdf7bdcd0a7f10d"
+}
