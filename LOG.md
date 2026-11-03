@@ -443,3 +443,31 @@ independently in a separate session, review of NOTES_CERTIFIER.md, and re-optimi
 - best T* = 0.6863607422566 ± 4e-11 (101 pieces), 5.27e-8 below the target 0.6863607950;
 - 40 pieces reach 0.6863607438 (95% of the gain over Pinho), 33 pieces reach 0.6863607503 (73%);
 - nothing is certified.
+
+## S5 — 2026-11-03 (certificate, branch `certificate` = main + certifier + search-A)
+
+### 23:20 Target check (step 0)
+- GitHub search API, teorth/optimizationproblems open PRs (56): C42 upper-bound PRs are #302 (Bakeas 0.68637*) and
+  #305 (Pinho 0.6863607950*, title unchanged, last touched 18:41 UTC today). #310 is a lower bound.
+  Nothing below 0.6863607950. Target unchanged.
+- Machine: 4 vCPU, 15 GB, no swap. Peak memory kept < 11 GB (one ≤ 7.5 GB run, or two ≤ 4 GB runs at a time).
+
+### 23:25 Grid alignment (`checkers/grid_check.py`, exact)
+- 33pc: lcm denominator 18432; N ∈ {18432, 36864, 73728, …} align all knots, ½, and all 3180 sums of ≤ 3 knots.
+- 40pc: needs N ≥ 147456; 101pc: needs N ≥ 294912 (not attempted: the 33pc claim is already certified,
+  and N = 147456 at P = 8–10 extrapolates to ≥ 12 GB from S3's 6.3 GB at 73728).
+
+### 23:30 Step 2: re-optimise 33pc phases at T = 0.68636075 (src/opt2.py, base 36864)
+- Start gradient 5.8e-9; L-BFGS finds no descent. Phases move ≤ 2.5e-6, T* = 0.6863607502854 (was …2855).
+  **No gain**; certificate keeps S2's phases. `results/S5_33pc_reopt_T75.json`.
+
+### 23:40 Checker #1 on 33pc at its own T = 0.68636076 (N 36864, P 10, refine 1)
+- PASS, F ∈ [0.6863607377711, 0.6863607390664] (width 1.3e-9), 352 s, 3.65 GB. Float F 0.6863607384 inside.
+- ⇒ T* ∈ [0.6863607500, 0.6863607506] (linearised, dF/dT = −1.2229).
+
+### 23:50 Claim C = T = 0.686360751 (`certificate/c42_profile_0.686360751.json`)
+| N | P | refine | verdict | sup R/t | EN | ED | F_upper | F_lower | width | s | GB |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 18432 | 12 | 1 | FAIL | 7.27e-8 | 2.82e-9 | 1.19e-9 | 0.6863607607554 | 0.6863607380943 | 2.3e-8 | 242 | 2.02 |
+| **36864** | **10** | 1 | **PASS** | 7.28e-9 | 1.59e-10 | 6.72e-11 | **0.6863607500725** | 0.6863607487772 | 1.3e-9 | 349 | 3.65 |
+- Margin C − F_upper = 9.28e-10. Margin below Pinho: 0.6863607950 − 0.686360751 = 4.4e-8.
