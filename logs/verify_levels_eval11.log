@@ -1,0 +1,2 @@
+third_party/pinho/volterra-quadratic-knots/certificates/C42_compact_best.json: knots=49 T=0.686360795 levels=[36864, 73728, 147456] F_N=['0.686360762135', '0.686360748557', '0.686360745123'] extrap=0.686360743958 [1415s]
+results/probeA_x2_extrap_eval11.json: knots=97 T=0.686360795 levels=[36864, 73728, 147456] F_N=['0.686360760255', '0.686360709695', '0.686360696560'] extrap=0.686360691939 [73s]

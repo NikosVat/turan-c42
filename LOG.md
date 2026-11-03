@@ -112,3 +112,31 @@ repo `teorth/optimizationproblems@87b4ebb` (constants/42a.md), and PRs were foun
 - Output: `logs/evaluator_validation.txt`.
 - Harcos 0.6936763062 (exact 0.6936763031); Bakeas 0.6863600848; Pinho 0.6863607374 at base 4608.
 - Pinho at base 9216 or 18432 gives 0.6863607433 / 0.6863607439. **Use base ≥ 9216 for profiles with knots near 1/4608.**
+
+### 16:41 Direction A: 96-piece probe (each Pinho interval halved), verified at independent levels
+- The optimizer was stopped after 11 evaluations of the extrapolated objective at base 18432: CPU contention made
+  each evaluation take > 100 s. At that point |grad| = 4.3e-6 and F was still decreasing.
+- Extrapolated F at fixed T = 0.6863607950:
+  - optimization levels (18432, 36864, 73728): 0.6863606904;
+  - **independent levels (36864, 73728, 147456): 0.6863606919**;
+  - raw F_147456: 0.6863606966.
+- Pinho's 48-piece profile on the same independent levels: 0.6863607440 (raw F_147456 = 0.6863607451).
+- **Gain at fixed T: ΔF = −5.2e-8.** It survives the change of levels and is visible in the raw F at N = 147456.
+- Fixed-point estimate, with ∂F/∂T ≈ −1.22: T* ≈ T − (T−F)/2.22.
+  - 96 pieces: ≈ 0.68636075;
+  - Pinho's family: ≈ 0.68636077.
+  - The room below the target 0.6863607950 is therefore ~4.6e-8 before certification losses (Pinho's
+    certificate lost 3e-8).
+- Saved as `results/best_profile.json`: float candidate only, not certified.
+- Finite-n confirmation was not possible at this precision: the finite-n error is ~1e-5 at n = 4e6.
+- Next (S2): continue this run, then refine to 192 pieces and run the T fixed-point loop.
+
+### 16:30 Spline path sanity check
+- A natural cubic spline through Bakeas's 25 knot values interpolates exactly and its adjoint gradient matches
+  finite differences.
+- At N = 3072 it gives F = 0.68635915 vs 0.68636007 for the piecewise-linear profile, at the same T and the same
+  knot values. This is consistent with the known near-0 resolution gain, not a new effect.
+- Theorem A's analysis allows C² phases (H6/H7), but the checkers' closed forms (H9/H10) do not.
+
+**S1 wall time ≈ 1 h; S1 verdict: reproduction OK; evaluator OK (≤ 3e-9 vs exact Harcos); B, C, D, E show
+no gain; A has ~5e-8 of float room at fixed T, and certification is the bottleneck.**

@@ -32,7 +32,8 @@ Every number below is a float (search only). The evidence is in LOG.md (S1) and 
 5. **Direction A still has a little room.**
    - Pinho's 48-knot profile is stationary for its own knot family: the extrapolated objective moves by 4e-10.
    - With every interval halved (96 pieces) the extrapolated F at fixed T = 0.6863607950 dropped from
-     0.6863607439 to ≤ 0.6863606904 within 11 evaluations. Status of that run: see the LOG (final S1 entry).
+     0.6863607440 to 0.6863606919 within 11 evaluations. That value was **re-verified on independent levels**
+     36864/73728/147456; the run was stopped while still descending. Saved in `results/best_profile.json`.
    - A drop δF at fixed T moves the fixed point T* by about δF/2.22, since ∂F/∂T = −1.22.
    - Pinho's family has float T* ≈ 0.68636077, so the remaining room is a few × 10⁻⁸.
 6. **Pitfall.** Optimising F_N at a fixed N overfits the discretisation error, which is ~5e-8 at N = 18432.
