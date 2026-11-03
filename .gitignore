@@ -1,0 +1,4 @@
+# third-party clones (separate git repos; pinned commits in third_party/README.md)
+third_party/*/
+__pycache__/
+*.pyc

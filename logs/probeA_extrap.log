@@ -1,0 +1,16 @@
+pinho 49 ['0.686360815757', '0.686360762135', '0.686360748557'] extrap 0.686360743946
+Traceback (most recent call last):
+  File "<string>", line 10, in <module>
+    p=load_profile(path); Fs,Fx=ev(p,Ns); print(name, len(p.knots), ['%.12f'%f for f in Fs], 'extrap %.12f'%Fx, flush=True)
+  File "/home/user/turan-c42/src/evaluator.py", line 107, in load_profile
+    ph = np.array([_parse_number(x) for x in d["phases"]])
+                   ~~~~~~~~~~~~~^^^
+  File "/home/user/turan-c42/src/evaluator.py", line 100, in _parse_number
+    return float(Fraction(s))
+                 ~~~~~~~~^^^
+  File "/usr/local/lib/python3.13/fractions.py", line 256, in __new__
+    raise ValueError('Invalid literal for Fraction: %r' %
+                     numerator)
+ValueError: Invalid literal for Fraction: 'np.float64(-1.4044217629916245)'
+reopt 49 ['0.686360810790', '0.686360763987', '0.686360752120'] extrap 0.686360748081
+refine0 52 ['0.686360798519', '0.686360769363', '0.686360763669'] extrap 0.686360762562

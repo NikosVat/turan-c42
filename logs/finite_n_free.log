@@ -1,0 +1,23 @@
+n=200 T=0.68637: smooth-profile F_n = 0.70127916; free-phase optimum F_n = 0.70020743 (delta -1.072e-03); max|theta-theta_smooth| = 1.600e-01; rms of 2nd difference of theta: smooth 1.67e-03, opt 2.24e-03; 13 it, 1s
+n=400 T=0.68637: smooth-profile F_n = 0.69526940; free-phase optimum F_n = 0.69465442 (delta -6.150e-04); max|theta-theta_smooth| = 1.577e-01; rms of 2nd difference of theta: smooth 5.19e-04, opt 1.45e-03; 15 it, 1s
+n=800 T=0.68637: smooth-profile F_n = 0.69163889; free-phase optimum F_n = 0.69128953 (delta -3.494e-04); max|theta-theta_smooth| = 1.593e-01; rms of 2nd difference of theta: smooth 1.83e-04, opt 9.46e-04; 16 it, 1s
+400 F 0.694654419139046 |grad| 3.3849177169174716e-10
+ BFGS: F=0.69465442 it=0 |grad|=3.4e-10 Optimization terminated successfully.
+   k in [1,5): mean d=-0.1191  max|d - mean|=0.0386
+   k in [5,20): mean d=-0.0710  max|d - mean|=0.0183
+   k in [20,50): mean d=-0.0402  max|d - mean|=0.0113
+   k in [50,100): mean d=-0.0225  max|d - mean|=0.0085
+   k in [100,150): mean d=-0.0099  max|d - mean|=0.0055
+   k in [150,180): mean d=-0.0013  max|d - mean|=0.0030
+   k in [180,195): mean d= 0.0032  max|d - mean|=0.0013
+   k in [195,201): mean d= 0.0047  max|d - mean|=0.0002
+800 F 0.691289525324993 |grad| 4.995895156860945e-10
+ BFGS: F=0.69128953 it=0 |grad|=5.0e-10 Desired error not necessarily achieved due to precision loss.
+   k in [1,5): mean d=-0.1164  max|d - mean|=0.0429
+   k in [5,20): mean d=-0.0610  max|d - mean|=0.0147
+   k in [20,100): mean d=-0.0298  max|d - mean|=0.0247
+   k in [100,200): mean d=-0.0144  max|d - mean|=0.0056
+   k in [200,300): mean d=-0.0064  max|d - mean|=0.0035
+   k in [300,380): mean d=-0.0003  max|d - mean|=0.0026
+   k in [380,395): mean d= 0.0027  max|d - mean|=0.0003
+   k in [395,401): mean d= 0.0030  max|d - mean|=0.0001

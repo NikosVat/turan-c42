@@ -10,7 +10,7 @@ R_n = min over z_1..z_n ∈ ℂ with max_i |z_i| = 1 of max_{1≤k≤n} |Σ_i z_
 (Equivalent normalization: z_1 = 1.) Also Erdős problem #519.
 Table entry: https://teorth.github.io/optimizationproblems/constants/42a.html
 
-## State of the art (as of 3 Nov 2026) — the number to beat is 0.68637
+## State of the art (as of 3 Nov 2026) — the number to beat is 0.6863607950 (updated in S1, see below)
 
 | Bound | Who | Method | Source |
 |---|---|---|---|
@@ -19,11 +19,12 @@ Table entry: https://teorth.github.io/optimizationproblems/constants/42a.html
 | 0.688983* | Röhrig | refined step profile | teorth/optimizationproblems PR #184 |
 | 0.6888863712* | Pinho | 256 middle blocks | github.com/rpinho/c42-certificate |
 | 0.6873358063* | Koshta | first-block cut-off τ = 41/200, T3/T4 correction terms | github.com/DennisKoshta/c42-turan-power-sum-certificate (current table record) |
-| **0.68637*** | Bakeas | Harcos linearization with **phase varying from the start** (τ = 0), s_k = T·e^{iφ(k/n)}, φ piecewise linear with 24 pieces | **github.com/Bakeas/turan-c42-bound v1.1.0** (PR #302 open, for 0.6865) |
+| 0.68637* | Bakeas | Harcos linearization with **phase varying from the start** (τ = 0), s_k = T·e^{iφ(k/n)}, φ piecewise linear with 24 pieces | github.com/Bakeas/turan-c42-bound v1.1.0 (teorth PR #302, open) |
+| **0.6863607950*** | Pinho | **Bakeas's Theorem A unchanged**; 48 phase pieces on knots j²/4608, integrated residual bound, smaller kernel cap near 0; Arb gives F ≤ 0.6863607774 | **github.com/rpinho/c42-certificate @009120a, folder volterra-quadratic-knots** (teorth PR #305, open, 31 Oct 2026) |
 
 Best lower bound: just above 1/2 (Biró). Numerics (Cheer–Goldston) suggest C42 ≈ 0.7 for small n, so the true value is unknown.
 
-A new record means a rigorously certified upper bound **strictly below 0.68637**.
+A new record means a rigorously certified upper bound **strictly below 0.6863607950** (Pinho, PR #305; S1 check on 3 Nov 2026: no other open or merged PR is lower. The merged table still shows Koshta 0.6873358063*). Pinho reports the float optimum of the Bakeas phase-only family as ≈ 0.686360744, so the remaining room inside that family is ~5e-8; see PLAN.md.
 Re-check the table page and the open PRs at the start of every session; if someone posted a better bound, that becomes the target.
 
 ## Bakeas framework in brief (read NOTES.md in his repo for the real thing)

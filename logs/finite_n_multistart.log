@@ -1,0 +1,23 @@
+smooth-start optimum at n=400: 0.69465442; smooth Bakeas profile: 0.69526940
+best 10 multistart local optima (F_n, start kind 0=iid 1=smooth 2=linear):
+  0.69465442  kind=1  trial=49
+  0.69465442  kind=2  trial=35
+  0.69465442  kind=0  trial=3
+  0.69465442  kind=2  trial=83
+  0.69465442  kind=0  trial=18
+  0.69465442  kind=0  trial=21
+  0.69465442  kind=0  trial=54
+  0.69465442  kind=1  trial=19
+  0.69465442  kind=1  trial=34
+  0.69465442  kind=2  trial=50
+kind-wise best: {0: np.float64(0.6946544191390452), 1: np.float64(0.6946544191390451), 2: np.float64(0.6946544191390451)} 42s
+free modulus 0<=|s_k|<=T, n=400, T=0.68637: best 8 local optima (F_n, kind, trial, min rho, frac rho=1):
+  0.69465442 kind=2 trial=23 min_rho=1.0000 frac_at_1=1.000
+  0.69465442 kind=2 trial=17 min_rho=1.0000 frac_at_1=1.000
+  0.73622921 kind=1 trial=43 min_rho=0.0000 frac_at_1=0.960
+  0.73633704 kind=2 trial=29 min_rho=0.0000 frac_at_1=0.920
+  0.73892346 kind=1 trial=19 min_rho=0.0000 frac_at_1=0.925
+  0.76157613 kind=1 trial=40 min_rho=0.0000 frac_at_1=0.905
+  0.77714098 kind=1 trial=31 min_rho=0.0000 frac_at_1=0.900
+  0.78355212 kind=2 trial=41 min_rho=0.0000 frac_at_1=0.870
+worst: 1.122560  #within 1e-7 of best: 2 28s

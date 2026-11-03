@@ -1,0 +1,14 @@
+profile        : c42_profile_0.68637.json
+M = 2560, N = 122880, prec = 192 bits, i* = 13
+a = Re(gamma)  : [0.1660999005 +/- 4.58e-11]   kappa = T = [0.686370 +/- 3e-11]
+sup|R/t|       : 1.0546e-07   (worst cell t = 0.020833)
+eps            : 3.3626e-07
+p~(1)          : 0.24608609526273643174 - 0.30423387897982761654j
+|p(1)| <=      : 0.3913016
+int|p|/(1-t) >=: 0.5701101   (for p~ alone: 0.5701102)
+F~ (approx)    : 0.68636062
+F <=           : 0.6863614529
+time           : setup 1.7s, float solve 5.2s, residual 9.9s, F bound 5.5s, total 22.3s
+PASS  (F < T certified)
+exit=0
+wall_seconds=23.023785378
