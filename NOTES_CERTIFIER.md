@@ -244,11 +244,17 @@ New and unreviewed:
 - the geometric treatment of knot cells.
 
 Validation done (logs in LOG.md, S3):
-1. Direct mpmath quadrature of R(t) and p̃(t) at sample points.
-2. The exactly solvable constant-phase (Harcos) profile: F_upper − F_exact = +2.6e-12 at N = 256.
-3. Agreement with the independent product-trapezoid evaluator (src/evaluator.py) to its extrapolation accuracy
-   (~1e-12) for Bakeas's profile.
-4. Corruption tests (checkers/corruptions/).
+1. Direct mpmath quadrature at sample points:
+   - R(t): sampled |R/t| ≤ 1.1e-12;
+   - p̃(t): differences ≤ 2e-15;
+   - p̃(1): difference 2e-16.
+2. The exactly solvable constant-phase (Harcos) profile: the exact F lies inside the certified enclosure
+   [F_lower, F_upper], whose width is 8e-12 at N = 256.
+3. Agreement with the independent product-trapezoid evaluator (src/evaluator.py) for Bakeas's profile, to that
+   evaluator's extrapolation accuracy (~1e-11).
+4. Convergence under refinement (gate (c) tables in LOG.md). Once converged, doubling N changes F_upper by < 1e-11.
+5. Corruption tests (checkers/corruptions/run_all.sh): every perturbed profile FAILs, every hypothesis
+   violation is REFUSED, and a claim 1e-9 below the enclosure FAILs, while 1e-9 above it PASSes.
 
 A second, independently written checker has **not** been written yet. CLAUDE.md requires one before any claim.
 
