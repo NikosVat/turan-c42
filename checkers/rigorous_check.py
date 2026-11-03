@@ -748,6 +748,8 @@ def main():
         out = verify(json.loads(raw), args.N, args.P, args.Pk, args.bits, not args.quiet)
     except Exception as e:  # any failure is a refusal
         out = dict(verdict="REFUSED", reason=f"{type(e).__name__}: {e}")
+    import resource
+    out["max_rss_GB"] = round(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1e6, 3)
     out["certificate_sha256"] = hashlib.sha256(raw).hexdigest()
     out["checker_sha256"] = hashlib.sha256(open(__file__, "rb").read()).hexdigest()
     print(json.dumps(out, indent=1))

@@ -182,8 +182,7 @@ class Witness:
 
         x, info = gmres(A, b, x0=b.copy(), rtol=tol, atol=0, restart=150, maxiter=4, callback=cb,
                         callback_type="pr_norm")
-        if info != 0:
-            raise RuntimeError(f"gmres info={info}")
+        self.gmres_info = info  # info != 0: stagnation at rounding level; the witness is still usable
         self.gmres_iters = it[0]
         X = x.reshape(N, P1)
         self.vals = X

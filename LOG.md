@@ -146,3 +146,46 @@ no gain; A has ~5e-8 of float room at fixed T, and certification is the bottlene
 ### 17:15 Machine
 - `nproc` = 4; `free -g`: 15 GB total, 14 GB free, no swap; `df -h /`: 30 GB available.
 - Everything built in this session must fit 4 vCPU / 15 GB. Pinho's N = 14.2M run needed 95 GB and 32 vCPU.
+
+### 17:20 Choice of technique (reasoning)
+- Pinho's error is O(h²) because the trial ρ̃ is piecewise linear; every doubling of accuracy costs ~1.4× N,
+  and N is memory-bound (Python lists of Arb balls). Per-cell R''' bounds (technique 2) or FFT (4) alone keep h².
+- Key observation: ρ is **piecewise analytic with breakpoints only at finite sums of knots and 1/2**, and for
+  both profiles those are all on the knot grid (j²/4608 + k²/4608 = (j²+k²)/4608; j/48 + k/48). So a
+  discontinuous piecewise polynomial of degree P on a knot-aligned uniform grid converges spectrally
+  (techniques 1 + 3 combined).
+- Convolutions of piecewise polynomials on a uniform grid are again piecewise polynomials, computable
+  **exactly** by two Kronecker-packed polynomial products (python-flint acb_poly, outward rounded). So the
+  residual R = d + d*ρ̃ − tρ̃ is an explicit polynomial per cell (d replaced by its Taylor polynomial on each
+  cell with a rigorous remainder); sup|R| on a cell ≤ Σ|Chebyshev coefficients|.
+- Same trick for p̃ = t^-γ + ∫(t−v)^-γ ρ̃: kernel cell 0 in closed form (Beta functions, θ^{1−γ} terms),
+  kernel cells ≥ 1 by Taylor polynomials with rigorous remainder; denominator via the exact polynomial
+  representation of p̃ per cell and sqrt(X) ≥ (3/2)Xu − (1/2)X²u³ (u > 0 certified), X = |p̃|².
+- Propagation: Lemma 3 (sup) and the integrated Gronwall form (Pinho), min of the two.
+
+### 17:35 Validation of the formulas (`checkers/tests/`)
+- Float pipeline F from the spectral trial: Bakeas 0.68636008313–0.68636008372 (N=192..768, P=6);
+  Pinho 0.6863607439575 (N=18432) / 0.6863607439536 (N=36864).
+- `tests/mp_pointwise.py` (mpmath, 30 digits, direct quadrature, no convolution identity):
+  Bakeas N=192 P=6: max sampled |R/t| = 1.1e-12 (cells 0–3, knots, 95/96 around 1/2);
+  N=96: p̃ cell representation vs direct quadrature ≤ 1.9e-15, p̃(1) diff 1.7e-16.
+- Harcos constant phase (`tests/profiles/harcos_const.json`, exact F = 0.69368452670658032 by mpmath):
+  rigorous F_upper − F_exact = +5.2e-12 (N=64), +2.6e-12 (N=256), +1.5e-12 (N=1024, before weight fix).
+  Two slack sources found and fixed on the way: cubic u fit near 0 (now deg 8/6/3), and the 1/(1−t) weight
+  series truncated at 4 terms (now adaptive, tail < 1e-22).
+
+### 17:50 Gate (a): Bakeas profile c42_profile_0.68637.json — PASS
+- `python checkers/rigorous_check.py third_party/bakeas/c42_profile_0.68637.json --N 768 --P 6`
+- **PASS, F ≤ 0.6863600829256854** (Arb), 4.2 s, residual sup|R/t| = 3.6e-12, EN = 3.2e-12, ED = 1.5e-12,
+  denominator slack 1.5e-12. Bakeas's own checkers: F ≤ 0.6863659 and 0.6863615 (N = 122880).
+- Note: the S1 evaluator's extrapolated value 0.6863600838 was off by ~1e-9. Its raw F_N at N=98304 is
+  0.6863600830081 and still moving (complex-exponent error terms from (t−t_k)^{2−γ}); the 4-term fit over
+  12288..98304 gives 0.6863600829277, i.e. 1.4e-12 above our F_upper, within that fit's accuracy. Our
+  enclosure says F ∈ [F_upper − ~1e-11, F_upper].
+
+### 18:00 Gate (b), first point: Pinho PR #305 profile
+- N=18432 (4608·4), P=6: **PASS, F ≤ 0.6863607723298**, 69.5 s, max RSS 1.24 GB.
+  (Pinho: F ≤ 0.6863607742 at N = 14.2M, 95 GB, 1110 s on 3 threads.)
+- Error budget: residual peak 3.6e-7 in cell 4 (first cell after the knot 1/4608: the continued piece has
+  a 1/t pole one knot-cell away, so convergence there is only (4s+2)^-P); EN = 7.9e-9, ED = 3.4e-9.
+  Denominator slack 2.1e-12. So the gap 2.8e-8 is all residual; fix = larger s or P.
