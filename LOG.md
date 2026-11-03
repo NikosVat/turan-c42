@@ -275,3 +275,9 @@ Pinho C42_compact_best.json (`logs/cert/sweep_pinho_*.json`; 36864/73728 rows pe
 - Pinho rerun (with F_lower): N=36864 P=8 r=1: F ∈ [0.6863607439470, 0.6863607439516], width 4.6e-12, 283 s.
 - Status per CLAUDE.md rules: one checker, new method, unreviewed; no second independent checker yet; phases
   not re-optimized at the lower T; no finite-n check at this precision. Not a claim.
+- Same phases, T = 0.68636075 (`certificate/candidates/s1_96piece_T0.68636075.json`), N=73728 P=8 r=1:
+  **PASS, F ∈ [0.6863607469915, 0.6863607473901]**, margin T − F_upper = 2.6e-9, 597 s, 6.29 GB.
+  The two runs give dF/dT = −1.223 (consistent with S1's −1.22). So with this phase vector, checker #1 certifies
+  T = 0.68636075, i.e. 4.5e-8 below Pinho. Still NOT a claim (same caveats as above).
+- Doubling check on Pinho: N=73728 P=6 r=1: F ∈ [0.6863607439463, 0.6863607439522] (width 5.9e-12, 530 s,
+  5.03 GB), overlapping the N=36864 P=8 enclosure [0.6863607439470, 0.6863607439516]. Stable.
