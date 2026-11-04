@@ -632,7 +632,9 @@ Machine: 4 vCPU, 15 GB. Record mode.
     F_upper, F_lower, p̃(1), trial_sha256 identical to certificate/expected_N36864_P10.json;
   - checker #2, N = 73728, P = 12: PASS, F ≤ 0.6863607494249, 374 s, 2.96 GB; F_ball identical to
     checkers/independent_out/cert_N73728_P12.json;
-  - checker #1, N = 73728, P = 10: running at commit time (result below).
+  - checker #1, N = 73728, P = 10, refine 1: PASS, F ∈ [0.6863607494206, 0.6863607494291], 655 s, 6.48 GB;
+    F_upper, F_lower, p̃(1), trial_sha256 identical to certificate/stability_N73728_P10.json (finished after
+    commit 7270346, which the PR pins; this line was added afterwards).
 - Other PRs: only 302, 305, 310 (and ours) touch 42a.md among all PR heads ≥ 200. #305 (bac1d85) and #310 (e0393b2)
   unchanged since S7b. #302 updated today (3887fbb): adds a lower-bound row 1/2 + 2^(−32176926823186696)* [Bak26c]
   and references [Bak26b], [Bak26c]; its upper bound is still 0.68637*. No PR claims an upper bound below
