@@ -541,3 +541,32 @@ Branch `claude/harcos-reduction-findings-53k0p2`. Machine: 4 vCPU, 15 GB.
   - Conditional on local = global and on the trend: lim R_n ≈ 0.68636 ± 2e-5.
 - Caveat: the background limit-reference job hit the 30-min tool limit once under CPU contention. It was rerun
   cheaply (S1's F values + a fresh slope).
+
+## S7 — 2026-11-04 (package; branch `certificate`)
+
+Machine: 4 vCPU, 15 GB. Record mode.
+
+- Merged `claude/certificate-validation-checker-0jbs2a` (S6: checker #2, REVIEW.md) and
+  `claude/harcos-reduction-findings-53k0p2` (S4: FINDINGS.md; this is the branch S4 was told to call `findings`)
+  into `certificate`. LOG.md conflict: kept both sections.
+- **Open PRs re-checked** (teorth/optimizationproblems, search API + PR heads by git fetch): the 42a PRs are
+  #302 (0.68637*), #305 (0.6863607950*, head bac1d85, body unchanged, 0 comments), #310 (lower bound),
+  #184 (Röhrig). Merged: #85, #251, #263. **No C42 upper bound below 0.686360751.**
+- REVIEW.md §2 / NOTES §5.3 (cell 0): checker #1 already set the constant term of d_{Q,0} to the exact `acb(0)`
+  (radius 0; `fr = [zero if i == 0 else gamma - g]`) and formed R_0/θ by shifting coefficients, never dividing a
+  ball by θ. Added an assertion (`is_zero() and is_exact()`). Note: `g - g` in Arb is a ball ±1e-16 at 53 bits,
+  so the concern was real in principle; the code was not affected.
+- REVIEW.md §2 / NOTES §6.2 (series truncation): checker #1 keeps l = 0..L (Horner `range(L, -1, -1)`, L+1
+  terms) with tail n'^{−a} n'^{−(L+1)}/(1−1/n') — the smaller bound, correct for that reading. Switched to the
+  conservative n'^{−a} n'^{−L}/(1−1/n') (valid under either reading). Tail < 1e-22 either way. NOTES §6.2 now
+  states the truncation and both bounds explicitly.
+- Also from REVIEW: κ̂ remark (§3; checker #1's κ̂ = T is an Arb ball containing T, valid by inclusion
+  monotonicity), hypothesis on a stated identically in NOTES §3/§7 and README, coefficient balls vs rounding
+  (§5.3), §7 piecewise-linear wording, min/inf note (§1), NOTES §9 (checker #2 exists), headline = tightest PASS.
+- Checker #1 SHA-256 now 93fdcf68…6c7d; checker #2 unchanged (26e12388…8093). SHA256SUMS lists both.
+- New corruption list for checker #1: `checkers/corruptions/claim/list3.txt` (copies of checker #2's certificate
+  corruptions: C < T, C = 1, a < 0, misaligned knot, phase-count mismatch, knots not increasing, T = C =
+  0.686360749, ψ_20 + 1e-3).
+- Removed 10 optimizer checkpoint/snapshot files (`results/*_ckpt.json`, `*_snap.json`; final JSONs kept).
+- Reruns (memory-aware queue, ≤ 13 GB, 4 single-threaded jobs, OPENBLAS_NUM_THREADS=1): both checkers at all
+  certificate settings, all corruption lists of both checkers, checker #2 self-test. Results below.

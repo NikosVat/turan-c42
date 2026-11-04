@@ -1,23 +1,67 @@
-# C42 ≤ 0.686360751: a candidate upper bound for Turán's pure power sum constant
+# C42 ≤ 0.686360751: an upper bound for Turán's pure power sum constant
 
-**Claim (candidate, unrefereed).**
+**Claim (unrefereed).**
 
-  C42 = limsup_{n→∞} R_n ≤ C = 0.686360751 = 686360751/10⁹,
+  C42 = limsup_{n→∞} R_n ≤ C = **686360751/1000000000** = 0.686360751,
 
-where R_n = min over z_1..z_n ∈ ℂ with max_i |z_i| = 1 of max_{1≤k≤n} |Σ_i z_i^k| (Erdős problem #519).
+where R_n = min over z_1, …, z_n ∈ ℂ with max_i |z_i| = 1 of max_{1≤k≤n} |Σ_i z_i^k| (Erdős problem #519;
+[table entry 42a](https://teorth.github.io/optimizationproblems/constants/42a.html)).
 
-This is 4.40·10⁻⁸ below the best bound posted so far, 0.6863607950* (Pinho, teorth/optimizationproblems PR #305,
-open), and 9.7·10⁻⁴ below the bound in the merged table (0.6873358063*, Koshta).
+- The bound is 4.40·10⁻⁸ below the best bound posted so far, 0.6863607950* (Pinho, teorth/optimizationproblems
+  PR #305, open). It is 9.249·10⁻⁶ below Bakeas's 0.68637* (PR #302, open) and 9.750553·10⁻⁴ below the value in
+  the merged table, 0.6873358063* (Koshta). These are exact differences of the decimals.
+- On 4 Nov 2026 no open or merged pull request in teorth/optimizationproblems claimed a lower upper bound for C42.
 
 **Status.**
-- The bound rests on Bakeas's Theorem A, with Pinho's arbitrary-knot form and integrated residual bound. To
-  this it adds a new profile (33 phase pieces) and a new rigorous checker (`checkers/rigorous_check.py`, Arb
-  ball arithmetic). Both are **new and unreviewed**.
-- The project rules (CLAUDE.md) require a **second, independently written checker** before the bound is
-  claimed publicly. That checker does not exist yet (planned for session S6). Until it exists and agrees, treat
-  0.686360751 as a candidate.
+- Two independently written rigorous checkers certify the bound (Arb ball arithmetic, python-flint 0.9.0).
+- The proof is Bakeas's Theorem A, with Pinho's arbitrary-knot form and integrated residual bound, plus a new
+  a posteriori certifier. It is written out in full in `NOTES.md`, with every new step marked.
+- An AI referee reviewed it (`REVIEW.md`) and found no mathematical error. **No human mathematician has checked
+  the argument.**
+
+## Certified results (tightest first)
+
+All runs are on the certificate below (SHA-256 `d015a829…5652`), with the checker versions in
+`certificate/SHA256SUMS`. F is the limit functional of Theorem A, and PASS means that F < C is proved.
+
+| checker | N | P | verdict | certified F_upper | C − F_upper | certified F_lower | time | peak memory |
+|---|---|---|---|---|---|---|---|---|
+@@RESULTS_TABLE@@
+
+- Checker #1 also certifies a lower bound F_lower (a diagnostic; the claim uses only F_upper). Its tightest
+  enclosure is F ∈ [@@C1_73728_LO@@, @@C1_73728_UP@@], of width @@C1_73728_W@@.
+- Every checker #2 upper bound lies inside that interval or above it. The margin C − F ≈ 1.6·10⁻⁹ is about 200
+  times the enclosure width.
+- Times: one core of a 4-vCPU cloud machine, measured with four jobs running at once (session S7). A run on an
+  otherwise idle machine is faster; see the timed reproduction below.
+- Doubling N or changing P moves F_upper by less than 10⁻¹¹ once converged. The loosest PASS (checker #1,
+  N = 36864, P = 10) is the quickest to reproduce.
+
+## Method
+
+- **Linearization (Harcos, Bakeas).** Prescribe the first ⌊n/2⌋ power sums as s_k = T e^{iφ(k/n)}, with T = C and
+  φ piecewise linear through 34 exact rational knots in [0, ½]. Harcos's linearization chooses the remaining power
+  sums with a common modulus F_n so that z = 1 is a root. This gives R_n ≤ max(T, F_n).
+- **Limit (Theorem A).** Bakeas's Theorem A shows F_n → F = |p(1)| / ∫_0^{1/2} |p(t)| dt/(1−t), where p is built
+  from the bounded solution ρ of the Volterra equation t ρ(t) = d(t) + ∫_0^t d(u) ρ(t−u) du. Its hypotheses are
+  that d = γ − T e^{iφ} is a contraction, sup|d| < 1, and that Re γ ≥ 0.
+- **The profile.** A float adjoint-gradient search (session S2) found a 33-piece profile whose fixed point
+  T = F is ≈ 0.6863607503. The knots are j²/1152, six dyadic knots near 0 and four greedy insertions.
+- **The certifier.**
+  - It takes a trial function ρ̃ that is a discontinuous piecewise polynomial on a uniform grid aligned with all
+    knots.
+  - It computes the residual of the Volterra equation *exactly* on every cell, by an identity for convolutions
+    of piecewise polynomials, and bounds it by Chebyshev coefficients.
+  - The a posteriori bounds of Bakeas and Pinho (Lemma 3 and its integrated form) turn this residual into
+    rigorous bounds on p(1) and on the denominator.
+  - The kernel singularity is handled in closed form.
+- **Result.** F is certified to about 10⁻¹¹ with under 7 GB of memory. For comparison, Pinho's certificate needed
+  14 million cells and 95 GB for 3·10⁻⁸.
 
 ## How to verify
+
+Requirements: Python ≥ 3.10 and python-flint 0.9.0. The time and peak memory of each command are given with
+it; the two quick settings need less than 4 GB.
 
 ```bash
 pip install python-flint==0.9.0 numpy scipy mpmath
@@ -27,34 +71,41 @@ pip install python-flint==0.9.0 numpy scipy mpmath
 sha256sum -c certificate/SHA256SUMS
 ```
 
-```bash
-OPENBLAS_NUM_THREADS=1 python checkers/rigorous_check.py certificate/c42_profile_0.686360751.json --N 36864 --P 10 --refine 1
-```
-
-The last command must print `"verdict": "PASS"` and exit with code 0. Expected output:
-`certificate/expected_N36864_P10.json`, with F ∈ [0.6863607487772, 0.6863607500725] and C − F_upper = 9.3e-10.
-Runtime: about 6 min on one core of a 4-vCPU cloud machine, peak memory 3.7 GB.
-
-The trial function ρ̃ is computed in floating point (GMRES), so its last bits can depend on the BLAS thread
-count. Each run then certifies its own ρ̃ rigorously, so the verdict is unaffected, but the last digits of F_upper
-may change. Our 4-thread and 1-thread runs at these settings differed by only 5e-22
-(0.68636075007245447 vs 0.68636075007245403). At N = 18432, P = 14 they differed by 8e-11.
-
-Stability reruns (PASS, enclosures nested inside the one above):
+Checker #2 (blind, independent), quick setting. Measured at @@C2_36864_P12_TIME@@ and @@C2_36864_P12_MEM@@:
 
 ```bash
-OPENBLAS_NUM_THREADS=1 python checkers/rigorous_check.py certificate/c42_profile_0.686360751.json --N 36864 --P 12 --refine 1
+OPENBLAS_NUM_THREADS=1 python checkers/independent_check.py certificate/c42_profile_0.686360751.json --N 36864 --P 12 --out result2.json
+```
+
+Checker #1, quick setting. Measured at @@C1_36864_P10_TIME@@ and @@C1_36864_P10_MEM@@:
+
+```bash
+OPENBLAS_NUM_THREADS=1 python checkers/rigorous_check.py certificate/c42_profile_0.686360751.json --N 36864 --P 10 --refine 1 > result1.json
+```
+
+- Each checker prints `PASS` and exits with code 0.
+- Checker #1 prints a JSON object with `"verdict": "PASS"`, and checker #2 prints a final line
+  `PASS: F <= … < C = 686360751/1000000000`.
+- The expected outputs are `certificate/expected_N36864_P10.json` (checker #1) and
+  `checkers/independent_out/cert_N36864_P12.json` (checker #2).
+
+Timed reproduction from a fresh clone (session S7, one job at a time on an idle machine):
+@@REPRO@@
+
+Tightest settings (the headline numbers above):
+
+```bash
+OPENBLAS_NUM_THREADS=1 python checkers/rigorous_check.py certificate/c42_profile_0.686360751.json --N 73728 --P 10 --refine 1 > result1_tight.json
 ```
 
 ```bash
-OPENBLAS_NUM_THREADS=1 python checkers/rigorous_check.py certificate/c42_profile_0.686360751.json --N 73728 --P 10 --refine 1
+OPENBLAS_NUM_THREADS=1 python checkers/independent_check.py certificate/c42_profile_0.686360751.json --N 73728 --P 12 --out result2_tight.json
 ```
 
-They give F ∈ [0.6863607494100, 0.6863607494397] (6 min, 3.8 GB) and F ∈ [0.6863607494207, 0.6863607494290]
-(13 min, 6.8 GB). See NOTES.md §8.3 for all runs, including coarser settings that FAIL because the bound is
-too loose.
+They took @@C1_73728_TIME@@ / @@C1_73728_MEM@@ and @@C2_73728_TIME@@ / @@C2_73728_MEM@@. Checker #1's other stability run is
+`--N 36864 --P 12` (@@C1_36864_P12_TIME@@, @@C1_36864_P12_MEM@@).
 
-Corruption tests (each must give the expected verdict; about 25 min):
+**Corruption tests.** Each must give the expected verdict, and each script exits nonzero on a mismatch.
 
 ```bash
 checkers/corruptions/claim/run_claim.sh
@@ -64,14 +115,49 @@ checkers/corruptions/claim/run_claim.sh
 checkers/corruptions/claim/run_claim.sh checkers/corruptions/claim/list2.txt
 ```
 
-`python checkers/grid_check.py certificate/c42_profile_0.686360751.json 36864` checks, in exact arithmetic, that every
-knot, ½ and every sum of up to three knots lies on the grid.
+```bash
+checkers/corruptions/claim/run_claim.sh checkers/corruptions/claim/list3.txt
+```
 
-## Certificate format
+```bash
+checkers/corruptions/run_all.sh
+```
 
-The certificate is the single file `certificate/c42_profile_0.686360751.json` (SHA-256 in
-`certificate/SHA256SUMS`). It is a JSON object. Only the following keys carry mathematical content; all other
-keys (`claim`, `framework`, `exact_note`, `origin`, `checker`) are descriptive and must not affect a verdict.
+```bash
+python checkers/independent_corruptions.py --jobs 3
+```
+
+- The first three are checker #1 on corrupted copies of the certificate, 2 jobs × 3.9 GB, about 6 min per FAIL
+  or PASS case. They cover lowered T = C, perturbed phases, the claim 1e-9 below and above the certified
+  enclosure, C < T, C = 1, a < 0, a misaligned knot, and malformed knots or phases.
+- The fourth is checker #1 on corrupted Bakeas and Pinho profiles (about 15 min).
+- The last is checker #2 on all of them (28 cases, about 25 min with 3 jobs).
+- Summaries are in `checkers/corruptions/claim/out/summary_list*.txt`, `checkers/corruptions/run_all_out.txt` and
+  `checkers/independent_out/corruptions/SUMMARY.txt`.
+
+**Self-tests:**
+- `python checkers/independent_selftest.py` (15 s) checks checker #2 against direct mpmath quadrature and the
+  exactly solvable constant-phase case.
+- `python checkers/tests/harcos_exact.py` gives the exact F of `checkers/tests/profiles/harcos_const.json`.
+  `python checkers/rigorous_check.py checkers/tests/profiles/harcos_const.json --N 256 --P 8 --refine 1` encloses
+  it.
+- `python checkers/grid_check.py certificate/c42_profile_0.686360751.json 36864` checks, in exact arithmetic, that
+  every knot, ½ and every sum of up to three knots lies on the grid.
+
+**Floating point and threads.** The trial function ρ̃ comes from a floating-point solve, so its last bits can
+depend on the BLAS thread count; set `OPENBLAS_NUM_THREADS=1` for bit-for-bit reproduction. Each run certifies its
+own ρ̃ rigorously, so the verdict does not depend on this, but the last digits of F_upper may.
+
+## The certificate
+
+`certificate/c42_profile_0.686360751.json`, SHA-256
+`d015a8295d809fa26c9f18888ece53d77c9fea71712420313e75911065855652` (also in `certificate/SHA256SUMS`, together with
+the SHA-256 of both checkers).
+
+### Certificate format
+
+The certificate is a JSON object. Only the following keys carry mathematical content. All other keys (`claim`,
+`framework`, `exact_note`, `origin`, `checker`) are descriptive and must not affect a verdict.
 
 | key | type | meaning |
 |---|---|---|
@@ -95,49 +181,89 @@ Let ρ be the bounded solution on (0,1] of t ρ(t) = d(t) + ∫_0^t d(u) ρ(t−
   p(t) = t^{−γ} + ∫_0^t (t−v)^{−γ} ρ(v) dv,   F = |p(1)| / ∫_0^{1/2} |p(t)| dt/(1−t).
 
 A checker must prove, rigorously (e.g. in interval or ball arithmetic):
-1. 0 < T ≤ C < 1, and the knots strictly increase from 0 to ½;
-2. 0 < a < 1 and κ < 1 (the hypotheses of Theorem A);
+1. 0 < T ≤ C < 1, and the knots strictly increase from 0 to ½.
+2. The hypotheses of Theorem A. Theorem A needs κ < 1 and a = Re γ ≥ 0; then a ≤ T < 1 automatically. Both
+   checkers certify the stronger condition 0 < a < 1, together with κ̂ < 1 for a number κ̂ ≥ κ. Any certified
+   upper bound κ̂ < 1 for κ may be used (NOTES.md §3, remark on κ̂).
 3. F < C. Equivalently, it must find a certified upper bound F_upper < C, with a certified positive lower bound
    for the denominator.
 
-Theorem A (NOTES.md §3) then gives limsup R_n ≤ max(T, F) ≤ C. NOTES.md §4 lists valid a posteriori error
-bounds for any trial function ρ̃. §§5–7 describe one way to evaluate everything rigorously, the way
+Theorem A (NOTES.md §3) then gives limsup R_n ≤ max(T, F) ≤ C. NOTES.md §4 lists valid a posteriori error bounds
+for any trial function ρ̃. §§5–7 describe one way to evaluate everything rigorously, the way
 `checkers/rigorous_check.py` does it. An independent checker may use any rigorous method.
 
-**Reference values** (from `checkers/rigorous_check.py`, for comparison only):
-- a = Re γ = 0.10165403…;
-- κ = T (attained on (½,1]; the largest |d| on (0,½] is 2T sin(E/2) with E = max|ψ_j − ψ_0| = 0.8709 < π);
+**Reference values** (for comparison only):
+- a = Re γ = T cos ψ_0 = 0.10165403756107…;
+- κ = T, attained on (½,1]. The largest |d| on (0,½] is 2T sin(E/2) = 0.57902, with
+  E = max|ψ_j − ψ_0| = 0.87087 < π;
 - |p̃(1)| ≈ 0.2201694;
 - ∫_0^{1/2}|p| dt/(1−t) ≈ 0.3207780;
-- F ∈ [0.6863607494207, 0.6863607494290] (N = 73728, P = 10, the tightest enclosure).
+- F ∈ [@@C1_73728_LO@@, @@C1_73728_UP@@] (checker #1, N = 73728, P = 10, the tightest enclosure).
+
+## Findings (summary of FINDINGS.md)
+
+Session S4 studied the finite-n problem itself (`FINDINGS.md`; float numerics except where stated):
+- **Proved:** Harcos's reduction is exact at every finite n.
+  - R_n = min over first halves s ∈ ℂ^{⌊n/2⌋} of max(max_k|s_k|, F_n(s)).
+  - Equivalently, R_n is the fixed point of T ↦ min_{max|s_k| ≤ T} F_n(s).
+  - So every construction (any split point, Koshta-type correction terms, a varying modulus) is dominated by the
+    completion of its own first half.
+- **Rigorous, finite n only:** Arb-certified upper bounds such as R_400 ≤ 0.690120598 and R_3200 ≤ 0.687129253.
+- **Numerical evidence (n = 200 to 3200):**
+  - about 2,000 local searches, including fully non-smooth and varying-modulus starts, find a single basin at
+    constant modulus;
+  - the optimum is the smooth limit profile plus a boundary layer whose gain decays like n^{−0.9};
+  - extrapolation puts lim R_n at about 0.68636 ± 2·10⁻⁵, the value of the smooth phase-only family.
+- **Consequence (heuristic):** if these local optima are global, then C42 ≈ 0.68636, so the present upper bound
+  would be within about 10⁻⁵ of the truth. The directions "varying modulus", "different split" and "hybrid with
+  correction terms" would then add nothing beyond the phase-only family.
+- **Not proved:** any new lower bound. The best lower bound is still Biró's, just above ½.
 
 ## Files
 
-- `NOTES.md`: statement, the full proof (Bakeas's Lemmas 1–3 and Theorem A, Pinho's integrated form, the new
-  certifier analysis, with new steps marked), exactly what the program checks, and the certificate data.
-- `certificate/`: the profile JSON, `SHA256SUMS`, and expected checker outputs.
-- `checkers/rigorous_check.py` (+ `spectral_witness.py`, a floating-point witness only): checker #1.
-- `checkers/corruptions/claim/`: corrupted versions of the certificate that must FAIL, and the runner.
-- `checkers/tests/`: validation against direct mpmath quadrature and the exactly solvable constant-phase case.
-- `NOTES_CERTIFIER.md`: the certifier derivation and its validation log (session S3).
-- `results/SATURATION.md`, `results/candidate_*.json`: the float search (session S2).
-- `LOG.md`, `PLAN.md`: experiment log and plan.
+- `NOTES.md` contains the statement and the full proof: Bakeas's Lemmas 1–3 and Theorem A, Pinho's integrated
+  form, and the new certifier analysis, with new steps marked. It also says exactly what the programs check.
+- `REVIEW.md` is the referee report and the description of checker #2 (session S6, written blind).
+- `certificate/` holds the profile JSON, `SHA256SUMS` and the expected outputs of checker #1 (see
+  `certificate/INDEX.md`).
+- `checkers/rigorous_check.py` (with `spectral_witness.py`, a floating-point witness only) is checker #1.
+- `checkers/independent_check.py` is checker #2, with `independent_selftest.py`, `independent_corruptions.py`
+  and its outputs in `checkers/independent_out/`.
+- `checkers/corruptions/` holds the corrupted certificates and the runners. `checkers/tests/` holds checker #1's
+  validation scripts.
+- `FINDINGS.md` and `results/finite_n/` are the finite-n study (session S4).
+- `NOTES_CERTIFIER.md` is the certifier derivation and its validation log (S3). `results/SATURATION.md` and
+  `results/candidate_*.json` are the float search (S2). `src/` holds the search and float cross-check code.
+- `submission/` contains the proposed update to teorth/optimizationproblems (`42a.md`, the README changes,
+  `PR_DRAFT.md`).
+- `LOG.md` and `PLAN.md` are the experiment log and the plan.
 
 ## Credits
 
-- **G. Harcos**: the linearization (Lemma 2) and the constant-phase bound 0.69368 (in Biró 2000).
-- **A. Biró**: the first proof that C42 < 1, and the lower bound > 1/2.
-- **S. Griego, A. Röhrig, Plata, R. Pinho, D. Koshta**: the 2026 certified block constructions in the
-  Optimization Constants repository.
-- **Bakeas** (turan-c42-bound v1.1.0, MIT): Theorem A, Lemma 3, the phase-varying profile with τ = 0, and the
-  checkers this work started from.
-- **R. Pinho** (c42-certificate @009120a, MIT): quadratic knots, the integrated (Gronwall) residual bound, the
-  arbitrary-knot form of Theorem A, and the previous record 0.6863607950.
+- **G. Harcos**: the linearization (Lemma 2 in NOTES.md) and the constant-phase bound 0.69368 (in Biró 2000).
+- **A. Biró**: the upper bound 5/6 and the lower bounds 1/2 and > 1/2 (the best lower bound to date).
+- **S. Griego** (0.6906538*, two-block coefficient cancellation), **A. Röhrig** (0.688983*, refined step profile,
+  PR #184), **K. Plata** (six-level step profile), **R. Pinho** (0.6888863712*, 256 middle blocks, PR #251) and
+  **D. Koshta** (0.6873358063*, first-block cut-off τ = 41/200, PR #263): the 2026 certified block constructions
+  in the Optimization Constants repository.
+- **V. Bakeas** (turan-c42-bound v1.1.0, MIT; PR #302): Theorem A, Lemma 3, the phase-varying profile with
+  τ = 0, and the checkers this work started from.
+- **R. Pinho** (c42-certificate @009120a, MIT; **PR #305**): the observation that Theorem A holds for arbitrary
+  knots, the quadratic knots j²/4608 (this profile uses j²/1152), the integrated (Gronwall) residual bound, and
+  the previous record 0.6863607950*.
 - No code from these repositories is copied into `checkers/`. `src/finite_n_check.py` imports Bakeas's
   `crosscheck/finite_n.py` (MIT) for a float cross-check only.
 
 ## AI use
 
-All search code, the checker, its derivation and these texts were produced by AI agents (Claude Code,
-Anthropic), working autonomously in cloud sessions directed by the repository owner. The owner did not check
-the mathematics by hand. No human mathematician has reviewed the new parts (NOTES.md §§5–7).
+- **Who did what.** This bound was found, proved and checked by Claude agents (Claude Code, Anthropic), directed
+  by Nikolaos Vatopoulos. The agents wrote the profile search, the certifier and its error analysis, both
+  checkers, the corruption tests, the referee report and all texts, working autonomously in cloud sessions.
+- **The second checker was written blind.** Checker #2 (`checkers/independent_check.py`) and `REVIEW.md` were
+  written in a separate session from `NOTES.md`, `certificate/` and the certificate-format section of this README
+  only. That session did not see the search code, checker #1 or the log.
+- **Limits of the independence.** The two checkers share no code, witness or intermediate data, but they share the
+  mathematics of NOTES.md §§3–4. Both are AI-written, so the independence is procedural.
+- **No human mathematician has checked the argument.** The director did not check the mathematics by hand.
+  Before the bound is treated as established, a human should read at least Theorem A (NOTES.md §3), Lemma C1
+  (§5.2) and §6.

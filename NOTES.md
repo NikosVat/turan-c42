@@ -10,8 +10,10 @@
   - The extension from the knots j/48 to arbitrary rational knots is Pinho's (c42-certificate @009120a,
     `volterra-quadratic-knots/VOLTERRA_VERIFIER_MATH.md`). It changes nothing in the proof; see the remark in §3.
 - Section 4: Lemma 3 is Bakeas's; the integrated (Gronwall) form of it is Pinho's.
-- Sections 5–7 (the certifier) are **NEW** and **unreviewed**. Every new step is marked **[NEW]**.
-- Section 8 gives the certificate and exactly what the programs check.
+- Sections 5–7 (the certifier) are **NEW**. Every new step is marked **[NEW]**. They have been reviewed only by an
+  AI referee (`REVIEW.md`, session S6), not by a human.
+- Section 8 gives the certificate and exactly what the programs check. Two independently written rigorous checkers
+  certify it (§8.2, §9).
 
 Notation:
 - s_k(z) = Σ_j z_j^k.
@@ -25,6 +27,9 @@ Notation:
 
 **Lemma 1.** Let R'_n be the infimum of max_{k≤n}|s_k(z)| over all z ∈ ℂ^n with max_j |z_j| = 1. Then R'_n = R_n.
 In particular C42 = limsup R_n in either normalization.
+
+(The problem is usually stated with "min". The minimum is attained, by compactness of {max_j|z_j| = 1}, but
+nothing below depends on that; only upper bounds for the infimum are used.)
 
 *Proof.*
 - (R_n ≤ R'_n.) Suppose max_j |z_j| = |z_{j0}| = 1, and put w_j = z_j/z_{j0}. Then w_{j0} = 1, and
@@ -82,6 +87,9 @@ k/n ≤ ½). Since |s_k| = T,
   R_n ≤ max(T, F_n),  F_n = |P_n|/D_n.   (1)
 
 **Theorem A.** Assume κ < 1 and a ≥ 0. (Then automatically a ≤ |γ| = T ≤ κ < 1, because |d| = T on (½,1].)
+
+*Hypotheses, as checked.* Theorem A needs κ < 1 and a = Re γ ≥ 0; then a ≤ T < 1 automatically. Both checkers
+certify the stronger condition 0 < a < 1, together with κ̂ < 1 for a number κ̂ ≥ κ (remark below).
 1. The equation
 
      t ρ(t) = d(t) + ∫_0^t d(u) ρ(t−u) du   (0 < t ≤ 1)   (2)
@@ -98,6 +106,21 @@ k/n ≤ ½). Since |s_k| = T,
 
 So the proof holds verbatim for any finite set of knots in [0,½]. This was already observed by Pinho (PR #305).
 The knots need not be rational for the theorem; they are rational only so that the certifier can align its grid.
+
+**Remark (an upper bound κ̂ suffices).** The proofs of Theorem A (Steps 2–3) and of Lemmas 3 and 3' (§4) use κ only
+through the inequality |d| ≤ κ < 1. They never need κ to *equal* sup|d|. So κ may be replaced throughout,
+including in the exponents t^{κ−1}, v^{−κ} and in B(κ, ·) in Lemma 3' and §4, by any number κ̂ with
+sup_{(0,1]}|d| ≤ κ̂ < 1. (In Lemma 3', E' ≤ r + κE/t implies E' ≤ r + κ̂E/t because E ≥ 0.)
+- Checker #2 takes κ̂ to be an exact rational.
+- Checker #1 (§7) takes κ̂ = T, or the exact upper endpoint of a ball enclosing 2T sin(E/2) if that is certainly
+  larger than T.
+  - T = 686360751/10⁹ is not a dyadic number, so Arb holds κ̂ = T as a ball of radius about 2^{−256} that contains
+    the exact rational T.
+  - That ball always contains an admissible number κ̂* = max(T, upper endpoint of the ball for 2T sin(E/2)) ≥ κ.
+  - Ball arithmetic is inclusion-monotone, so every quantity computed with the ball (EN, ED, the exponents and
+    the Beta functions) encloses its value at κ̂*. This is what the proof needs.
+
+(Clarification requested by REVIEW.md §2.)
 
 **Proof.** Throughout, M = max(TΛ, 2T). For 0 < u ≤ ½, |d(u)| = T|1 − e^{i(φ(u)−φ(0))}| ≤ TΛu. For u > ½,
 |d(u)| = T ≤ 2Tu. Hence
@@ -343,7 +366,18 @@ products are computed with `acb_poly` multiplication, which is outward rounded.
 z_i = iβ_i h. Then d(h(i+θ)) = γ − g_i e^{z_i θ}, where g_i = Te^{iφ_i}.
 - Replace e^{z_iθ} by its Taylor polynomial of degree Q, giving d_{Q,i}. Since z_iθ is imaginary,
   |e^{iy} − Σ_{k≤Q}(iy)^k/k!| ≤ |y|^{Q+1}/(Q+1)! for real y. So |d − d_Q| ≤ ε_i := T|β_i h|^{Q+1}/(Q+1)! on cell i.
-- On cell 0 the constant term of d_{Q,0} is exactly 0, and |d − d_Q|(t) ≤ T(|β_0|t)^{Q+1}/(Q+1)!.
+- *Coefficients.* The coefficients γ − g_i and −g_i z_i^k/k! of d_{Q,i} are irrational. In checker #1 they are Arb
+  balls, each containing the exact coefficient, so ε_i needs no rounding term: every later product and sum is
+  outward rounded. An implementation that instead rounds them to dyadic numbers must add the rounding error to
+  ε_i (checker #2 rounds to multiples of 2^{−128} and does add it). (REVIEW.md §2, clarification 2.)
+- On cell 0, φ_0 = ψ_0, so g_0 = γ, and the constant term γ − g_0 of d_{Q,0} is exactly 0. Also
+  |d − d_Q|(t) ≤ T(|β_0|t)^{Q+1}/(Q+1)!.
+  - **The constant term must be the exact number 0, not a ball that contains 0.** Computing γ − g_0 in ball
+    arithmetic gives a ball of positive radius around 0. Then R_0(θ)/θ (below) would not be a polynomial, and
+    dividing by θ would not be justified.
+  - Checker #1 sets this coefficient to the exact `acb(0)` (radius 0) and asserts that it is exact before it forms
+    R_0/θ. It forms R_0/θ by shifting coefficients (degree k → k−1) and never divides a ball by θ. Checker #2 uses
+    the integer 0 and asserts R̂_0(0) = 0 exactly. (REVIEW.md §2, clarification 1.)
 - On cells i ≥ H, d = γ exactly (ε_i = 0). The single point u = ½ does not affect any integral.
 
 Q is the smallest integer with T(Λh)^{Q+1}/(Q+1)! < 2^{−110}.
@@ -364,8 +398,9 @@ sup_{[0,1]}|q| ≤ Σ_n |χ_n|. The same bound gives ‖ρ̃‖_∞ ≤ max_m Σ
 - For m ≥ 1, t ≥ mh, so
   r_m = (Σ_n|χ_n(R_m)| + ε_m)/(mh) + 2ε_max‖ρ̃‖_∞.
   The factor 2 is slack; ε_max‖ρ̃‖_∞ suffices.
-- For m = 0, R_0 has zero constant term: d_{Q,0}(0) = 0, the convolution part carries a factor θ, and
-  t ρ̃ = hθρ̃_0. So R_0(θ)/θ is a polynomial, and with t = hθ,
+- For m = 0, R_0 has zero constant term: d_{Q,0}(0) = 0 exactly (see above), the convolution part carries a
+  factor θ (Lemma C1 with m = 0 and V_{−1} = 0), and t ρ̃ = hθρ̃_0. So R_0(θ)/θ is a polynomial, whose
+  coefficients are those of R_0 shifted down by one degree. With t = hθ,
   r_0 = Σ_n|χ_n(R_0/θ)|/h + T|β_0|^{Q+1}h^Q/(Q+1)! + ε_max‖ρ̃‖_∞.
 
 Then r(t) := r_m on I_m is a valid majorant in Lemmas 3 and 3'. sup|R/t| ≤ max_m r_m, and ε_∞ = max_m r_m/(1−κ).
@@ -395,8 +430,15 @@ Put n' = N−k. The cell integrals are, per monomial σ^b:
 - n' = 1: ∫_0^1 (1−σ)^{−γ}σ^b dσ = B(b+1, 1−γ).
 - n' = 2: ∫_0^1 (2−σ)^{−γ}σ^b dσ = Σ_{e=0}^{b} binom(b,e) 2^{b−e} (−1)^e (2^{e+1−γ} − 1)/(e+1−γ). This follows by
   substituting y = 2−σ and expanding σ^b = (2−y)^b.
-- n' ≥ 3: (n'−σ)^{−γ} = n'^{−γ} Σ_{l≥0} ((γ)_l/l!)(σ/n')^l, truncated after L(n') terms. With |(γ)_l/l!| ≤ 1, the
-  tail is ≤ n'^{−a} n'^{−L−1}/(1−1/n') · sup|ρ̃_k|, times h^{1−a}.
+- n' ≥ 3: (n'−σ)^{−γ} = n'^{−γ} Σ_{l≥0} ((γ)_l/l!)(σ/n')^l.
+  - **Truncation.** The program keeps the L + 1 terms l = 0, 1, …, L, where
+    L = L(n') = min(54, ⌈25 ln 10/ln n'⌉ + 1).
+  - **Tail.** With |(γ)_l/l!| ≤ 1 and 0 ≤ σ ≤ 1, the omitted part Σ_{l≥L+1} is at most
+    n'^{−a} · n'^{−(L+1)}/(1−1/n') · sup|ρ̃_k|, times |h^{1−γ}| = h^{1−a}.
+  - **What checker #1 adds.** It adds the larger bound n'^{−a} · n'^{−L}/(1−1/n') · sup|ρ̃_k| · h^{1−a} (one factor
+    n' more). This would remain valid even if only the L terms l = 0..L−1 were kept. It is the conservative reading
+    asked for in REVIEW.md §2 (§6.2). Up to session S5 the program used the tail n'^{−(L+1)}, which is also correct,
+    because it keeps l = 0..L. Since n'^{−L} ≤ 10^{−25}/n', the whole tail is below 10^{−22} either way.
 
 ### 6.3 p̃ on a cell m ≥ 1 of [0,½]
 
@@ -492,14 +534,19 @@ The input is T, C, the knots and the phases, all exact rationals (decimal string
 `checkers/rigorous_check.py` checks, in outward-rounded Arb ball arithmetic:
 1. 0 < T ≤ C < 1; the knots strictly increase from 0 to ½; there is one phase per knot.
 2. N is even and N·u_j ∈ ℤ for every knot.
-3. a = Re γ = T cos ψ_0 satisfies 0 < a < 1.
-4. κ < 1. It is computed as follows.
+3. a = Re γ = T cos ψ_0 satisfies 0 < a < 1. (Theorem A needs only a ≥ 0; see §3.)
+4. κ̂ < 1, for a number κ̂ ≥ κ = sup_{(0,1]}|d| (by the remark in §3 this suffices). It is computed as
+   follows.
    - On (½,1], |d| = T.
-   - On (0,½], |d(u)| = 2T|sin((φ(u)−ψ_0)/2)|. The function |φ − ψ_0| is piecewise linear, so its maximum
-     E = max_j |ψ_j − ψ_0| is attained at a knot.
+   - On (0,½], |d(u)| = 2T|sin((φ(u)−ψ_0)/2)|. The function φ − ψ_0 is linear on each piece [u_j, u_{j+1}], and
+     the absolute value of a linear function is convex, so its maximum on each piece is attained at an endpoint.
+     Hence E = max_{[0,½]} |φ − ψ_0| = max_j |ψ_j − ψ_0| is attained at a knot. (The function |φ − ψ_0| itself is
+     piecewise linear only after its zero crossings are added as breakpoints; the conclusion does not need them.)
    - If E < π (certified), then sup_{(0,½]}|d| = 2T sin(E/2), because sin(x/2) is increasing on [0,π].
      Otherwise the program uses 2T.
-   - κ = max(T, that value).
+   - If the upper endpoint of the ball for that value is certainly > T, κ̂ is that upper endpoint, an exact
+     number. Otherwise κ̂ = T, held as a ball containing the exact rational T. In the second case the ball also
+     contains an admissible κ̂* ≥ κ, which is enough (remark in §3).
 5. Every quantity entering (10) is a finite ball, and D̃_low − ED > 0 (lower endpoint).
 6. **PASS iff the upper endpoint of the ball (|p̃(1)| + EN)/(D̃_low − ED) is < C.**
 
@@ -691,12 +738,29 @@ Pinho's profile (C42_compact_best.json). Log: `logs/S5/finite_n_claim.log`.
   - Bakeas's and Pinho's profiles PASS, with enclosures consistent with their published values;
   - doubling N or changing P moves F_upper by < 1e-11 once converged;
   - corruption tests FAIL as they should (§8).
-- **Second checker.** CLAUDE.md requires a second checker, written independently from this file and the
-  certificate format only. At the time of writing it has **not** been written (planned for session S6).
-  Until it exists and agrees, the bound must be treated as a candidate.
+- **Second checker (session S6).** `checkers/independent_check.py` was written in a separate session from this
+  file, `certificate/` and the README's certificate-format section only. Its author did not open checker #1, the
+  search code or the log. It implements the same framework (Theorem A, §4, piecewise-polynomial ρ̃ on the
+  knot-aligned grid, Lemma C1), but uses a different rigorous sub-method wherever there is a choice. It has its own
+  witness, exact integer convolutions, the closed form of p̃(1) with no truncation, and a linear-minorant lower
+  bound for the denominator instead of inequality S (REVIEW.md §3). It PASSes the certificate at three settings,
+  and its upper bounds lie inside checker #1's enclosures (§8.2). It gives the expected verdict on all 28
+  corruption cases (§8.3).
+- **Referee report.** The same session reviewed this file as a referee (`REVIEW.md`). It found no mathematical
+  error and asked for clarifications, which are made here: the exact zero on cell 0 (§5.3), the rounding of the
+  coefficients of d (§5.3), the series truncation (§6.2), κ̂ (§3), the hypothesis on a (§3, §7), and the wording
+  in §7.
+- **What independence means here.** The two checkers share no code, witness or intermediate data. They share the
+  mathematics of §§3–4 (Theorem A and the a posteriori bounds) and the trial-space framework of §5, so an error
+  there would affect both. Both were written by AI agents (Claude Code). The independence is procedural, not a
+  different author.
+- **Not done.** No human mathematician has checked Theorem A, Lemma C1 or §6. Before the bound is treated as
+  established, a human should read at least these.
 
 ## AI use
 
-The search, the certifier, its derivation and this text were produced by AI agents (Claude Code), directed by
-the repository owner. The mathematics of Sections 1–4 is by Bakeas (with AI assistance, per his notes), Harcos
-and Pinho. Nothing in Sections 5–8 has been reviewed by a human mathematician. Corrections are welcome.
+The search, both certifiers, their derivation, the referee report and this text were produced by AI agents
+(Claude Code, Anthropic), directed by the repository owner. Checker #2 and REVIEW.md were written blind, from this
+file and the certificate format only. The mathematics of Sections 1–4 is by Bakeas (with AI assistance, per his
+notes), Harcos and Pinho. Nothing in Sections 5–8 has been reviewed by a human mathematician. Corrections are
+welcome.
