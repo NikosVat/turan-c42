@@ -3,7 +3,7 @@
 Model: Opus 5.5. Every session starts from `main`. Credits expire 4 Nov, so aim to finish S7 by tomorrow early afternoon.
 Before starting, note your remaining credit. Rough split of what's left: S2 30% · S3 20% · S4 10% · S5 15% · S6 15% · S7 5% · buffer 5%.
 
-Target: certified upper bound strictly below 0.6863607950 (Pinho, PR #305).
+Target: certified upper bound strictly below 0.6863607950 (Pinho, [PR #305](https://github.com/teorth/optimizationproblems/pull/305)).
 
 ---
 
@@ -23,7 +23,7 @@ Every hypothesis of Theorem A must still be checked rigorously: contraction, den
 
 Validation gates, in order (log each one):
 (a) certifies Bakeas's 0.68637 profile;
-(b) certifies Pinho's PR #305 profile at 0.6863607950 using far less memory than 95 GB;
+(b) certifies Pinho's [PR #305](https://github.com/teorth/optimizationproblems/pull/305) profile at 0.6863607950 using far less memory than 95 GB;
 (c) shows how tight it is: the certified bound minus the float value, as a function of N;
 (d) corruptions FAIL: a perturbed profile, and a claim 1×10⁻⁹ below the true F.
 
@@ -78,6 +78,6 @@ Read ONLY `NOTES.md`, `certificate/`, and the certificate-format section of the 
 
 ## S7 — Package
 
-- **Record mode:** on `certificate`, fix anything REVIEW.md raised and rerun both checkers. Write README.md and PR_DRAFT.md as described in CLAUDE.md, credit Pinho's PR #305 as well, record the SHA-256, and open a PR into main.
+- **Record mode:** on `certificate`, fix anything REVIEW.md raised and rerun both checkers. Write README.md and PR_DRAFT.md as described in CLAUDE.md, credit Pinho's [PR #305](https://github.com/teorth/optimizationproblems/pull/305) as well, record the SHA-256, and open a PR into main.
 - **Findings mode:** on `findings`, polish FINDINGS.md and write PR_DRAFT.md for a "comment only, no bound change" PR to constants/42a.md. Many such PRs are already open in that repo. Summarize the structural result and the numerical evidence, credit Bakeas and Pinho, and add an AI-use statement.
 

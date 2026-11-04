@@ -1,0 +1,7 @@
+L=  8 n=   400: F_n smooth 0.6952694034, with k<=8 graft 0.6949118481, gain -3.576e-04
+L=  8 n=   800: F_n smooth 0.6916388854, with k<=8 graft 0.6914422434, gain -1.966e-04
+L=  8 n=  1600: F_n smooth 0.6894657230, with k<=8 graft 0.6893396920, gain -1.260e-04
+L=  8 n=  3200: F_n smooth 0.6881758821, with k<=8 graft 0.6880918312, gain -8.405e-05
+L=  8 n=  6400: F_n smooth 0.6874160227, with k<=8 graft 0.6873604915, gain -5.553e-05
+L=  8 n= 12800: F_n smooth 0.6869712831, with k<=8 graft 0.6869354155, gain -3.587e-05
+L=  8 n= 25600: F_n smooth 0.6867124380, with k<=8 graft 0.6866897985, gain -2.264e-05

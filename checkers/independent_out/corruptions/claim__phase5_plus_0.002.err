@@ -1,0 +1,26 @@
+[    0.0s] certificate /home/user/turan-c42/checkers/corruptions/claim/phase5_plus_0.002.json: T = 686360751/1000000000, C = 686360751/1000000000, 33 pieces
+[    0.0s] a = [0.101654037561 +/- 7.82e-14], E = 0.870865, sup_(0,1/2]|d| <= [0.57901759 +/- 3.85e-9], kappa_hat = 686360751/1000000000
+[    2.6s] d^ built: Q = 13, Lambda = 614.888, eps_max = 1.1e-36
+[    3.3s] float solve: N=36864, P=12, Q=13, stride S=26, FFT length 1920000
+[   64.8s]   GMRES: info=0, inner iterations=87
+[   64.9s] exact residual (pass 0)
+[   91.1s]   collocation max|R/t| at the nodes (float) = 2.431e-10
+[  162.1s]   GMRES: info=3, inner iterations=99
+[  162.1s] exact residual (pass 1)
+[  187.4s]   collocation max|R/t| at the nodes (float) = 1.995e-14
+[  196.8s]   GMRES: info=3, inner iterations=15
+[  196.9s] exact residual (pass 2)
+[  218.2s]   collocation max|R/t| at the nodes (float) = 3.068e-15
+[  218.6s] ||rho~||_inf <= 422.819066
+[  226.3s] sup |R/t| <= 1.6572e-10 (worst piece t in [5.425e-05, 5.595e-05])
+[  228.1s] EN: integrated 1.8492e-12, sup 5.8817e-10 ; ED: integrated 7.7952e-13, sup 1.6622e-10
+[  233.2s] p~(1) = [0.13052410166787578222 +/- 2.95e-21] + [-0.17711666316665818158 +/- 4.82e-22]j
+[  238.3s] kernel polynomials built (Pk = 30), E_kern <= 7.784e-17
+[  266.5s] kernel convolution done (stride 43)
+[  266.6s]   denominator cells 1..3 done (fit degree 20, v degree 65), running sum [0.000300421722815512 +/- 2.04e-19]
+[  266.6s]   denominator cells 4..15 done (fit degree 14, v degree 47), running sum [0.00101179132000140 +/- 3.68e-18]
+[  266.7s]   denominator cells 16..127 done (fit degree 9, v degree 32), running sum [0.00598406357352068 +/- 6.45e-19]
+[  267.5s]   denominator cells 128..1023 done (fit degree 6, v degree 23), running sum [0.0329617775938318 +/- 3.06e-17]
+[  279.9s]   denominator cells 1024..18431 done (fit degree 4, v degree 17), running sum [0.320553840469164 +/- 3.73e-16]
+[  279.9s] float estimate of int|p~|w minus D~_low (cells >= 1; diagnostic): -3.886e-16
+[  279.9s] D~_low = [0.32055384046916429467 +/- 4.26e-22]

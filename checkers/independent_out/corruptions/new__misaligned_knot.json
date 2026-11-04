@@ -1,0 +1,15 @@
+{
+ "checker": "checkers/independent_check.py",
+ "certificate": "/home/user/turan-c42/checkers/independent_out/corruptions/new/misaligned_knot.json",
+ "python_flint": "0.9.0",
+ "numpy": "2.5.3",
+ "checker_sha256": "26e12388ec20955b6394dcc96bae77c0bfc949cb2d649dae45a9e2a747008093",
+ "certificate_sha256": "c576c0369a614ac7bcad979ebb1e6b937356814ccb9a5175705e0337315c3a7a",
+ "T": "686360751/1000000000",
+ "C": "686360751/1000000000",
+ "pieces": 33,
+ "verdict": "REFUSED",
+ "reason": "grid N=36864 is not even or not aligned with the knots (lcd 169878528)",
+ "runtime_s": 0.0,
+ "peak_rss_GB": 0.075
+}

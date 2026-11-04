@@ -1,0 +1,9 @@
+OK  bakeas_phase0_plus_5e-2.json  expected=FAIL got=FAIL
+OK  bakeas_T_0.68636.json  expected=FAIL got=FAIL
+OK  bakeas_shift_a_negative.json  expected=REFUSED got=REFUSED
+OK  pinho_claim_below_T.json  expected=REFUSED got=REFUSED
+OK  pinho_T_below_fixed_point.json  expected=FAIL got=FAIL
+OK  pinho_phase3_plus_1e-2.json  expected=FAIL got=FAIL
+OK  pinho_T76_claim_1e-9_below_F.json  expected=FAIL got=FAIL
+OK  pinho_T76_claim_1e-9_above_F.json  expected=PASS got=PASS
+corruption tests: 8 as expected, 0 mismatches

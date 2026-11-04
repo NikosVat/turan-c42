@@ -205,5 +205,5 @@ Koshta's §2 states an equivalent fact. Consequences:
 - Bakeas's limit family restricts only by the ansatz s_k = g(k/n);
 - directions C (any β) and D are reparametrisations within B, or non-smooth first halves.
 
-The finite-n experiments in LOG.md (S1, 16:15) find a single basin at constant modulus for n = 400. They also find
+Full proof and the S4 finite-n study: FINDINGS.md. The finite-n experiments in LOG.md (S1, 16:15) find a single basin at constant modulus for n = 400. They also find
 that the advantage of a free first half over the smooth one decays like n^{−0.8}.

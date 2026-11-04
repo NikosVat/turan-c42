@@ -1,0 +1,11 @@
+{
+ "checker": "checkers/independent_check.py",
+ "certificate": "/home/user/turan-c42/checkers/corruptions/pinho_T_below_fixed_point.json",
+ "python_flint": "0.9.0",
+ "numpy": "2.5.3",
+ "checker_sha256": "26e12388ec20955b6394dcc96bae77c0bfc949cb2d649dae45a9e2a747008093",
+ "verdict": "REFUSED",
+ "reason": "missing key C",
+ "runtime_s": 0.0,
+ "peak_rss_GB": 0.075
+}

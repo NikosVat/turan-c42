@@ -1,6 +1,6 @@
 # PLAN.md — ranking of directions A–D (written end of S1, 2026-11-03)
 
-**Target: certified bound < 0.6863607950** (Pinho, teorth PR #305, Bakeas's Theorem A with 48 quadratic knots).
+**Target: certified bound < 0.6863607950** (Pinho, teorth [PR #305](https://github.com/teorth/optimizationproblems/pull/305), Bakeas's Theorem A with 48 quadratic knots).
 
 Every number below is a float (search only). The evidence is in LOG.md (S1) and `results/`.
 
@@ -85,3 +85,54 @@ The Bakeas–Pinho family is very close to saturated. A new certified record is 
 significant digit, roughly 0.68636076–0.68636079, and only if S3 delivers a much tighter certifier. If S2 cannot
 get the float fixed point below ~0.68636076, or S3 cannot certify within ~2e-8 of the float value, the right
 outcome is to write up the negative results (B, C, D, E) and stop.
+
+## S3 update (certifier, branch `certifier`)
+
+Certification is no longer the bottleneck. `checkers/rigorous_check.py` (spectral a-posteriori, Arb):
+- Pinho's profile: F ∈ [0.6863607439470, 0.6863607439516] at N=36864, P=8 (3.2 GB, ~5 min);
+- S1's 96-piece candidate at T = 0.68636076 PASSes with F ≤ 0.68636073516 (6.3 GB, 10 min).
+
+The remaining work for a record is: re-optimize at the lower T (search), a second independently written checker
+(separate session, from NOTES_CERTIFIER.md only), review, and packaging.
+
+## S2 outcome (direction A search, branch `search-A`, 2026-11-03). Float only, not certified.
+
+- **Best float fixed point: T* = 0.6863607422566 ± 4e-11** (D96_6, 101 pieces), i.e. **5.27e-8 below 0.6863607950**.
+- **Saturation.** See `results/SATURATION.md`.
+  - The family's float infimum is ≈ 0.686360742 ± 3e-10, so direction A is exhausted in float.
+  - Piece count saturates at ~35–40 with adjoint-greedy knots. What still matters is the first-knot depth:
+    the optimal phase has a u^0.28 singularity at 0.
+- **Candidates** (`results/candidate_{101,40,33}pc.json`):
+  - 101 pieces: T* = 0.6863607423, first break 1/294912, max slope 6817;
+  - 40 pieces: T* = 0.6863607438, first break 1/147456, max slope 3653;
+  - 33 pieces: T* = 0.6863607503, first break 1/18432, max slope 615.
+- **Correction to the S1 estimate above.** A claim at T_c needs F_upper(T_c) ≤ T_c. Since dF/dT = −1.2229, the
+  certifier may lose up to **2.2229 × margin**:
+  - 1.17e-7 (101 pieces), 1.14e-7 (40 pieces), 9.9e-8 (33 pieces).
+  - So the allowed gap is not "≲ 2e-8". Pinho's certifier lost 3.3e-8 on his profile.
+  - The difficulty for S3 is the steep first pieces (slopes 600–6800 vs Pinho's 196). The requirement is not
+    an extra-tight certifier.
+  - Suggested S3 order: certify the 33-piece candidate first (first break 1/18432), then try the 40- and 101-piece
+    ones with a graded near-0 grid.
+- Tools added: `src/fastsolve.py` (O(N log² N) forward/adjoint), `src/opt2.py` (driver + fixed point),
+  `src/knotgrad.py` (knot gradients and insertion scores), `src/finite_n_check.py`, `src/export_candidate.py`,
+  `src/summarize.py`.
+
+## S5 outcome (certificate, branch `certificate`, 2026-11-04)
+
+- **Checker #1 certifies C42 ≤ C = 0.686360751** (33-piece S2 profile, T = C) at N = 36864, P = 10:
+  F ∈ [0.6863607487772, 0.6863607500725], margin 9.3e-10. Stable: N = 73728 (P 10) and P = 12 give nested
+  enclosures around F ≈ 0.68636074942. Corruptions all as expected. 4.40e-8 below Pinho's 0.6863607950.
+- 40pc / 101pc not certified: they need N ≥ 147456 / 294912 (est. ≥ 13 GB / ≥ 26 GB at P = 10) and would gain
+  ≤ 6.5e-9 more. Not worth it before checker #2 exists.
+- Next (S6): independent checker #2 written from NOTES.md, certificate/ and README "Certificate format" only.
+  Then PR_DRAFT.md.
+
+## S7 outcome (package, branch `certificate`, 2026-11-04)
+
+- REVIEW.md points addressed (NOTES §§1, 3, 5.3, 6.2, 7, 8, 9; README). Checker #1: exact-zero assertion on cell 0
+  and conservative series tail (no change in F to 25 digits).
+- Both checkers rerun at all settings and on all corruptions: everything as expected. Fresh-clone reproduction OK.
+- No C42 claim below 0.686360751 in teorth/optimizationproblems (4 Nov 2026).
+- Remaining before a public claim: a human reading of Theorem A, Lemma C1 and NOTES §6; then submit
+  `submission/` (fill `<REPO_URL>`, `<COMMIT>`).

@@ -1,0 +1,12 @@
+{"stage": "hypotheses", "seconds": 0.0, "a": "[0.101654037561 +/- 7.82e-14]", "kappa": "[0.686360751000 +/- 3e-17]"}
+{"stage": "witness", "seconds": 225.06, "gmres": "318", "coll": "4.33e-08"}
+{"stage": "refine", "seconds": 337.13, "it": "0", "max_nodal_R_over_t": "1.101e-06"}
+{"stage": "residual: d coefficients", "seconds": 346.14, "Q": "13"}
+{"stage": "residual: U product", "seconds": 394.68}
+{"stage": "residual: V product", "seconds": 446.27}
+{"stage": "residual: certified", "seconds": 459.93, "sup": "[1.1096e-8 +/- 2.08e-13]", "worst": "2"}
+{"stage": "propagation", "seconds": 460.74, "eps_inf": "[3.5379e-8 +/- 1.13e-13]", "EN": "[1.7850e-9 +/- 1.74e-15]", "ED": "[7.5502e-10 +/- 2.99e-15]"}
+{"stage": "numerator", "seconds": 465.73, "p1": "[0.13064442213636421379 +/- 3.84e-21] + [-0.17721912722584258263 +/- 3.46e-22]j"}
+{"stage": "denominator: kernel U product", "seconds": 504.08}
+{"stage": "denominator: kernel V product", "seconds": 537.31}
+{"stage": "denominator: certified", "seconds": 571.08, "n_geo": "67", "D_low": "[0.320778022672411 +/- 3.23e-16]", "err": "[3.187e-12 +/- 1.86e-16]", "E_kern": "[4.596e-12 +/- 4.00e-16]"}

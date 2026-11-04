@@ -1,0 +1,10 @@
+33 pieces, knot lcm denominator 18432, N0 = 36864, T = 0.68636075
+[    5.3s] eval    1 Fx = 0.6863607504427 best 0.6863607504427 |g| = 5.818e-09
+[    7.9s] eval    2 Fx = 0.6863607566927 best 0.6863607504427 |g| = 1.931e-05
+[   17.9s] eval    6 Fx = 0.6863607504427 best 0.6863607504427 |g| = 1.285e-08
+[   30.2s] eval   11 Fx = 0.6863607504427 best 0.6863607504427 |g| = 3.362e-09
+optimisation done: 13 evals, Fx 0.6863607504427 -> 0.6863607504427 (delta -5.895e-14); CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL [35s]
+verify: F_N ['0.6863608152719', '0.6863607672805', '0.6863607548213', '0.6863607516880'] at [36864, 73728, 147456, 294912]
+verify: Fx_opt 0.6863607504427  Fx_ind 0.6863607506345  Fx_4fit 0.6863607506643  err 1.92e-10
+fixed point: T* = 0.6863607502854  (dF/dT = -1.2229, residual -1.9e-14, err est 8.6e-11); margin below 0.6863607950: 4.471e-08
+wrote results/S5_33pc_reopt_T75.json [43s]

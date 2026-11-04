@@ -1,0 +1,108 @@
+{
+ "verdict": "FAIL",
+ "C": "68637/100000",
+ "T": "68637/100000",
+ "N": 768,
+ "P": 6,
+ "Q": 10,
+ "Pk": 20,
+ "bits": 256,
+ "refine": 1,
+ "a": "[0.19917689221070864990 +/- 2.78e-21]",
+ "kappa": "[0.68637000000000000000 +/- 3e-25]",
+ "hypotheses": {
+  "0 < a = Re gamma": true,
+  "a < 1": true,
+  "kappa < 1": true,
+  "T < 1": true
+ },
+ "residual_sup": "[3.73328e-13 +/- 8.96e-21]",
+ "residual_worst_cell": 16,
+ "rho_norm": "[2.34600 +/- 1.39e-6]",
+ "eps_inf": "[1.19035e-12 +/- 4.67e-18]",
+ "EN": "[2.31172e-14 +/- 4.03e-20]",
+ "ED": "[1.24180e-14 +/- 2.57e-20]",
+ "EN_sup": "[1.486e-12 +/- 4.03e-16]",
+ "EN_int": "[2.312e-14 +/- 2.85e-18]",
+ "ED_sup": "[4.738e-13 +/- 1.65e-18]",
+ "ED_int": "[1.242e-14 +/- 2.03e-18]",
+ "p_tilde_1": "[0.2919788548882432882514677883 +/- 7.73e-29] + [-0.3564390182891935364843606427 +/- 5.34e-29]j",
+ "numerator_upper": "[0.4607607030344875004407547 +/- 3.74e-26]",
+ "denominator_trial_lower": "[0.6712757821172775481374794 +/- 1.03e-26]",
+ "denominator_lower": "[0.6712757821172651301631585 +/- 3.11e-26]",
+ "denominator_err": "[1.05968e-12 +/- 7.14e-19]",
+ "knot_cells": 31,
+ "F_upper": "[0.6863955401179618872134588 +/- 2.43e-27]",
+ "trial_sha256": "5e8c41cc34179fe3f36cb30951738ccd2fcaab7208c7c4588c65981cfc432f47",
+ "seconds": 5.1,
+ "log": [
+  {
+   "stage": "hypotheses",
+   "seconds": 0.0,
+   "a": "[0.199176892211 +/- 2.92e-13]",
+   "kappa": "[0.686370000000 +/- 3e-17]"
+  },
+  {
+   "stage": "witness",
+   "seconds": 0.06,
+   "gmres": "8",
+   "coll": "1.87e-14"
+  },
+  {
+   "stage": "refine",
+   "seconds": 0.89,
+   "it": "0",
+   "max_nodal_R_over_t": "5.180e-12"
+  },
+  {
+   "stage": "residual: d coefficients",
+   "seconds": 0.95,
+   "Q": "10"
+  },
+  {
+   "stage": "residual: U product",
+   "seconds": 1.32
+  },
+  {
+   "stage": "residual: V product",
+   "seconds": 1.67
+  },
+  {
+   "stage": "residual: certified",
+   "seconds": 1.75,
+   "sup": "[3.7333e-13 +/- 2.00e-18]",
+   "worst": "16"
+  },
+  {
+   "stage": "propagation",
+   "seconds": 1.76,
+   "eps_inf": "[1.1903e-12 +/- 4.54e-17]",
+   "EN": "[2.3117e-14 +/- 1.60e-19]",
+   "ED": "[1.2418e-14 +/- 2.57e-20]"
+  },
+  {
+   "stage": "numerator",
+   "seconds": 1.81,
+   "p1": "[0.29197885488824328825 +/- 1.47e-21] + [-0.35643901828919353648 +/- 4.37e-21]j"
+  },
+  {
+   "stage": "denominator: kernel U product",
+   "seconds": 2.11
+  },
+  {
+   "stage": "denominator: kernel V product",
+   "seconds": 2.37
+  },
+  {
+   "stage": "denominator: certified",
+   "seconds": 5.14,
+   "n_geo": "31",
+   "D_low": "[0.671275782117278 +/- 4.52e-16]",
+   "err": "[1.060e-12 +/- 3.20e-16]",
+   "E_kern": "[1.518e-12 +/- 4.50e-16]"
+  }
+ ],
+ "max_rss_GB": 0.14,
+ "certificate_sha256": "ef71677558eee6a064c23e398e528c77cafd7921cbf6ed5b51d7c57797544db6",
+ "checker_sha256": "253e56784cd7030dff72765046098f636609b423033c0a75ecdf7bdcd0a7f10d"
+}

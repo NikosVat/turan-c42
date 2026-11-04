@@ -1,0 +1,40 @@
+[    0.0s] a = [0.103114762547 +/- 3.82e-13], E = 0.870000, sup_(0,1/2]|d| <= [0.57851220 +/- 1.01e-9], kappa_hat = 429/625
+[    0.0s] d^ built: Q = 16, Lambda = 3.840, eps_max = 3.36e-36
+[    0.0s] float solve: N=64, P=10, Q=16, stride S=27, FFT length 3456
+[    1.5s]   GMRES: info=20, inner iterations=1161
+[    1.5s] exact residual (pass 0)
+[    1.6s]   collocation max|R/t| at the nodes (float) = 1.274e-12
+[    1.6s]   GMRES: info=3, inner iterations=15
+[    1.6s] exact residual (pass 1)
+[    1.6s]   collocation max|R/t| at the nodes (float) = 2.345e-15
+[    1.6s]   GMRES: info=0, inner iterations=7
+[    1.6s] exact residual (pass 2)
+[    1.7s]   collocation max|R/t| at the nodes (float) = 2.351e-15
+[    1.7s] ||rho~||_inf <= 2.653205
+[    2.7s] sup |R/t| <= 1.1891e-08 (worst piece t in [1.562e-02, 1.660e-02])
+[    2.7s] EN: integrated 1.7108e-09, sup 4.2276e-08 ; ED: integrated 7.9797e-10, sup 1.1969e-08
+[    2.7s] p~(1) = [0.27833369663753533350 +/- 3.70e-21] + [-0.26789182306356116575 +/- 2.01e-21]j
+[    2.7s] kernel polynomials built (Pk = 30), E_kern <= 1.483e-16
+[    2.8s] kernel convolution done (stride 41)
+[    2.8s]   denominator cells 1..3 done (fit degree 20, v degree 65), running sum [0.0901299612658451 +/- 3.13e-17]
+[    2.8s]   denominator cells 4..15 done (fit degree 14, v degree 47), running sum [0.300934384493925 +/- 1.69e-16]
+[    2.8s]   denominator cells 16..31 done (fit degree 9, v degree 32), running sum [0.560700350114528 +/- 3.99e-16]
+[    2.8s] float estimate of int|p~|w minus D~_low (cells >= 1; diagnostic): 5.910e-10
+[    2.8s] D~_low = [0.56070034953537663591 +/- 1.05e-21]
+residual checks (|R/t| vs rigorous r):
+  t=0.040144  |R/t| = 1.134e-11   r = 1.367e-11
+  t=0.019610  |R/t| = 3.778e-09   r = 7.265e-09
+  t=0.996265  |R/t| = 3.760e-16   r = 4.043e-16
+  t=0.994556  |R/t| = 3.284e-16   r = 3.485e-16
+  t=0.048342  |R/t| = 1.613e-13   r = 2.645e-13
+  t=0.013958  |R/t| = 7.361e-16   r = 8.670e-16
+p~ representation checks:
+  m=5 th=0.433  |direct - repr| = 6.25e-17  (|p|=1.105)
+  m=31 th=0.767  |direct - repr| = 1.39e-16  (|p|=0.526)
+  m=17 th=0.445  |direct - repr| = 1.11e-16  (|p|=0.762)
+  m=17 th=0.802  |direct - repr| = 0.00e+00  (|p|=0.755)
+  m=8 th=0.945  |direct - repr| = 5.55e-17  (|p|=0.969)
+  m=3 th=0.031  |direct - repr| = 2.22e-16  (|p|=1.248)
+p~(1): direct (0.278333696637535333 - 0.267891823063561166j), checker [0.278333696637535333 +/- 4.97e-19] + [-0.267891823063561166 +/- 2.53e-19]j, diff 2.28e-17
+denominator: GL estimate 0.560700350126842, certified D_low [0.5607003495353766 +/- 3.60e-17], estimate - D_low = 5.91e-10
+SELFTEST OK

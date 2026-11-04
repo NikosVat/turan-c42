@@ -1,0 +1,5 @@
+50 pieces, knot lcm denominator 18432, N0 = 36864, T = 0.68636076
+verify: F_N ['0.6863608062644', '0.6863607576154', '0.6863607449793', '0.6863607418009'] at [36864, 73728, 147456, 294912]
+verify: Fx_opt 0.6863607405357  Fx_ind 0.6863607407320  Fx_4fit 0.6863607407624  err 1.96e-10
+fixed point: T* = 0.6863607513320  (dF/dT = -1.2229, residual -3.4e-14, err est 8.8e-11); margin below 0.6863607950: 4.367e-08
+wrote results/A_q48_g1.json [19s]

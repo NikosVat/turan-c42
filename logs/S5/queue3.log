@@ -1,0 +1,20 @@
+done certificate/stability_N18432_P13.json FAIL [0.6863607514075835856956928 +/- 2.98e-26] [0.6863607474421288373157408 +/- 4.82e-26] 275.4 2.077 
+Terminated
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import json; d=json.load(open('certificate/stability_N36864_P12.json')); print('done', 'certificate/stability_N36864_P12.json', d['verdict'], d.get('F_upper'), d.get('F_lower'), d.get('seconds'), d.get('max_rss_GB'), d.get('reason',''))
+                   ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/json/__init__.py", line 298, in load
+    return loads(fp.read(),
+        cls=cls, object_hook=object_hook,
+        parse_float=parse_float, parse_int=parse_int,
+        parse_constant=parse_constant, object_pairs_hook=object_pairs_hook, **kw)
+  File "/usr/local/lib/python3.13/json/__init__.py", line 352, in loads
+    return _default_decoder.decode(s)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/usr/local/lib/python3.13/json/decoder.py", line 345, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/json/decoder.py", line 363, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)

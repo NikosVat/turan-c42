@@ -1,0 +1,7 @@
+{
+ "verdict": "REFUSED",
+ "reason": "ValueError: knots must be strictly increasing",
+ "max_rss_GB": 0.078,
+ "certificate_sha256": "6e1d34ed707dffe7a50721eadde528567d93190d54747e53d3715d63219df68b",
+ "checker_sha256": "93fdcf68c94578ee47ab2cacabe1df7b458ae27f61f1b24a36c86def918e6c7d"
+}

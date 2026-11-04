@@ -1,0 +1,10 @@
+# file N P expected   (stage 3, added in S7: corruptions of the certificate itself; the inputs are copies of the
+# files that checker #2's runner writes to checkers/independent_out/corruptions/new/)
+cert_C_below_T.json 36864 10 REFUSED
+cert_C_eq_1.json 36864 10 REFUSED
+cert_a_negative.json 36864 10 REFUSED
+cert_misaligned_knot.json 36864 10 REFUSED
+cert_phase_count_mismatch.json 36864 10 REFUSED
+cert_knots_not_increasing.json 36864 10 REFUSED
+cert_T_C_0.686360749.json 36864 10 FAIL
+cert_phase20_plus_1e-3.json 36864 10 FAIL

@@ -1,0 +1,5 @@
+# file N P expected   (stage 1; the claim-resolution tests are in list2.txt, built from T_0.68636074_C_eq_T)
+T_0.68636074_C_eq_T.json 36864 10 FAIL
+T_0.68636075_below_fixed_point.json 36864 10 FAIL
+phase5_plus_0.002.json 36864 10 FAIL
+phase12_plus_0.005.json 36864 10 FAIL

@@ -1,0 +1,2 @@
+done checkers/corruptions/claim/out/T74_claim_1e-9_below_F.json FAIL [0.6863607639542054392949733 +/- 2.53e-26] [0.6863607617992753040341318 +/- 1.72e-26] 292.0 2.273 
+done checkers/corruptions/claim/out/T74_claim_1e-9_above_F.json PASS [0.6863607639542054392949733 +/- 2.53e-26] [0.6863607617992753040341318 +/- 1.72e-26] 281.2 2.273 

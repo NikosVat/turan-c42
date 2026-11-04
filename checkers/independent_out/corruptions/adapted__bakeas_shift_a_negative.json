@@ -1,0 +1,15 @@
+{
+ "checker": "checkers/independent_check.py",
+ "certificate": "/home/user/turan-c42/checkers/independent_out/corruptions/adapted/bakeas_shift_a_negative.json",
+ "python_flint": "0.9.0",
+ "numpy": "2.5.3",
+ "checker_sha256": "26e12388ec20955b6394dcc96bae77c0bfc949cb2d649dae45a9e2a747008093",
+ "certificate_sha256": "ad9b16d5cf260355d7c707ce8f0104e5b55b13e3736902467de20bdaa5b56db1",
+ "T": "68637/100000",
+ "C": "68637/100000",
+ "pieces": 24,
+ "verdict": "REFUSED",
+ "reason": "a = Re gamma = T cos psi_0 is not certified > 0 (a = [-0.03812597648956883680644584379573449633176904290293081393205580427629128332739087176611193304081450527378641549844968679150655830064407 +/- 4.87e-135])",
+ "runtime_s": 0.0,
+ "peak_rss_GB": 0.077
+}
