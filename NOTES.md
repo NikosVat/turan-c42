@@ -564,9 +564,9 @@ A_G4_24, optimized in float at T = 0.68636076). Its float fixed point is T* = 0.
 changed, to C. Re-optimizing the phases at T = 0.68636075 (S5) moved T* by 2e-14, so the phases were kept.
 
 Knot structure:
-- dyadic knots 1/18432, …, 1/576;
-- the quadratic knots j²/1152 for j ≥ 2 (Pinho's family with 24 pieces);
-- adjoint-greedy insertions 13/2304, 25/2304, 41/2304.
+- near 0: 1/18432, 1/9216, 1/4608, 1/2304, 1/1152, 1/576 (S2 calls these "dyadic");
+- the quadratic knots j²/1152 for j = 2..24 (Pinho's family with 24 pieces);
+- four adjoint-greedy insertions: 1/768, 13/2304, 25/2304, 41/2304.
 
 Theorem A inputs (certified by the program):
 - a = Re γ = T cos ψ_0 = 0.1016540375610781… ∈ (0,1);
@@ -608,7 +608,28 @@ CORRUPTION_TABLE
 
 ### 8.4 Finite-n cross-check (floating point, not part of the proof)
 
-FINITE_N
+`src/finite_n_check.py` (float; FFT power-series exp from Bakeas's `crosscheck/finite_n.py`) evaluates the exact
+finite-n construction of §3 with K = ⌊n/2⌋ and s_k = T e^{iφ(k/n)}, at T = 0.686360751, for this profile and for
+Pinho's profile (C42_compact_best.json). Log: `logs/S5/finite_n_claim.log`.
+
+| n | F_n (this profile) | F_n (Pinho) | difference |
+|---|---|---|---|
+| 125000 | 0.6864519118 | 0.6864520357 | −1.24e-7 |
+| 250000 | 0.6864116410 | 0.6864118216 | −1.81e-7 |
+| 500000 | 0.6863890455 | 0.6863892306 | −1.85e-7 |
+| 1000000 | 0.6863764269 | 0.6863765926 | −1.66e-7 |
+| 2000000 | 0.6863694088 | 0.6863695480 | −1.39e-7 |
+| 4000000 | 0.6863655194 | 0.6863656337 | −1.14e-7 |
+
+- F_n decreases monotonically. The ratios of successive increments are constant (≈ 1.81), as expected for
+  F_n − F ∝ n^{−0.86}.
+- 3-point Aitken extrapolates are still rising towards the limits:
+  - this profile: 0.68636016, 0.68636047, 0.68636061, 0.68636068;
+  - Pinho's profile: 0.68636027, 0.68636055, 0.68636068, 0.68636074.
+- Their last difference, −5.5e-8, agrees with the difference of the limits at this T: F ≈ 0.6863607494 here,
+  against ≈ 0.6863607978 for Pinho's profile (his F at T = 0.6863607950 plus 1.2229 × 4.4e-8), i.e. −4.8e-8.
+- So the finite-n values are consistent with the certified limit. At these n the finite-n error (~5e-6) is far
+  larger than the margin, so this is a consistency check only, not evidence at the 1e-9 level.
 
 
 ## 9. What is new and unreviewed

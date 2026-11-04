@@ -79,8 +79,8 @@
  ],
  "checker": {
   "program": "checkers/rigorous_check.py",
-  "N": 36864,
-  "P": 10,
+  "N": 18432,
+  "P": 14,
   "refine": 1,
   "bits": 256,
   "Pk": 20

@@ -1,0 +1,12 @@
+n =   125000: C42_compact_best.json: F_n = 0.6864520357 (T=0.686360751)  c42_profile_0.686360751.json: F_n = 0.6864519118 (T=0.686360751)
+            differences to C42_compact_best.json: -1.239e-07
+n =   250000: C42_compact_best.json: F_n = 0.6864118216 (T=0.686360751)  c42_profile_0.686360751.json: F_n = 0.6864116410 (T=0.686360751)
+            differences to C42_compact_best.json: -1.807e-07
+n =   500000: C42_compact_best.json: F_n = 0.6863892306 (T=0.686360751)  c42_profile_0.686360751.json: F_n = 0.6863890455 (T=0.686360751)
+            differences to C42_compact_best.json: -1.851e-07
+n =  1000000: C42_compact_best.json: F_n = 0.6863765926 (T=0.686360751)  c42_profile_0.686360751.json: F_n = 0.6863764269 (T=0.686360751)
+            differences to C42_compact_best.json: -1.656e-07
+n =  2000000: C42_compact_best.json: F_n = 0.6863695480 (T=0.686360751)  c42_profile_0.686360751.json: F_n = 0.6863694088 (T=0.686360751)
+            differences to C42_compact_best.json: -1.392e-07
+n =  4000000: C42_compact_best.json: F_n = 0.6863656337 (T=0.686360751)  c42_profile_0.686360751.json: F_n = 0.6863655194 (T=0.686360751)
+            differences to C42_compact_best.json: -1.143e-07
