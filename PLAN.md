@@ -1,6 +1,6 @@
 # PLAN.md — ranking of directions A–D (written end of S1, 2026-11-03)
 
-**Target: certified bound < 0.6863607950** (Pinho, teorth PR #305, Bakeas's Theorem A with 48 quadratic knots).
+**Target: certified bound < 0.6863607950** (Pinho, teorth [PR #305](https://github.com/teorth/optimizationproblems/pull/305), Bakeas's Theorem A with 48 quadratic knots).
 
 Every number below is a float (search only). The evidence is in LOG.md (S1) and `results/`.
 

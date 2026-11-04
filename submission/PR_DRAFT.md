@@ -2,8 +2,10 @@
 
 Placeholders: `<REPO_URL>` = URL of this repository, `<COMMIT>` = the commit hash to cite (pin a commit, as the
 other 42a rows do). Files to submit: `submission/42a.md` → `constants/42a.md`, and the two README changes in
-`submission/README_row42.md` (a full patched copy is `submission/README.md`). Both are written on top of PR #305
-(teorth/optimizationproblems commit `bac1d85`), which is itself on top of PR #302.
+`submission/README_row42.md` (a full patched copy is `submission/README.md`). All are written against the current
+`main` of teorth/optimizationproblems (commit `87b4ebbd426ff8db597a2004cc45da17903bdcf2`) and add only our row,
+our reference [Vat26] and our contribution note, plus the README cell and one Recent-progress line. They contain
+nothing from the open PRs [#302](https://github.com/teorth/optimizationproblems/pull/302) (Bakeas) or [#305](https://github.com/teorth/optimizationproblems/pull/305) (Pinho); those are cited by inline links.
 
 Before submitting, the human contributor should read and verify the references and links, as CONTRIBUTING's AI
 use policy requires, and re-check the open PRs for a lower C42 claim.
@@ -15,13 +17,13 @@ use policy requires, and re-check the open PRs for a lower C42 claim.
 **Body:**
 
 This PR records **C₄₂ ≤ 686360751/1000000000 = 0.686360751\*** for Turán's pure power-sum constant. That is
-4.40e-8 below #305 (0.6863607950\*), 9.249e-6 below #302 (0.68637\*), and 9.750553e-4 below the merged
-0.6873358063\*. The margins are exact differences of the decimal values.
+4.40e-8 below the pending [#305](https://github.com/teorth/optimizationproblems/pull/305) (0.6863607950\*), 9.249e-6 below the pending [#302](https://github.com/teorth/optimizationproblems/pull/302) (0.68637\*), and
+9.750553e-4 below the merged 0.6873358063\* ([#263](https://github.com/teorth/optimizationproblems/pull/263)). The margins are exact differences of the decimal values.
 
-**Idea.** The construction and the limit theorem are Bakeas's (#302, Theorem A): Harcos's linearization with
-s_k = T e^{iφ(k/n)} for k ≤ ⌊n/2⌋, which gives limsup R_n ≤ max(T, F). Pinho (#305) observed that the proof holds
-for any finite set of knots, and added the integrated (Gronwall) form of the residual bound. Both are used
-unchanged. Two things are new:
+**Idea.** The construction and the limit theorem are Bakeas's ([#302](https://github.com/teorth/optimizationproblems/pull/302), Theorem A): Harcos's linearization
+with s_k = T e^{iφ(k/n)} for k ≤ ⌊n/2⌋, which gives limsup R_n ≤ max(T, F). Pinho ([#305](https://github.com/teorth/optimizationproblems/pull/305)) observed that the
+proof holds for any finite set of knots, and added the integrated (Gronwall) form of the residual bound. Both are
+used unchanged. Two things are new:
 
 - **A 33-piece profile.** It was found by an adjoint-gradient search on the limit functional. It uses the knots
   j²/1152 (Pinho's quadratic family with 24 pieces), six dyadic knots 1/18432, …, 1/576 near 0, and four greedy
@@ -34,8 +36,8 @@ unchanged. Two things are new:
     Chebyshev coefficients.
   - Lemma 3, in Pinho's integrated form, turns this into bounds on |p(1) − p̃(1)| and on the denominator.
   - p̃ is evaluated on each cell with the kernel singularity handled in closed form.
-  - The result is an enclosure of F of width about 1e-11 at N = 73728 and 7 GB. For comparison, #305's
-    certificate used N = 14,155,776 for a one-sided gap of about 3e-8.
+  - The result is an enclosure of F of width about 1e-11 at N = 73728 and 7 GB. For comparison, the
+    certificate of [#305](https://github.com/teorth/optimizationproblems/pull/305) used N = 14,155,776 for a one-sided gap of about 3e-8.
 
 **Certificate, note, format specification and checkers:** <REPO_URL>/tree/<COMMIT>
 
@@ -67,7 +69,7 @@ unchanged. Two things are new:
 
 **Scope.** This is an unrefereed analytic asymptotic reduction (a bound on limsup R_n). No explicit finite
 threshold, optimality or formal verification is claimed. The asterisk follows CONTRIBUTING's convention for
-self-archived results. The margin below #305 is small (4.4e-8) but large compared with the certified enclosure
+self-archived results. The margin below [#305](https://github.com/teorth/optimizationproblems/pull/305) is small (4.4e-8) but large compared with the certified enclosure
 width (about 1e-11). The float search (session S2) puts the best fixed point of the phase-only family at about
 0.68636074, so further gains inside this family are confined to about 1e-8.
 
@@ -77,9 +79,14 @@ a separate Claude agent, working blind from the note and the certificate format 
 code or data, but both are AI-written, so their independence is procedural. No human mathematician has checked
 the argument.
 
-**Overlap.** This PR edits the same table, reference list and README cell as #302 and #305, both open as of
-4 Nov 2026. It is written on top of #305, because the new row cites [Bak26] and [Pin26b]. Please merge them in
-chronological order: the new row goes after the [Pin26b] row. #310 changes only the lower-bound table and does
-not conflict.
+**Pending PRs and overlap.** [#302](https://github.com/teorth/optimizationproblems/pull/302) (Bakeas, 0.68637\*) and [#305](https://github.com/teorth/optimizationproblems/pull/305) (Pinho, 0.6863607950\*) are still open
+as of 4 Nov 2026. This construction builds directly on both: it uses Bakeas's Theorem A and Pinho's
+arbitrary-knot form and integrated residual bound.
+- This PR is written against current `main`. It does not include their rows or references, and cites them by
+  inline links instead.
+- It edits the same table, reference list and README cell. If [#302](https://github.com/teorth/optimizationproblems/pull/302) or [#305](https://github.com/teorth/optimizationproblems/pull/305) is merged first, we will rebase:
+  the new row goes after their rows, and the inline links in our row and contribution note become their
+  reference keys ([Bak26], [Pin26b]).
+- [#310](https://github.com/teorth/optimizationproblems/pull/310) changes only the lower-bound table and does not conflict.
 
 🤖 Generated with [Claude Code](https://claude.com/claude-code)

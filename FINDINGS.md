@@ -3,7 +3,7 @@
 Status: unrefereed note from this project (session S4, 2026-11-03). Section 2 has complete, elementary proofs.
 Sections 5–7 report **floating-point numerics** (local optimisation). The only rigorous numbers in them are the Arb
 upper bounds for R_n at the finite n listed, which say nothing rigorous about C42. Nothing here changes the
-certified upper bound for C42. The current record is Pinho's 0.6863607950* (teorth PR #305).
+certified upper bound for C42. The current record is Pinho's 0.6863607950* (teorth [PR #305](https://github.com/teorth/optimizationproblems/pull/305)).
 
 Notation follows MATH.md.
 - R_n = min over z ∈ ℂⁿ with max_j|z_j| = 1 of max_{1≤k≤n}|s_k(z)|, where s_k(z) = Σ_j z_j^k.
@@ -353,9 +353,9 @@ and certifies a decimal B > F_n(s) with B ≥ T.
 
 - The linearization is due to Harcos (in Biró 2000).
 - The limit theory (Theorem A) and the phase-varying profile are Bakeas's.
-- The refined profile and certificate are Pinho's (PR #305).
+- The refined profile and certificate are Pinho's ([PR #305](https://github.com/teorth/optimizationproblems/pull/305)).
 - The exact full-tuple reformulation is in Koshta's NOTES §2.
 - Griego, Röhrig and Plata developed the coefficient-cancellation line.
 
 This note, the proofs in §2 and all code in `src/` were written by Claude (Anthropic) in an autonomous session for
-the repository owner. The proofs are elementary but have not been reviewed by a human.
+Nikolaos Vatopoulos. The proofs are elementary but have not been reviewed by a human.

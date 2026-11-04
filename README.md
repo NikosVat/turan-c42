@@ -8,7 +8,7 @@ where R_n = min over z_1, …, z_n ∈ ℂ with max_i |z_i| = 1 of max_{1≤k≤
 [table entry 42a](https://teorth.github.io/optimizationproblems/constants/42a.html)).
 
 - The bound is 4.40·10⁻⁸ below the best bound posted so far, 0.6863607950* (Pinho, teorth/optimizationproblems
-  PR #305, open). It is 9.249·10⁻⁶ below Bakeas's 0.68637* (PR #302, open) and 9.750553·10⁻⁴ below the value in
+  [PR #305](https://github.com/teorth/optimizationproblems/pull/305), open). It is 9.249·10⁻⁶ below Bakeas's 0.68637* ([PR #302](https://github.com/teorth/optimizationproblems/pull/302), open) and 9.750553·10⁻⁴ below the value in
   the merged table, 0.6873358063* (Koshta). These are exact differences of the decimals.
 - On 4 Nov 2026 no open or merged pull request in teorth/optimizationproblems claimed a lower upper bound for C42.
 
@@ -241,8 +241,8 @@ Session S4 studied the finite-n problem itself (`FINDINGS.md`; float numerics ex
 - `FINDINGS.md` and `results/finite_n/` are the finite-n study (session S4).
 - `NOTES_CERTIFIER.md` is the certifier derivation and its validation log (S3). `results/SATURATION.md` and
   `results/candidate_*.json` are the float search (S2). `src/` holds the search and float cross-check code.
-- `submission/` contains the proposed update to teorth/optimizationproblems (`42a.md`, the README changes,
-  `PR_DRAFT.md`).
+- `submission/` contains the proposed update to teorth/optimizationproblems, written against its current `main`
+  (`42a.md`, the README changes, `PR_DRAFT.md`).
 - `LOG.md` and `PLAN.md` are the experiment log and the plan.
 
 ## Credits
@@ -250,12 +250,12 @@ Session S4 studied the finite-n problem itself (`FINDINGS.md`; float numerics ex
 - **G. Harcos**: the linearization (Lemma 2 in NOTES.md) and the constant-phase bound 0.69368 (in Biró 2000).
 - **A. Biró**: the upper bound 5/6 and the lower bounds 1/2 and > 1/2 (the best lower bound to date).
 - **S. Griego** (0.6906538*, two-block coefficient cancellation), **A. Röhrig** (0.688983*, refined step profile,
-  PR #184), **K. Plata** (six-level step profile), **R. Pinho** (0.6888863712*, 256 middle blocks, PR #251) and
-  **D. Koshta** (0.6873358063*, first-block cut-off τ = 41/200, PR #263): the 2026 certified block constructions
+  [PR #184](https://github.com/teorth/optimizationproblems/pull/184)), **K. Plata** (six-level step profile), **R. Pinho** (0.6888863712*, 256 middle blocks, [PR #251](https://github.com/teorth/optimizationproblems/pull/251)) and
+  **D. Koshta** (0.6873358063*, first-block cut-off τ = 41/200, [PR #263](https://github.com/teorth/optimizationproblems/pull/263)): the 2026 certified block constructions
   in the Optimization Constants repository.
-- **V. Bakeas** (turan-c42-bound v1.1.0, MIT; PR #302): Theorem A, Lemma 3, the phase-varying profile with
+- **V. Bakeas** (turan-c42-bound v1.1.0, MIT; [PR #302](https://github.com/teorth/optimizationproblems/pull/302)): Theorem A, Lemma 3, the phase-varying profile with
   τ = 0, and the checkers this work started from.
-- **R. Pinho** (c42-certificate @009120a, MIT; **PR #305**): the observation that Theorem A holds for arbitrary
+- **R. Pinho** (c42-certificate @009120a, MIT; **[PR #305](https://github.com/teorth/optimizationproblems/pull/305)**): the observation that Theorem A holds for arbitrary
   knots, the quadratic knots j²/4608 (this profile uses j²/1152), the integrated (Gronwall) residual bound, and
   the previous record 0.6863607950*.
 - No code from these repositories is copied into `checkers/`. `src/finite_n_check.py` imports Bakeas's

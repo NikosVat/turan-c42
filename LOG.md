@@ -11,11 +11,11 @@ repo `teorth/optimizationproblems@87b4ebb` (constants/42a.md), and PRs were foun
 ### 15:45 Target check
 - Merged table (42a.md @87b4ebb): best upper bound 0.6873358063* (Koshta).
 - Open PRs:
-  - #302 (Bakeas, 0.68637*, phase-varying first block);
-  - **#305 (Pinho, 0.6863607950*)**: Bakeas's Theorem A, 48 phase pieces on knots j²/4608, sharper Arb error
+  - [#302](https://github.com/teorth/optimizationproblems/pull/302) (Bakeas, 0.68637*, phase-varying first block);
+  - **[#305](https://github.com/teorth/optimizationproblems/pull/305) (Pinho, 0.6863607950*)**: Bakeas's Theorem A, 48 phase pieces on knots j²/4608, sharper Arb error
     propagation, F ≤ 0.6863607774, repo rpinho/c42-certificate@009120a/volterra-quadratic-knots;
-  - #310 (Pinho, lower bound 1/2 + 2^-4096*, irrelevant here);
-  - #184 (Röhrig, old).
+  - [#310](https://github.com/teorth/optimizationproblems/pull/310) (Pinho, lower bound 1/2 + 2^-4096*, irrelevant here);
+  - [#184](https://github.com/teorth/optimizationproblems/pull/184) (Röhrig, old).
 - **Target updated in CLAUDE.md: 0.6863607950.** Pinho and Bakeas both report the float optimum of the
   phase-only family as ≈ 0.686360744.
 
@@ -183,14 +183,14 @@ no gain; A has ~5e-8 of float room at fixed T, and certification is the bottlene
   12288..98304 gives 0.6863600829277, i.e. 1.4e-12 above our F_upper, within that fit's accuracy. Our
   enclosure says F ∈ [F_upper − ~1e-11, F_upper].
 
-### 17:48 Gate (b), first point: Pinho PR #305 profile
+### 17:48 Gate (b), first point: Pinho [PR #305](https://github.com/teorth/optimizationproblems/pull/305) profile
 - N=18432 (4608·4), P=6: **PASS, F ≤ 0.6863607723298**, 69.5 s, max RSS 1.24 GB.
   (Pinho: F ≤ 0.6863607742 at N = 14.2M, 95 GB, 1110 s on 3 threads.)
 - Error budget: residual peak 3.6e-7 in cell 4 (first cell after the knot 1/4608: the continued piece has
   a 1/t pole one knot-cell away, so convergence there is only (4s+2)^-P); EN = 7.9e-9, ED = 3.4e-9.
   Denominator slack 2.1e-12. So the gap 2.8e-8 is all residual; fix = larger s or P.
 
-### 17:53 Gate (b): Pinho PR #305 profile — PASS, far tighter and with 2.6 GB
+### 17:53 Gate (b): Pinho [PR #305](https://github.com/teorth/optimizationproblems/pull/305) profile — PASS, far tighter and with 2.6 GB
 - `python checkers/rigorous_check.py third_party/pinho/volterra-quadratic-knots/certificates/C42_compact_best.json --N 36864 --P 8`
 - **PASS, F ≤ 0.6863607448924165** (Arb), 155.5 s single-threaded, **max RSS 2.62 GB**.
   Float F of the same family (spectral float pipeline, N=18432/36864): 0.6863607439575 / 0.6863607439536.
@@ -447,8 +447,8 @@ independently in a separate session, review of NOTES_CERTIFIER.md, and re-optimi
 ## S5 — 2026-11-03 (certificate, branch `certificate` = main + certifier + search-A)
 
 ### 23:20 Target check (step 0)
-- GitHub search API, teorth/optimizationproblems open PRs (56): C42 upper-bound PRs are #302 (Bakeas 0.68637*) and
-  #305 (Pinho 0.6863607950*, title unchanged, last touched 18:41 UTC today). #310 is a lower bound.
+- GitHub search API, teorth/optimizationproblems open PRs (56): C42 upper-bound PRs are [#302](https://github.com/teorth/optimizationproblems/pull/302) (Bakeas 0.68637*) and
+  [#305](https://github.com/teorth/optimizationproblems/pull/305) (Pinho 0.6863607950*, title unchanged, last touched 18:41 UTC today). [#310](https://github.com/teorth/optimizationproblems/pull/310) is a lower bound.
   Nothing below 0.6863607950. Target unchanged.
 - Machine: 4 vCPU, 15 GB, no swap. Peak memory kept < 11 GB (one ≤ 7.5 GB run, or two ≤ 4 GB runs at a time).
 
@@ -550,8 +550,8 @@ Machine: 4 vCPU, 15 GB. Record mode.
   `claude/harcos-reduction-findings-53k0p2` (S4: FINDINGS.md; this is the branch S4 was told to call `findings`)
   into `certificate`. LOG.md conflict: kept both sections.
 - **Open PRs re-checked** (teorth/optimizationproblems, search API + PR heads by git fetch): the 42a PRs are
-  #302 (0.68637*), #305 (0.6863607950*, head bac1d85, body unchanged, 0 comments), #310 (lower bound),
-  #184 (Röhrig). Merged: #85, #251, #263. **No C42 upper bound below 0.686360751.**
+  [#302](https://github.com/teorth/optimizationproblems/pull/302) (0.68637*), [#305](https://github.com/teorth/optimizationproblems/pull/305) (0.6863607950*, head bac1d85, body unchanged, 0 comments), [#310](https://github.com/teorth/optimizationproblems/pull/310) (lower bound),
+  [#184](https://github.com/teorth/optimizationproblems/pull/184) (Röhrig). Merged: [#85](https://github.com/teorth/optimizationproblems/pull/85), [#251](https://github.com/teorth/optimizationproblems/pull/251), [#263](https://github.com/teorth/optimizationproblems/pull/263). **No C42 upper bound below 0.686360751.**
 - REVIEW.md §2 / NOTES §5.3 (cell 0): checker #1 already set the constant term of d_{Q,0} to the exact `acb(0)`
   (radius 0; `fr = [zero if i == 0 else gamma - g]`) and formed R_0/θ by shifting coefficients, never dividing a
   ball by θ. Added an assertion (`is_zero() and is_exact()`). Note: `g - g` in Arb is a ball ±1e-16 at 53 bits,
@@ -585,5 +585,30 @@ Machine: 4 vCPU, 15 GB. Record mode.
   checker #1 PASS 393 s / 3.64 GB; both outputs identical to the committed expected outputs.
 - NOTES §8.2 now leads with the tightest PASS of both checkers; §8.3 tables from S7 runs, with outward rounding
   (the S5 tables had rounded some F_upper values down in the last digit; display only).
-- README.md, submission/ (42a.md on top of PR #305 head bac1d85, README row 42 + Recent-progress line,
+- README.md, submission/ (42a.md on top of [PR #305](https://github.com/teorth/optimizationproblems/pull/305) head bac1d85, README row 42 + Recent-progress line,
   PR_DRAFT.md), PR_DRAFT.md pointer at root.
+
+### S7b — 2026-11-04 (owner follow-up)
+
+- Name for all credits confirmed by the owner: **Nikolaos Vatopoulos**. It is now used in README, NOTES (AI use),
+  FINDINGS (AI use) and submission/ (row reference column "Vatopoulos [Vat26]", reference "Vatopoulos, Nikolaos",
+  contribution note, Recent-progress line).
+- teorth PR links: no file contained `/turan-c42/pull/`. Bare mentions "PR #n" / "#n" of teorth PRs (85, 184, 251,
+  263, 302, 305, 310) in all markdown files are now explicit links to
+  https://github.com/teorth/optimizationproblems/pull/n (GitHub autolinks bare #n in PR bodies and commit messages
+  to this repo, not to teorth). Erdős problem numbers (#519, #165) left alone.
+- submission/ rebuilt against teorth **main** 87b4ebb (not on top of #305): 42a.md = main + our row (after
+  Koshta's) + [Vat26] + our contribution note (diff: 5 added lines, 0 removed); README row 42 changed from
+  `0.69368 (0.6873358063*)` to `0.69368 (0.686360751*)` + one Recent-progress line. Bakeas (#302) and Pinho (#305)
+  are cited by inline links; the row now defines F itself (it can no longer lean on Bakeas's row). PR_DRAFT.md
+  says #302/#305 are pending, that the construction builds on them, and that we rebase if they merge first.
+- URL / hash check (submission/ and README.md):
+  - commits by git fetch: Bakeas dc9c491, Pinho 009120a (path volterra-quadratic-knots) and a8a9bc3, Koshta
+    8e1797e (= repo HEAD), Griego c8ddce1 (= tag v1.0.0), teorth main 87b4ebb, own e6ffc94: all resolve;
+  - teorth PR refs 184, 251, 263, 302, 305, 310 exist; profile SHA-256 705a…cafcab = rpinho certificates/c42_256.json
+    @a8a9bc3, be0c…cbef = Koshta certificates/c42_tau41_200_M64_0.6873358063.json @8e1797e, d015a829… = ours;
+  - full teorth README copy (253 URLs): 120 teorth.github.io pages all have a source file on main; 44/44 GitHub
+    repos exist (one parse artifact from a BibTeX `url = {…}`); 18/18 pinned refs/paths resolve;
+  - not checkable here: web hosts are outside this session's network policy (github.com web pages 403 via the
+    proxy; teorth.github.io, erdosproblems.com, arxiv.org, doi.org etc. not resolvable). Those 80 URLs are
+    teorth's existing content, copied unchanged.

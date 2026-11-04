@@ -2,7 +2,7 @@
 
 Status: **new and unreviewed** (written in session S3, 3 Nov 2026, by an AI agent). Theorem A, Lemma 3 and the
 limit equation are Bakeas's (turan-c42-bound v1.1.0). The integrated (Gronwall) propagation bound is Pinho's
-(PR #305 bundle, VOLTERRA_VERIFIER_MATH.md). Everything else below is the new part: the trial space, the exact
+([PR #305](https://github.com/teorth/optimizationproblems/pull/305) bundle, VOLTERRA_VERIFIER_MATH.md). Everything else below is the new part: the trial space, the exact
 residual, the representation of p̃, and the denominator bound. The program is `checkers/rigorous_check.py`. Its only
 floating-point part is the witness `checkers/spectral_witness.py`.
 

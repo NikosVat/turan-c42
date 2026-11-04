@@ -104,7 +104,7 @@ certify the stronger condition 0 < a < 1, together with κ̂ < 1 for a number κ
 - φ is continuous and piecewise linear with finitely many pieces, so |d(u)| ≤ TΛu on (0,½];
 - d is uniformly continuous on (0,½].
 
-So the proof holds verbatim for any finite set of knots in [0,½]. This was already observed by Pinho (PR #305).
+So the proof holds verbatim for any finite set of knots in [0,½]. This was already observed by Pinho ([PR #305](https://github.com/teorth/optimizationproblems/pull/305)).
 The knots need not be rational for the theorem; they are rational only so that the certifier can align its grid.
 
 **Remark (an upper bound κ̂ suffices).** The proofs of Theorem A (Steps 2–3) and of Lemmas 3 and 3' (§4) use κ only
@@ -807,7 +807,7 @@ Pinho's profile (C42_compact_best.json). Log: `logs/S5/finite_n_claim.log`.
 ## AI use
 
 The search, both certifiers, their derivation, the referee report and this text were produced by AI agents
-(Claude Code, Anthropic), directed by the repository owner. Checker #2 and REVIEW.md were written blind, from this
+(Claude Code, Anthropic), directed by Nikolaos Vatopoulos. Checker #2 and REVIEW.md were written blind, from this
 file and the certificate format only. The mathematics of Sections 1–4 is by Bakeas (with AI assistance, per his
 notes), Harcos and Pinho. Nothing in Sections 5–8 has been reviewed by a human mathematician. Corrections are
 welcome.
