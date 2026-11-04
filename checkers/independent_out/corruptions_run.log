@@ -1,0 +1,30 @@
+case                                           expected  got       F_upper                  reason / margin
+bakeas_T_0.68636.json                          REFUSED   REFUSED   -                        "constant" must be "C_42"
+bakeas_phase0_plus_5e-2.json                   REFUSED   REFUSED   -                        "constant" must be "C_42"
+bakeas_shift_a_negative.json                   REFUSED   REFUSED   -                        "constant" must be "C_42"
+pinho_T_below_fixed_point.json                 REFUSED   REFUSED   -                        missing key C
+pinho_claim_below_T.json                       REFUSED   REFUSED   -                        need 0 < T <= C < 1 (T=137272159/200000000, C=6863607949/10000000000)
+pinho_phase3_plus_1e-2.json                    REFUSED   REFUSED   -                        missing key C
+adapted/bakeas_shift_a_negative.json           REFUSED   REFUSED   -                        a = Re gamma = T cos psi_0 is not certified > 0 (a = [-0.03812597648956883680644584379573449633176904290293081393205580427629128332739087176611193304081450527378641549844968679150655830064407 +/- 4.87e-135])
+new/C_below_T.json                             REFUSED   REFUSED   -                        need 0 < T <= C < 1 (T=686360751/1000000000, C=2745443/4000000)
+new/C_eq_1.json                                REFUSED   REFUSED   -                        need 0 < T <= C < 1 (T=686360751/1000000000, C=1)
+new/a_negative.json                            REFUSED   REFUSED   -                        a = Re gamma = T cos psi_0 is not certified > 0 (a = [-0.03522727517096914797164046723333519646582246223928972354054529042013403311305955641666001531433298405073195720570008513814201322370395 +/- 7.01e-135])
+new/misaligned_knot.json                       REFUSED   REFUSED   -                        grid N=36864 is not even or not aligned with the knots (lcd 169878528)
+new/phase_count_mismatch.json                  REFUSED   REFUSED   -                        need K+1 >= 2 breaks and exactly one phase per break
+new/T_as_float.json                            REFUSED   REFUSED   -                        T must be a string (exact rational), got 0.686360751
+new/knots_not_increasing.json                  REFUSED   REFUSED   -                        breaks must be strictly increasing
+pinho_T76_claim_1e-9_above_F.json              PASS      PASS      0.68636078675080802293   C = 343180393877/500000000000, C - F_upper = 1.003e-09
+pinho_T76_claim_1e-9_below_F.json              FAIL      FAIL      0.68636078675080802293   C = 171590196437/250000000000, C - F_upper = -1.003e-09
+claim/T74_claim_1e-9_above_F.json              PASS      PASS      0.68636076288418145489   C = 27454430581/40000000000, C - F_upper = 1.641e-09
+claim/T74_claim_1e-9_below_F.json              FAIL      FAIL      0.68636076288418145489   C = 686360761229/1000000000000, C - F_upper = -1.655e-09
+claim/T_0.68636074_C_eq_T.json                 FAIL      FAIL      0.68636076288418145489   C = 34318037/50000000, C - F_upper = -2.288e-08
+claim/T_0.68636075_below_fixed_point.json      FAIL      FAIL      0.68636075065517997165   C = 2745443/4000000, C - F_upper = -6.552e-10
+claim/phase12_plus_0.005.json                  FAIL      FAIL      0.68636085126014052230   C = 686360751/1000000000, C - F_upper = -1.003e-07
+claim/phase5_plus_0.002.json                   FAIL      FAIL      0.68636075374095647927   C = 686360751/1000000000, C - F_upper = -2.741e-09
+adapted/bakeas_T_0.68636.json                  FAIL      FAIL      0.68637231176627993979   C = 17159/25000, C - F_upper = -1.231e-05
+adapted/bakeas_phase0_plus_5e-2.json           FAIL      FAIL      0.68639554011678402819   C = 68637/100000, C - F_upper = -2.554e-05
+adapted/pinho_T_below_fixed_point.json         FAIL      FAIL      0.68636078675080802293   C = 17159019/25000000, C - F_upper = -2.675e-08
+adapted/pinho_phase3_plus_1e-2.json            FAIL      FAIL      0.68636099228369743269   C = 137272159/200000000, C - F_upper = -1.973e-07
+new/T_C_0.686360749.json                       FAIL      FAIL      0.68636075187808028387   C = 686360749/1000000000, C - F_upper = -2.878e-09
+new/phase20_plus_1e-3.json                     FAIL      FAIL      0.68636076032597891790   C = 686360751/1000000000, C - F_upper = -9.326e-09
+ALL AS EXPECTED

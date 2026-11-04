@@ -18,9 +18,10 @@ E = max|ψ_j − ψ_0| = 0.8708652 < π, sup_{(0,½]}|d| = 2T sin(E/2) ≤ 0.579
 
 (EN, ED: the smaller of the integrated and sup forms, which is the integrated form in every run. Times measured
 with two runs sharing 4 cores; python-flint 0.9.0, Arb precision 448 bits. Outputs in
-`checkers/independent_out/cert_N*_P*.json`, logs in `*.err`.)
+`checkers/independent_out/cert_N*_P*.json`, logs in `*.err`. SHA-256 of `checkers/independent_check.py` for
+all runs in this report: `26e12388ec20955b6394dcc96bae77c0bfc949cb2d649dae45a9e2a747008093`.)
 
-- **Stability.** Doubling N moves F_upper down by 7.4·10⁻¹², exactly the shrinkage of EN/D̃ + F·ED/D̃; D̃_low
+- **Stability.** Doubling N moves F_upper down by 7.4·10⁻¹², consistent with the shrinkage of EN/D̃ + F·ED/D̃; D̃_low
   and p̃(1) agree to 4·10⁻¹⁷ between the two grids. The float Gauss–Legendre estimate of ∫|p̃|w agrees with
   the certified D̃_low to 4·10⁻¹⁶, i.e. the linear minorant loses nothing measurable.
 - **Agreement with checker #1.** NOTES §8.3 reports checker #1's tightest enclosure
@@ -40,7 +41,9 @@ with two runs sharing 4 cores; python-flint 0.9.0, Arb precision 448 bits. Outpu
 a posteriori bounds (Bakeas, Pinho) and the new certifier method (§§5–7) are correct as written, up to the
 clarifications listed in §2. The bound C42 ≤ 0.686360751 is now confirmed by two independently written rigorous
 checkers. It remains **unrefereed by any human**; the two checkers share the mathematics of NOTES §§3–4 (which
-I reviewed but which is not peer-reviewed), so a gap there would affect both.
+I reviewed but which is not peer-reviewed), so a gap there would affect both. Independence is procedural:
+both checkers were written by AI agents (Claude Code), checker #2 without access to checker #1's code; they
+share no code, witness or intermediate data, but not a different author.
 
 
 ---
@@ -182,10 +185,12 @@ Validation of checker #2 itself (`checkers/independent_selftest.py`, toy 5-piece
   random points in cells 0, 1, 2, 3, N/4, N/2 ± 1, N − 1;
 - p̃(t) by direct quadrature agrees with the cell representation to ≤ 2·10⁻¹⁶;
 - p̃(1) by direct quadrature agrees with the closed form to 2·10⁻¹⁷;
-- a float Gauss–Legendre estimate of ∫\|p̃\|w exceeds the certified D̃_low (as it must).
+- a float Gauss–Legendre estimate of ∫\|p̃\|w exceeds the certified D̃_low (as it must), by 5.9·10⁻¹⁰ on this
+  deliberately coarse grid (h = 1/64); on the certificate grid the same diagnostic gap is ≤ 4·10⁻¹⁶ (§0).
+  Output: `checkers/independent_out/selftest.txt`.
 - Constant-phase (Harcos) profile T = 0.69, ψ ≡ −1.3, N = 256: certified F ≤ 0.79514335162406, exact
   F = 0.79514335162396 (mpmath, from the closed formula in NOTES §3); D̃_low is 1.1·10⁻¹³ below the exact
-  denominator.
+  denominator. Files: `checkers/independent_out/tests/`.
 
 What checker #2 does **not** share with checker #1: no code, no witness, no data other than the certificate file.
 It was written from NOTES.md and the README format section; it agrees with NOTES §§3–4 because those are the
@@ -205,7 +210,35 @@ Meaning of the verdicts: PASS = F < C proved; FAIL = the certified upper bound i
 F_lower > C in NOTES §8.3 is what shows those claims are false); REFUSED = invalid input or a hypothesis of
 Theorem A not certified.
 
-__CORRUPTIONS__
+| case | expected | got | certified F_upper | C − F_upper / reason |
+|---|---|---|---|---|
+| `claim/T74_claim_1e-9_above_F` (T = 0.68636074, C = #1's F_upper + 1e-9) | PASS | PASS | 0.6863607628842 | +1.64·10⁻⁹ |
+| `claim/T74_claim_1e-9_below_F` (C = #1's F_lower − 1e-9) | FAIL | FAIL | 0.6863607628842 | −1.66·10⁻⁹ |
+| `claim/T_0.68636074_C_eq_T` | FAIL | FAIL | 0.6863607628842 | −2.29·10⁻⁸ |
+| `claim/T_0.68636075_below_fixed_point` | FAIL | FAIL | 0.6863607506552 | −6.55·10⁻¹⁰ |
+| `claim/phase5_plus_0.002` | FAIL | FAIL | 0.6863607537410 | −2.74·10⁻⁹ |
+| `claim/phase12_plus_0.005` | FAIL | FAIL | 0.6863608512601 | −1.00·10⁻⁷ |
+| `pinho_T76_claim_1e-9_above_F` (resolution control) | PASS | PASS | 0.6863607867508 | +1.00·10⁻⁹ |
+| `pinho_T76_claim_1e-9_below_F` | FAIL | FAIL | 0.6863607867508 | −1.00·10⁻⁹ |
+| `adapted/pinho_T_below_fixed_point` (C := T = 0.68636076) | FAIL | FAIL | 0.6863607867508 | −2.68·10⁻⁸ |
+| `adapted/pinho_phase3_plus_1e-2` (C := T) | FAIL | FAIL | 0.6863609922837 | −1.97·10⁻⁷ |
+| `adapted/bakeas_T_0.68636` (C := T) | FAIL | FAIL | 0.6863723117663 | −1.23·10⁻⁵ |
+| `adapted/bakeas_phase0_plus_5e-2` (C := T) | FAIL | FAIL | 0.6863955401168 | −2.55·10⁻⁵ |
+| `new/T_C_0.686360749` (T = C lowered by 2e-9) | FAIL | FAIL | 0.6863607518781 | −2.88·10⁻⁹ |
+| `new/phase20_plus_1e-3` | FAIL | FAIL | 0.6863607603260 | −9.33·10⁻⁹ |
+| `adapted/bakeas_shift_a_negative` | REFUSED | REFUSED | – | a = −0.0381 not > 0 |
+| `new/a_negative` (all phases − 0.2) | REFUSED | REFUSED | – | a = −0.0352 not > 0 |
+| `pinho_claim_below_T`, `new/C_below_T`, `new/C_eq_1` | REFUSED | REFUSED | – | need 0 < T ≤ C < 1 |
+| `new/misaligned_knot` (u_1 = 1/18433, `--N 36864`) | REFUSED | REFUSED | – | grid not aligned with knots |
+| `new/phase_count_mismatch`, `new/knots_not_increasing`, `new/T_as_float` | REFUSED | REFUSED | – | format |
+| `bakeas_*` (3 files, old format), `pinho_T_below_fixed_point`, `pinho_phase3_plus_1e-2` (no `C`), as is | REFUSED | REFUSED | – | format (no `constant`/`breaks`/`C`) |
+
+**All 28 verdicts are as expected** (`checkers/independent_out/corruptions/SUMMARY.txt`; one JSON + log per case).
+Consistency with checker #1 on the same files: every checker #2 upper bound is ≥ the corresponding checker #1
+lower bound in NOTES §8.3 (e.g. T = C = 0.68636075: #2 gives F ≤ 0.6863607506552, #1 gives
+F ≥ 0.6863607500001), and the resolution controls pass with the designed 1e-9 margin. The values for the old
+Bakeas/Pinho profiles match the floats quoted in those files' `note` fields (e.g. Bakeas at T = 0.68636:
+"F(T) ~ 0.686372"; Pinho at T = 0.68636076: "float F ~ 0.6863607867").
 
 ## 5. How to run checker #2
 

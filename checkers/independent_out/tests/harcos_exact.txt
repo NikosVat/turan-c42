@@ -1,0 +1,1 @@
+exact F (NOTES 3, Harcos formula) = 0.795143351623963620968794296272

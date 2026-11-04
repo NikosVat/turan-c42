@@ -1,0 +1,26 @@
+[    0.0s] certificate /home/user/turan-c42/checkers/independent_out/corruptions/adapted/bakeas_phase0_plus_5e-2.json: T = 68637/100000, C = 68637/100000, 24 pieces
+[    0.0s] a = [0.199176892211 +/- 2.92e-13], E = 0.725291, sup_(0,1/2]|d| <= [0.48697812 +/- 2.84e-9], kappa_hat = 68637/100000
+[    1.3s] d^ built: Q = 7, Lambda = 3.417, eps_max = 1.4e-37
+[    1.7s] float solve: N=36864, P=12, Q=7, stride S=20, FFT length 1474560
+[   56.3s]   GMRES: info=0, inner iterations=85
+[   56.3s] exact residual (pass 0)
+[   87.9s]   collocation max|R/t| at the nodes (float) = 4.036e-12
+[  164.2s]   GMRES: info=3, inner iterations=96
+[  164.3s] exact residual (pass 1)
+[  191.6s]   collocation max|R/t| at the nodes (float) = 6.549e-15
+[  196.4s]   GMRES: info=0, inner iterations=6
+[  196.5s] exact residual (pass 2)
+[  221.9s]   collocation max|R/t| at the nodes (float) = 2.267e-15
+[  222.7s] ||rho~||_inf <= 2.345035
+[  228.5s] sup |R/t| <= 2.3122e-15 (worst piece t in [2.724e-02, 2.726e-02])
+[  231.1s] EN: integrated 3.8061e-15, sup 9.2060e-15 ; ED: integrated 1.4046e-15, sup 2.9345e-15
+[  236.1s] p~(1) = [0.29197885488824328988 +/- 4.08e-22] + [-0.35643901828919353502 +/- 5.37e-23]j
+[  241.5s] kernel polynomials built (Pk = 30), E_kern <= 1.157e-18
+[  262.2s] kernel convolution done (stride 43)
+[  262.3s]   denominator cells 1..3 done (fit degree 20, v degree 65), running sum [0.000834724769872576 +/- 2.64e-20]
+[  262.3s]   denominator cells 4..15 done (fit degree 14, v degree 47), running sum [0.00253290079589327 +/- 3.11e-18]
+[  262.4s]   denominator cells 16..127 done (fit degree 9, v degree 32), running sum [0.0133718338032235 +/- 3.73e-17]
+[  263.0s]   denominator cells 128..1023 done (fit degree 6, v degree 23), running sum [0.0698479368790058 +/- 1.61e-17]
+[  271.5s]   denominator cells 1024..18431 done (fit degree 4, v degree 17), running sum [0.671275782118390 +/- 3.16e-16]
+[  271.5s] float estimate of int|p~|w minus D~_low (cells >= 1; diagnostic): -1.110e-16
+[  271.5s] D~_low = [0.67127578211839031404 +/- 1.81e-21]
