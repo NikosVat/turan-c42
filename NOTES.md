@@ -621,52 +621,83 @@ Theorem A inputs (certified by the program):
 - κ = max(T, 0.57902) = T = 0.686360751 < 1;
 - the slopes satisfy 1.2 ≤ |β_j| ≤ 615 (not used by the proof).
 
-### 8.2 Certified result (checker #1)
+### 8.2 Certified results (both checkers; tightest first)
 
-`OPENBLAS_NUM_THREADS=1 python checkers/rigorous_check.py certificate/c42_profile_0.686360751.json --N 36864 --P 10 --refine 1`
-(256-bit Arb, python-flint 0.9.0, Python 3.13; Q = 13, P_k = 20; full output in
-`certificate/expected_N36864_P10.json`):
+All runs in session S7, on the certificate file above (SHA-256 `d015a829…5652`), with checker #1 SHA-256
+`93fdcf68…6c7d` and checker #2 SHA-256 `26e12388…8093` (`certificate/SHA256SUMS`), python-flint 0.9.0,
+Python 3.13, `OPENBLAS_NUM_THREADS=1`. Upper bounds are rounded up and lower bounds down in the last digit shown.
+
+| checker | N | P | verdict | F_upper | C − F_upper | F_lower (checker #1 only) | output |
+|---|---|---|---|---|---|---|---|
+| #2 | 73728 | 12 | PASS | 0.6863607494249 | 1.575e-9 | – | `checkers/independent_out/cert_N73728_P12.json` |
+| #1 | 73728 | 10 | PASS | 0.6863607494291 | 1.571e-9 | 0.6863607494206 | `certificate/stability_N73728_P10.json` |
+| #2 | 36864 | 12 | PASS | 0.6863607494323 | 1.568e-9 | – | `checkers/independent_out/cert_N36864_P12.json` |
+| #1 | 36864 | 12 | PASS | 0.6863607494397 | 1.560e-9 | 0.6863607494100 | `certificate/stability_N36864_P12.json` |
+| #1 | 36864 | 10 | PASS | 0.6863607500725 | 9.275e-10 | 0.6863607487772 | `certificate/expected_N36864_P10.json` |
+| #2 | 36864 | 10 | PASS | 0.6863607500744 | 9.256e-10 | – | `checkers/independent_out/cert_N36864_P10.json` |
+
+- **Tightest enclosure** (checker #1, N = 73728, P = 10): F ∈ [0.6863607494206, 0.6863607494291], width 8.4e-12.
+  Checker #2's best upper bound, 0.68636074942486, lies inside it.
+- **Agreement.** No upper bound of either checker lies below a lower bound of checker #1. At the common setting
+  N = 36864, P = 10 the two upper bounds differ by 1.9e-12.
+- **Margin.** C − F ≈ 1.57e-9, about 190 times the width of the tightest enclosure. So the claim does not sit at
+  the edge of the certified resolution.
+- The N = 36864, P = 10 runs are the loosest PASSes. They are kept as the quick reproduction setting (README) and
+  as the setting of checker #1's corruption tests.
+
+**Error budget of the tightest checker #1 run.** Command:
+`OPENBLAS_NUM_THREADS=1 python checkers/rigorous_check.py certificate/c42_profile_0.686360751.json --N 73728 --P 10 --refine 1`
+(256-bit Arb; Q = 11, P_k = 20):
 
 | quantity | value |
 |---|---|
-| sup_t \|R(t)/t\| ≤ max_m r_m | 7.27826e-9 (worst cell m = 2) |
-| ‖ρ̃‖_∞ ≤ | 422.819 |
-| ε_∞ = sup\|R/t\|/(1−κ) | 2.32058e-8 |
-| EN (integrated form; sup form 2.583e-8) | 1.59407e-10 |
-| ED (integrated form; sup form 7.300e-9) | 6.72278e-11 |
-| p̃(1) | 0.130644422135623288746790986588 − 0.177219127225608731395717733545 i |
-| \|p̃(1)\| + EN ≤ | 0.2201694442013934931421864 |
-| D̃_low (69 knot cells; bookkeeping error 3.18633e-12) | 0.3207780226714513265564244 |
-| D̃_low − ED ≥ | 0.3207780226042235570125772 |
-| **F ≤ F_upper** | **0.6863607500724540266028192** |
-| F ≥ F_lower (diagnostic) | 0.6863607487772309291757098 |
-| **C − F_upper** | **9.275e-10** |
-| runtime, peak memory | 359.2 s, 3.638 GB |
+| sup_t \|R(t)/t\| ≤ max_m r_m | 1.04773e-11 (worst cell m = 4) |
+| ‖ρ̃‖_∞ ≤ | 422.428 |
+| ε_∞ = sup\|R/t\|/(1−κ) | 3.34056e-11 |
+| EN (integrated form; sup form 3.719e-11) | 1.31766e-13 |
+| ED (integrated form; sup form 1.051e-11) | 5.55632e-14 |
+| p̃(1) | 0.13064442213562333467811462410 − 0.17721912722560877600434428411 i |
+| \|p̃(1)\| + EN ≤ | 0.2201694440421183413151174 |
+| D̃_low (51 knot cells; bookkeeping error 1.70783e-12) | 0.3207780226729314101273080 |
+| D̃_low − ED ≥ | 0.3207780226728758469046277 |
+| **F ≤ F_upper** | **0.68636074942903279938849** (rounded up) |
+| F ≥ F_lower (diagnostic) | 0.68636074942065543378426 (rounded down) |
+| **C − F_upper** | **1.571e-9** |
+| runtime, peak memory | 780.3 s (with 3 other jobs running), 6.781 GB |
 
-The claim C is an exact decimal with 9 digits. The tightest enclosure (§8.3, N = 36864, P = 12) is
-F(C) ∈ [0.68636074941002, 0.68636074943967]. Linearized with the float slope dF/dT = −1.2229, this puts the fixed
-point at T* ≈ 0.6863607503. That agrees with S2's float value 0.6863607502855 ± 9e-11. This is an estimate, not a
-proof step. So C is ≈ 7e-10 above T*, and 4.40e-8 below Pinho's 0.6863607950.
+The worst residual cell is the first cell after the first knot, the same place checker #2 reports (REVIEW.md §0).
+
+**Effect of the S7 change (§6.2).** The three checker #1 runs above were repeated with the conservative series
+tail. F_upper and F_lower agree with the S5 runs to all 25 printed digits; only the radius of p̃(1) grew, from
+about 2e-31 to 2e-30.
+
+**Fixed point (estimate, not a proof step).** C is an exact decimal with 9 digits. Linearized with the float
+slope dF/dT = −1.2229, the tightest enclosure puts the fixed point at T* ≈ 0.6863607503. That agrees with S2's
+float value 0.6863607502855 ± 9e-11. So C is ≈ 7e-10 above T*, and 4.40e-8 below Pinho's 0.6863607950.
 
 ### 8.3 Stability, resolution and corruption tests
 
-**Stability.** All runs use the certificate file with C = T = 0.686360751, refine = 1 and 256 bits. The runs
-in `certificate/runs_superseded/` were made on an earlier copy of the file that differed only in the descriptive
-`checker` field.
+**Stability (checker #1).** All runs use the certificate file with C = T = 0.686360751, refine = 1 and 256 bits.
+- The first three rows are the S7 runs (current checker; times measured with up to four jobs running at once).
+- The other rows are S5 runs of the checker before the S7 tail change (§6.2). That change moves F by less than
+  1e-22, so they are kept as they are.
+- The runs in `certificate/runs_superseded/` were made on an earlier copy of the file that differed only in the
+  descriptive `checker` field.
 
 | run | N | P | verdict | F_lower | F_upper | width | s | GB |
 |---|---|---|---|---|---|---|---|---|
-| **primary** | 36864 | 10 | PASS | 0.6863607487772 | 0.6863607500724 | 1.29522e-9 | 359.2 | 3.638 |
-| different P | 36864 | 12 | PASS | 0.6863607494100 | 0.6863607494396 | 2.96471e-11 | 345.7 | 3.84 |
-| doubled N | 73728 | 10 | PASS | 0.6863607494206 | 0.6863607494290 | 8.37737e-12 | 748.2 | 6.778 |
-| coarse grid (superseded primary) | 18432 | 14 | PASS | 0.6863607486167 | 0.6863607502330 | 1.61629e-9 | 295.6 | 2.272 |
+| doubled N (tightest) | 73728 | 10 | PASS | 0.6863607494206 | 0.6863607494291 | 8.37737e-12 | 780.3 | 6.781 |
+| different P | 36864 | 12 | PASS | 0.6863607494100 | 0.6863607494397 | 2.96471e-11 | 398.1 | 3.843 |
+| quick setting | 36864 | 10 | PASS | 0.6863607487772 | 0.6863607500725 | 1.29522e-9 | 416.4 | 3.641 |
+| coarse grid (S5, superseded primary) | 18432 | 14 | PASS | 0.6863607486167 | 0.6863607502330 | 1.61629e-9 | 295.6 | 2.272 |
 | coarse grid | 18432 | 13 | FAIL | 0.6863607474421 | 0.6863607514075 | 3.96545e-9 | 275.4 | 2.077 |
 | high P | 36864 | 14 | FAIL | 0.6863607422378 | 0.6863607566116 | 1.43739e-8 | 571.3 | 4.088 |
 | coarse grid | 18432 | 12 | FAIL | 0.6863607380942 | 0.6863607607554 | 2.26612e-8 | 241.5 | 2.022 |
 | coarse grid, high P | 18432 | 16 | FAIL | 0.6863379598988 | 0.6863835394937 | 4.55796e-5 | 1280.7 | 2.413 |
 
 - The three PASS runs give nested enclosures:
-  [0.6863607494207, 0.6863607494290] ⊂ [0.6863607494100, 0.6863607494397] ⊂ [0.6863607487772, 0.6863607500725].
+  [0.6863607494206, 0.6863607494291] ⊂ [0.6863607494100, 0.6863607494397] ⊂ [0.6863607487772, 0.6863607500725]
+  (each interval widened outward in the last digit).
   All lie below C.
 - Every FAIL row is a *loose* but valid bound: its enclosure contains the PASS enclosures, and only its upper end
   exceeds C. No pair of enclosures is disjoint.
@@ -675,8 +706,8 @@ in `certificate/runs_superseded/` were made on an earlier copy of the file that 
   - At P = 14 on N = 36864, and at P = 16 on N = 18432, the floating-point witness degrades (monomial-basis
     conditioning; at N = 36864, P = 14 GMRES needs 318 iterations and the collocation residual is 4e-8). The
     checker then certifies a poorer ρ̃.
-- This is why the primary setting is N = 36864, P = 10. There the witness is well conditioned: 29 GMRES
-  iterations and collocation residual 5e-11.
+- This is why the settings used are N ≥ 36864 with P = 10 or 12. At N = 36864, P = 10 the witness is well
+  conditioned: 29 GMRES iterations and collocation residual 5e-11.
 
 **Corruption tests** (`checkers/corruptions/claim/`, N = 36864, P = 10; outputs in `out/`, summary in
 `out/SUMMARY.txt`):

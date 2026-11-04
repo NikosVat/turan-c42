@@ -46,13 +46,13 @@ unchanged. Two things are new:
   (on (0,½], |d| ≤ 2T sin(E/2) = 0.579 with E = max|ψ_j − ψ_0| = 0.871).
 - **Checker #1** (`checkers/rigorous_check.py`, python-flint 0.9.0, 256-bit Arb):
   `OPENBLAS_NUM_THREADS=1 python checkers/rigorous_check.py certificate/c42_profile_0.686360751.json --N 73728 --P 10 --refine 1`
-  gives PASS with F ∈ [@@C1_73728_LO@@, @@C1_73728_UP@@] (@@C1_73728_TIME@@, @@C1_73728_MEM@@). The
-  quick setting `--N 36864 --P 10` gives PASS, F ≤ @@C1_36864_P10_UP@@, in @@C1_36864_P10_TIME@@ and
-  @@C1_36864_P10_MEM@@.
+  gives PASS with F ∈ [0.6863607494206, 0.6863607494291] (13.0 min, 6.8 GB). The
+  quick setting `--N 36864 --P 10` gives PASS, F ≤ 0.6863607500725, in 6.9 min and
+  3.6 GB.
 - **Checker #2** (`checkers/independent_check.py`, 448-bit Arb) was written in a separate session from the note
   and the certificate-format specification only, without access to the search code or checker #1.
   `python checkers/independent_check.py certificate/c42_profile_0.686360751.json --N 73728 --P 12` gives PASS,
-  F ≤ @@C2_73728_UP@@ (@@C2_73728_TIME@@, @@C2_73728_MEM@@), inside checker #1's enclosure.
+  F ≤ 0.6863607494249 (10.2 min, 2.9 GB), inside checker #1's enclosure.
   - It uses a different rigorous method at every step where there is a choice: exact integer convolutions, a
     closed form for p̃(1) with no truncation, and a linear-minorant lower bound for the denominator.
   - It shares the mathematics of Theorem A and Lemma 3.

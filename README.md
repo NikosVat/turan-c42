@@ -26,16 +26,23 @@ All runs are on the certificate below (SHA-256 `d015a829…5652`), with the chec
 
 | checker | N | P | verdict | certified F_upper | C − F_upper | certified F_lower | time | peak memory |
 |---|---|---|---|---|---|---|---|---|
-@@RESULTS_TABLE@@
+| #2 | 73728 | 12 | PASS | 0.6863607494249 | 1.575e-09 | – | 10.2 min | 2.9 GB |
+| #1 | 73728 | 10 | PASS | 0.6863607494291 | 1.571e-09 | 0.6863607494206 | 13.0 min | 6.8 GB |
+| #2 | 36864 | 12 | PASS | 0.6863607494323 | 1.568e-09 | – | 3.9 min | 1.5 GB |
+| #1 | 36864 | 12 | PASS | 0.6863607494397 | 1.560e-09 | 0.6863607494100 | 6.6 min | 3.8 GB |
+| #1 | 36864 | 10 | PASS | 0.6863607500725 | 9.275e-10 | 0.6863607487772 | 6.9 min | 3.6 GB |
+| #2 | 36864 | 10 | PASS | 0.6863607500744 | 9.256e-10 | – | 2.9 min | 1.3 GB |
 
 - Checker #1 also certifies a lower bound F_lower (a diagnostic; the claim uses only F_upper). Its tightest
-  enclosure is F ∈ [@@C1_73728_LO@@, @@C1_73728_UP@@], of width @@C1_73728_W@@.
+  enclosure is F ∈ [0.6863607494206, 0.6863607494291], of width 8.38e-12.
 - Every checker #2 upper bound lies inside that interval or above it. The margin C − F ≈ 1.6·10⁻⁹ is about 200
   times the enclosure width.
 - Times: one core of a 4-vCPU cloud machine, measured with four jobs running at once (session S7). A run on an
   otherwise idle machine is faster; see the timed reproduction below.
-- Doubling N or changing P moves F_upper by less than 10⁻¹¹ once converged. The loosest PASS (checker #1,
-  N = 36864, P = 10) is the quickest to reproduce.
+- Once converged, refining moves F_upper by about 10⁻¹¹. Checker #2 moves by 7.4·10⁻¹² from N = 36864 to 73728
+  at P = 12. Checker #1 moves by 1.1·10⁻¹¹ from (N, P) = (36864, 12) to (73728, 10).
+- The N = 36864, P = 10 runs are the loosest PASSes (margin 9.3·10⁻¹⁰), but they are the cheapest to reproduce.
+  At that setting the two checkers' upper bounds agree to 2·10⁻¹².
 
 ## Method
 
@@ -71,13 +78,13 @@ pip install python-flint==0.9.0 numpy scipy mpmath
 sha256sum -c certificate/SHA256SUMS
 ```
 
-Checker #2 (blind, independent), quick setting. Measured at @@C2_36864_P12_TIME@@ and @@C2_36864_P12_MEM@@:
+Checker #2 (blind, independent), quick setting. Measured at 3.9 min and 1.5 GB:
 
 ```bash
 OPENBLAS_NUM_THREADS=1 python checkers/independent_check.py certificate/c42_profile_0.686360751.json --N 36864 --P 12 --out result2.json
 ```
 
-Checker #1, quick setting. Measured at @@C1_36864_P10_TIME@@ and @@C1_36864_P10_MEM@@:
+Checker #1, quick setting. Measured at 6.9 min and 3.6 GB:
 
 ```bash
 OPENBLAS_NUM_THREADS=1 python checkers/rigorous_check.py certificate/c42_profile_0.686360751.json --N 36864 --P 10 --refine 1 > result1.json
@@ -102,8 +109,8 @@ OPENBLAS_NUM_THREADS=1 python checkers/rigorous_check.py certificate/c42_profile
 OPENBLAS_NUM_THREADS=1 python checkers/independent_check.py certificate/c42_profile_0.686360751.json --N 73728 --P 12 --out result2_tight.json
 ```
 
-They took @@C1_73728_TIME@@ / @@C1_73728_MEM@@ and @@C2_73728_TIME@@ / @@C2_73728_MEM@@. Checker #1's other stability run is
-`--N 36864 --P 12` (@@C1_36864_P12_TIME@@, @@C1_36864_P12_MEM@@).
+They took 13.0 min / 6.8 GB and 10.2 min / 2.9 GB. Checker #1's other stability run is
+`--N 36864 --P 12` (6.6 min, 3.8 GB).
 
 **Corruption tests.** Each must give the expected verdict, and each script exits nonzero on a mismatch.
 
@@ -198,7 +205,7 @@ for any trial function ρ̃. §§5–7 describe one way to evaluate everything r
   E = max|ψ_j − ψ_0| = 0.87087 < π;
 - |p̃(1)| ≈ 0.2201694;
 - ∫_0^{1/2}|p| dt/(1−t) ≈ 0.3207780;
-- F ∈ [@@C1_73728_LO@@, @@C1_73728_UP@@] (checker #1, N = 73728, P = 10, the tightest enclosure).
+- F ∈ [0.6863607494206, 0.6863607494291] (checker #1, N = 73728, P = 10, the tightest enclosure).
 
 ## Findings (summary of FINDINGS.md)
 
