@@ -11,5 +11,5 @@
  "verdict": "REFUSED",
  "reason": "grid N=36864 is not even or not aligned with the knots (lcd 169878528)",
  "runtime_s": 0.0,
- "peak_rss_GB": 0.072
+ "peak_rss_GB": 0.075
 }
