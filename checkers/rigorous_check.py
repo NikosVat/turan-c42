@@ -211,6 +211,9 @@ def residual_bounds(pr, hy, N, P, Crows, log, nodes=None):
             z = acb(0, R(beta / N))
             g = T * acb(0, R(phi)).exp()
             ge = T * acb(0, R(phi + beta / N)).exp()
+            # On cell 0, phi_0 = psi_0 and g_0 = gamma, so the constant term gamma - g_0 of d_{Q,0} is
+            # mathematically 0. It is set to the EXACT zero acb(0) (radius 0), not computed as the
+            # ball gamma - g (which would only contain 0); see NOTES.md 5.3 and the assertion below.
             fr = [zero if i == 0 else gamma - g]
             hr = [fr[0]]
             rr = [gamma - ge]
@@ -311,8 +314,11 @@ def residual_bounds(pr, hy, N, P, Crows, log, nodes=None):
     if nodes is not None:
         return node_res
     rho_norm = amax(rho_sup)
-    # cell 0: R_0(theta)/theta (constant term of R_0 is exactly 0)
-    mono = [arb(0)] * (D + 1)
+    # cell 0: R_0(theta)/theta. The constant term of R_0 is exactly 0: d_{Q,0}(0) is the exact zero
+    # (asserted here), the convolution part on cell 0 is h sum_c theta^{c+1} U_{0,c}/(c+1)! (Lemma C1,
+    # V_{-1} = 0) and t rho~ = h theta rho~_0. So R_0/theta is formed by shifting coefficients
+    # (k -> k-1); nothing is divided by theta, and no ball around 0 is ever dropped.
+    assert f_rows[0][0].is_zero() and f_rows[0][0].is_exact(), "d_{Q,0}(0) must be the exact zero"
     mono = [acb(0)] * (D + 1)
     for k in range(1, Q + 1):
         mono[k - 1] += f_rows[0][k]
@@ -408,7 +414,11 @@ def numerator(hy, N, P, res):
             for l in range(L, -1, -1):
                 s = s * x + rf[l] * w[l]
             tot += s * acb(n1) ** (-gamma)
-            tail += arb(n1) ** (-a) * x ** (L + 1) / (1 - x) * res["rho_sup"][k]
+            # The Horner loop keeps the L+1 terms l = 0..L, so the omitted tail is
+            # <= n'^-a n'^-(L+1)/(1-1/n') sup|rho~_k|. We use the conservative bound
+            # n'^-a n'^-L/(1-1/n') sup|rho~_k| (one factor n' larger), which is valid even if only
+            # l = 0..L-1 were kept (NOTES.md 6.2; REVIEW.md 2, section 6.2).
+            tail += arb(n1) ** (-a) * x ** L / (1 - x) * res["rho_sup"][k]
     h = R(Fraction(1, N))
     hg = acb(h) ** (1 - gamma)
     p1 = 1 + hg * tot
