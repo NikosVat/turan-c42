@@ -24,5 +24,5 @@ by
 Insert as the first item under `## Recent progress`:
 
 ```
-- [42](https://teorth.github.io/optimizationproblems/constants/42a.html) **improved upper bound (unrefereed):** $C\_{42} \leq 0.686360751$* by Nikolaos Vatopoulos with Claude (Anthropic), 4 Nov 2026, using the limit theorem of V. Bakeas ([PR #302](https://github.com/teorth/optimizationproblems/pull/302)) in the arbitrary-knot form of R. Pinho ([PR #305](https://github.com/teorth/optimizationproblems/pull/305)): a 33-piece phase profile and an a posteriori certifier that computes the residual of the Volterra equation exactly on every cell; two independently written Arb checkers ([note, certificate and checkers](<REPO_URL>/tree/<COMMIT>)).
+- [42](https://teorth.github.io/optimizationproblems/constants/42a.html) **improved upper bound (unrefereed):** $C\_{42} \leq 0.686360751$* by Nikolaos Vatopoulos, 4 Nov 2026, using the limit theorem of V. Bakeas ([PR #302](https://github.com/teorth/optimizationproblems/pull/302)) in the arbitrary-knot form of R. Pinho ([PR #305](https://github.com/teorth/optimizationproblems/pull/305)): a 33-piece phase profile and an a posteriori certifier that computes the residual of the Volterra equation exactly on every cell; two independently written Arb checkers ([note, certificate and checkers](<REPO_URL>/tree/<COMMIT>)).
 ```

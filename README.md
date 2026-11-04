@@ -16,8 +16,8 @@ where R_n = min over z_1, …, z_n ∈ ℂ with max_i |z_i| = 1 of max_{1≤k≤
 - Two independently written rigorous checkers certify the bound (Arb ball arithmetic, python-flint 0.9.0).
 - The proof is Bakeas's Theorem A, with Pinho's arbitrary-knot form and integrated residual bound, plus a new
   a posteriori certifier. It is written out in full in `NOTES.md`, with every new step marked.
-- An AI referee reviewed it (`REVIEW.md`) and found no mathematical error. **No human mathematician has checked
-  the argument.**
+- It is unrefereed: no human mathematician has yet checked the argument (see
+  [Credits and AI use](#credits-and-ai-use)).
 
 ## Certified results (tightest first)
 
@@ -245,7 +245,20 @@ Session S4 studied the finite-n problem itself (`FINDINGS.md`; float numerics ex
   (`42a.md`, the README changes, `PR_DRAFT.md`).
 - `LOG.md` and `PLAN.md` are the experiment log and the plan.
 
-## Credits
+## Credits and AI use
+
+Nikolaos Vatopoulos ran the project, set its goals, made the decisions between stages, ran and checked all
+computations, and takes responsibility for the submission. The 33-piece profile and its search, the new proofs
+(NOTES.md §§5–7), the certifier, both checkers, the corruption tests, the referee report and all texts were
+produced with Claude (Anthropic) agents under his direction. Checker #2 (`checkers/independent_check.py`) and the
+referee report `REVIEW.md` were written blind, in a separate session, from `NOTES.md`, `certificate/` and the
+certificate-format section of this README only, without access to the search code, checker #1 or the log; the
+referee report found no mathematical error. The two checkers share no code, witness or intermediate data, but they
+share the mathematics of NOTES.md §§3–4, and both are AI-written, so their independence is procedural. No human
+mathematician has yet checked the argument. Before the bound is treated as established, a human should read at
+least Theorem A (NOTES.md §3), Lemma C1 (§5.2) and §6.
+
+Prior work:
 
 - **G. Harcos**: the linearization (Lemma 2 in NOTES.md) and the constant-phase bound 0.69368 (in Biró 2000).
 - **A. Biró**: the upper bound 5/6 and the lower bounds 1/2 and > 1/2 (the best lower bound to date).
@@ -260,17 +273,3 @@ Session S4 studied the finite-n problem itself (`FINDINGS.md`; float numerics ex
   the previous record 0.6863607950*.
 - No code from these repositories is copied into `checkers/`. `src/finite_n_check.py` imports Bakeas's
   `crosscheck/finite_n.py` (MIT) for a float cross-check only.
-
-## AI use
-
-- **Who did what.** This bound was found, proved and checked by Claude agents (Claude Code, Anthropic), directed
-  by Nikolaos Vatopoulos. The agents wrote the profile search, the certifier and its error analysis, both
-  checkers, the corruption tests, the referee report and all texts, working autonomously in cloud sessions.
-- **The second checker was written blind.** Checker #2 (`checkers/independent_check.py`) and `REVIEW.md` were
-  written in a separate session from `NOTES.md`, `certificate/` and the certificate-format section of this README
-  only. That session did not see the search code, checker #1 or the log.
-- **Limits of the independence.** The two checkers share no code, witness or intermediate data, but they share the
-  mathematics of NOTES.md §§3–4. Both are AI-written, so the independence is procedural.
-- **No human mathematician has checked the argument.** The director did not check the mathematics by hand.
-  Before the bound is treated as established, a human should read at least Theorem A (NOTES.md §3), Lemma C1
-  (§5.2) and §6.

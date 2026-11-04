@@ -351,11 +351,14 @@ and certifies a decimal B > F_n(s) with B ≥ T.
 
 ## Credits and AI use
 
+Nikolaos Vatopoulos ran the project, set its goals, made the decisions between stages, ran and checked all
+computations, and takes responsibility for this note. This note, the proofs in §2 and all code in `src/` were
+produced with Claude (Anthropic) agents under his direction (session S4). The proofs are elementary but have not
+yet been checked by a human mathematician.
+
+Prior work:
 - The linearization is due to Harcos (in Biró 2000).
 - The limit theory (Theorem A) and the phase-varying profile are Bakeas's.
 - The refined profile and certificate are Pinho's ([PR #305](https://github.com/teorth/optimizationproblems/pull/305)).
 - The exact full-tuple reformulation is in Koshta's NOTES §2.
 - Griego, Röhrig and Plata developed the coefficient-cancellation line.
-
-This note, the proofs in §2 and all code in `src/` were written by Claude (Anthropic) in an autonomous session for
-Nikolaos Vatopoulos. The proofs are elementary but have not been reviewed by a human.

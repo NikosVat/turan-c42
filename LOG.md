@@ -612,3 +612,31 @@ Machine: 4 vCPU, 15 GB. Record mode.
   - not checkable here: web hosts are outside this session's network policy (github.com web pages 403 via the
     proxy; teorth.github.io, erdosproblems.com, arxiv.org, doi.org etc. not resolvable). Those 80 URLs are
     teorth's existing content, copied unchanged.
+
+### S8 — 2026-11-04 (audit of teorth/optimizationproblems#327; credit wording)
+
+- PR teorth/optimizationproblems#327 (fork branch 42a-turan-0.686360751, head 6c971f0): open, not draft, 0 comments,
+  no reviews, no labels. Touches only constants/42a.md (+5) and README.md (+2/−1). Base = teorth main 87b4ebb,
+  which is unchanged; merges cleanly into main (git merge-tree). teorth has no CI workflows.
+- Consistency at 9668a60: knots and phases in the row = certificate (34 + 34, LCD 18432); SHA-256 d015a829…5652;
+  F intervals, a, κ, margins and run times in the row and description = committed outputs; table arity 3 on every
+  row; `scripts/check_pages.py`: 0 errors / 0 warnings on main and on the PR.
+- Links: teorth PR refs 263, 302, 305, 310 exist (search API + refs/pull); Bakeas dc9c491 (= tag v1.1.0), Pinho
+  009120a (path volterra-quadratic-knots) and our 9668a60 resolve. teorth.github.io and other github.com web pages
+  are blocked by this session's proxy (not fetchable).
+- Fresh clone at 9668a60, python-flint 0.9.0, OPENBLAS_NUM_THREADS=1, 4 vCPU (two jobs at once):
+  - `sha256sum -c certificate/SHA256SUMS`: 4/4 OK; grid_check N = 36864 OK; independent_selftest OK;
+  - checker #2, N = 36864, P = 12: PASS, F ≤ 0.6863607494322799, 181 s, 1.54 GB; F_ball identical to
+    checkers/independent_out/cert_N36864_P12.json;
+  - checker #1, N = 36864, P = 10, refine 1: PASS, F ∈ [0.6863607487772, 0.6863607500725], 355 s, 3.49 GB;
+    F_upper, F_lower, p̃(1), trial_sha256 identical to certificate/expected_N36864_P10.json;
+  - checker #2, N = 73728, P = 12: PASS, F ≤ 0.6863607494249, 374 s, 2.96 GB; F_ball identical to
+    checkers/independent_out/cert_N73728_P12.json;
+  - checker #1, N = 73728, P = 10: running at commit time (result below).
+- Other PRs: only 302, 305, 310 (and ours) touch 42a.md among all PR heads ≥ 200. #305 (bac1d85) and #310 (e0393b2)
+  unchanged since S7b. #302 updated today (3887fbb): adds a lower-bound row 1/2 + 2^(−32176926823186696)* [Bak26c]
+  and references [Bak26b], [Bak26c]; its upper bound is still 0.68637*. No PR claims an upper bound below
+  0.686360751. Ours still conflicts textually with #302/#305 (README, 42a.md) and #310 (42a.md), as the PR says.
+- Credit wording rewritten to lead with Nikolaos Vatopoulos, with one AI-use statement (README "Credits and AI use",
+  NOTES/FINDINGS AI-use paragraphs, submission/ contribution note); [Vat26] reference and Recent-progress line no
+  longer mention AI. certificate/ and checkers/ unchanged.

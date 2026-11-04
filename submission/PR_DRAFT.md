@@ -16,77 +16,38 @@ use policy requires, and re-check the open PRs for a lower C42 claim.
 
 **Body:**
 
-This PR records **C₄₂ ≤ 686360751/1000000000 = 0.686360751\*** for Turán's pure power-sum constant. That is
-4.40e-8 below the pending [#305](https://github.com/teorth/optimizationproblems/pull/305) (0.6863607950\*), 9.249e-6 below the pending [#302](https://github.com/teorth/optimizationproblems/pull/302) (0.68637\*), and
-9.750553e-4 below the merged 0.6873358063\* ([#263](https://github.com/teorth/optimizationproblems/pull/263)). The margins are exact differences of the decimal values.
+This PR records **C₄₂ ≤ 686360751/1000000000 = 0.686360751\*** for Turán's pure power-sum constant. That is 4.40e-8 below the pending [#305](https://github.com/teorth/optimizationproblems/pull/305) (0.6863607950\*), 9.249e-6 below the pending [#302](https://github.com/teorth/optimizationproblems/pull/302) (0.68637\*), and 9.750553e-4 below the merged 0.6873358063\* ([#263](https://github.com/teorth/optimizationproblems/pull/263)). The margins are exact differences of the decimal values.
 
-**Idea.** The construction and the limit theorem are Bakeas's ([#302](https://github.com/teorth/optimizationproblems/pull/302), Theorem A): Harcos's linearization
-with s_k = T e^{iφ(k/n)} for k ≤ ⌊n/2⌋, which gives limsup R_n ≤ max(T, F). Pinho ([#305](https://github.com/teorth/optimizationproblems/pull/305)) observed that the
-proof holds for any finite set of knots, and added the integrated (Gronwall) form of the residual bound. Both are
-used unchanged. Two things are new:
+**Idea.** The construction and the limit theorem are Bakeas's ([#302](https://github.com/teorth/optimizationproblems/pull/302), Theorem A): Harcos's linearization with s_k = T e^{iφ(k/n)} for k ≤ ⌊n/2⌋, which gives limsup R_n ≤ max(T, F). Pinho ([#305](https://github.com/teorth/optimizationproblems/pull/305)) observed that the proof holds for any finite set of knots, and added the integrated (Gronwall) form of the residual bound. Both are used unchanged. Two things are new:
 
-- **A 33-piece profile.** It was found by an adjoint-gradient search on the limit functional. It uses the knots
-  j²/1152 (Pinho's quadratic family with 24 pieces), six dyadic knots 1/18432, …, 1/576 near 0, and four greedy
-  insertions. Its floating-point fixed point T = F is about 0.6863607503, and the certificate takes T = C = 0.686360751.
+- **A 33-piece profile.** It was found by an adjoint-gradient search on the limit functional. It uses the knots j²/1152 (Pinho's quadratic family with 24 pieces), six dyadic knots 1/18432, …, 1/576 near 0, and four greedy insertions. Its floating-point fixed point T = F is about 0.6863607503, and the certificate takes T = C = 0.686360751.
 - **A new a posteriori certifier.**
-  - The trial function ρ̃ is a discontinuous piecewise polynomial of degree P on N uniform cells aligned with
-    all knots.
-  - The residual d + d∗ρ̃ − tρ̃ is then computed *exactly* on every cell, from an identity for convolutions of
-    piecewise polynomials (two Kronecker-substituted polynomial products). Its sup per cell is bounded by
-    Chebyshev coefficients.
+  - The trial function ρ̃ is a discontinuous piecewise polynomial of degree P on N uniform cells aligned with all knots.
+  - The residual d + d∗ρ̃ − tρ̃ is then computed *exactly* on every cell, from an identity for convolutions of piecewise polynomials (two Kronecker-substituted polynomial products). Its sup per cell is bounded by Chebyshev coefficients.
   - Lemma 3, in Pinho's integrated form, turns this into bounds on |p(1) − p̃(1)| and on the denominator.
   - p̃ is evaluated on each cell with the kernel singularity handled in closed form.
-  - The result is an enclosure of F of width about 1e-11 at N = 73728 and 7 GB. For comparison, the
-    certificate of [#305](https://github.com/teorth/optimizationproblems/pull/305) used N = 14,155,776 for a one-sided gap of about 3e-8.
+  - The result is an enclosure of F of width about 1e-11 at N = 73728 and 7 GB. For comparison, the certificate of [#305](https://github.com/teorth/optimizationproblems/pull/305) used N = 14,155,776 for a one-sided gap of about 3e-8.
 
 **Certificate, note, format specification and checkers:** <REPO_URL>/tree/<COMMIT>
 
-- Certificate `certificate/c42_profile_0.686360751.json`, SHA-256
-  `d015a8295d809fa26c9f18888ece53d77c9fea71712420313e75911065855652`. It contains T = C = 0.686360751, 34 exact
-  rational knots (least common denominator 18432) and 34 exact decimal phases. The row lists them all.
-- The hypotheses of Theorem A are certified: a = Re γ = T cos ψ_0 = 0.1016540… > 0, and κ = sup|d| = T < 1
-  (on (0,½], |d| ≤ 2T sin(E/2) = 0.579 with E = max|ψ_j − ψ_0| = 0.871).
-- **Checker #1** (`checkers/rigorous_check.py`, python-flint 0.9.0, 256-bit Arb):
-  `OPENBLAS_NUM_THREADS=1 python checkers/rigorous_check.py certificate/c42_profile_0.686360751.json --N 73728 --P 10 --refine 1`
-  gives PASS with F ∈ [0.6863607494206, 0.6863607494291] (13.0 min, 6.8 GB). The
-  quick setting `--N 36864 --P 10` gives PASS, F ≤ 0.6863607500725, in about 6.5 min and
-  3.6 GB.
-- **Checker #2** (`checkers/independent_check.py`, 448-bit Arb) was written in a separate session from the note
-  and the certificate-format specification only, without access to the search code or checker #1.
-  `python checkers/independent_check.py certificate/c42_profile_0.686360751.json --N 73728 --P 12` gives PASS,
-  F ≤ 0.6863607494249 (10.2 min, 2.9 GB), inside checker #1's enclosure.
-  - It uses a different rigorous method at every step where there is a choice: exact integer convolutions, a
-    closed form for p̃(1) with no truncation, and a linear-minorant lower bound for the denominator.
+- Certificate `certificate/c42_profile_0.686360751.json`, SHA-256 `d015a8295d809fa26c9f18888ece53d77c9fea71712420313e75911065855652`. It contains T = C = 0.686360751, 34 exact rational knots (least common denominator 18432) and 34 exact decimal phases. The row lists them all.
+- The hypotheses of Theorem A are certified: a = Re γ = T cos ψ_0 = 0.1016540… > 0, and κ = sup|d| = T < 1 (on (0,½], |d| ≤ 2T sin(E/2) = 0.579 with E = max|ψ_j − ψ_0| = 0.871).
+- **Checker #1** (`checkers/rigorous_check.py`, python-flint 0.9.0, 256-bit Arb): `OPENBLAS_NUM_THREADS=1 python checkers/rigorous_check.py certificate/c42_profile_0.686360751.json --N 73728 --P 10 --refine 1` gives PASS with F ∈ [0.6863607494206, 0.6863607494291] (13.0 min, 6.8 GB). The quick setting `--N 36864 --P 10` gives PASS, F ≤ 0.6863607500725, in about 6.5 min and 3.6 GB.
+- **Checker #2** (`checkers/independent_check.py`, 448-bit Arb) was written in a separate session from the note and the certificate-format specification only, without access to the search code or checker #1. `python checkers/independent_check.py certificate/c42_profile_0.686360751.json --N 73728 --P 12` gives PASS, F ≤ 0.6863607494249 (10.2 min, 2.9 GB), inside checker #1's enclosure.
+  - It uses a different rigorous method at every step where there is a choice: exact integer convolutions, a closed form for p̃(1) with no truncation, and a linear-minorant lower bound for the denominator.
   - It shares the mathematics of Theorem A and Lemma 3.
-- **Corruption tests.** Perturbed phases, a lowered T = C, and claims 1e-9 below the certified enclosure all FAIL.
-  For the corrupted copies of this certificate, each FAIL is certifiably false, because checker #1's lower bound
-  exceeds C. The 1e-9-above controls PASS. Hypothesis violations (C < T, a < 0, a misaligned grid, malformed
-  input) are REFUSED. Checker #1 gives the expected verdict on all 22 of its cases, and checker #2 on all 28 of
-  its cases.
-- A floating-point cross-check that uses no limit theorem: the exact finite-n construction on the same profile,
-  at n up to 4·10⁶, is monotone and consistent with the certified limit. Its error at these n (~5e-6) is far
-  larger than the margin, so this is a consistency check only.
+- **Corruption tests.** Perturbed phases, a lowered T = C, and claims 1e-9 below the certified enclosure all FAIL. For the corrupted copies of this certificate, each FAIL is certifiably false, because checker #1's lower bound exceeds C. The 1e-9-above controls PASS. Hypothesis violations (C < T, a < 0, a misaligned grid, malformed input) are REFUSED. Checker #1 gives the expected verdict on all 22 of its cases, and checker #2 on all 28 of its cases.
+- A floating-point cross-check that uses no limit theorem: the exact finite-n construction on the same profile, at n up to 4·10⁶, is monotone and consistent with the certified limit. Its error at these n (~5e-6) is far larger than the margin, so this is a consistency check only.
 
-**Scope.** This is an unrefereed analytic asymptotic reduction (a bound on limsup R_n). No explicit finite
-threshold, optimality or formal verification is claimed. The asterisk follows CONTRIBUTING's convention for
-self-archived results. The margin below [#305](https://github.com/teorth/optimizationproblems/pull/305) is small (4.4e-8) but large compared with the certified enclosure
-width (about 1e-11). The float search (session S2) puts the best fixed point of the phase-only family at about
-0.68636074, so further gains inside this family are confined to about 1e-8.
+**Scope.** This is an unrefereed analytic asymptotic reduction (a bound on limsup R_n). No explicit finite threshold, optimality or formal verification is claimed. The asterisk follows CONTRIBUTING's convention for self-archived results. The margin below [#305](https://github.com/teorth/optimizationproblems/pull/305) is small (4.4e-8) but large compared with the certified enclosure width (about 1e-11). The float search (session S2) puts the best fixed point of the phase-only family at about 0.68636074, so further gains inside this family are confined to about 1e-8.
 
-**AI use.** Found, proved and checked by Claude agents (Claude Code, Anthropic), directed by Nikolaos Vatopoulos,
-who takes responsibility for the submission. The second checker and a referee report on the note were written by
-a separate Claude agent, working blind from the note and the certificate format only. The two checkers share no
-code or data, but both are AI-written, so their independence is procedural. No human mathematician has checked
-the argument.
+**Credit and AI use.** Nikolaos Vatopoulos ran the project and takes responsibility for the submission. How Claude (Anthropic) agents were used, and what the independence of the two checkers amounts to, is stated in the contribution note that this PR adds to `constants/42a.md`.
 
-**Pending PRs and overlap.** [#302](https://github.com/teorth/optimizationproblems/pull/302) (Bakeas, 0.68637\*) and [#305](https://github.com/teorth/optimizationproblems/pull/305) (Pinho, 0.6863607950\*) are still open
-as of 4 Nov 2026. This construction builds directly on both: it uses Bakeas's Theorem A and Pinho's
-arbitrary-knot form and integrated residual bound.
-- This PR is written against current `main`. It does not include their rows or references, and cites them by
-  inline links instead.
-- It edits the same table, reference list and README cell. If [#302](https://github.com/teorth/optimizationproblems/pull/302) or [#305](https://github.com/teorth/optimizationproblems/pull/305) is merged first, we will rebase:
-  the new row goes after their rows, and the inline links in our row and contribution note become their
-  reference keys ([Bak26], [Pin26b]).
-- [#310](https://github.com/teorth/optimizationproblems/pull/310) changes only the lower-bound table and does not conflict.
+**Pending PRs and overlap.** [#302](https://github.com/teorth/optimizationproblems/pull/302) (Bakeas, 0.68637\*) and [#305](https://github.com/teorth/optimizationproblems/pull/305) (Pinho, 0.6863607950\*) are still open as of 4 Nov 2026. This construction builds directly on both: it uses Bakeas's Theorem A and Pinho's arbitrary-knot form and integrated residual bound.
+- This PR is written against current `main`. It does not include their rows or references, and cites them by inline links instead.
+- It edits the same table, reference list and README cell. If [#302](https://github.com/teorth/optimizationproblems/pull/302) or [#305](https://github.com/teorth/optimizationproblems/pull/305) is merged first, we will rebase: the new row goes after their rows, and the inline links in our row and contribution note become their reference keys ([Bak26], [Pin26b]).
+- [#310](https://github.com/teorth/optimizationproblems/pull/310) adds a lower-bound row and a reference [Pin26c]. It does not overlap with this PR in substance, but its reference is inserted at the same place in the list as [Vat26], so whichever is merged second needs a trivial rebase.
 
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+https://claude.ai/code/session_01AGaR2jaURXufqYqbrMwX2g

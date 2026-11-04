@@ -4,7 +4,7 @@
 
   limsup_{n→∞} R_n ≤ 0.686360751,   R_n = inf_{z_1 = 1, z_2..z_n ∈ ℂ} max_{1≤k≤n} |Σ_j z_j^k|.
 
-**Status: unrefereed. Written with AI assistance (see the end of the file).**
+**Status: unrefereed.** Credits and AI use are stated at the end of the file.
 - Sections 1–3 (Lemmas 1–2, Theorem A) are Bakeas's (turan-c42-bound v1.1.0, commit dc9c491, MIT). They are
   reproduced here with small notational changes, so that this file is self-contained.
   - The extension from the knots j/48 to arbitrary rational knots is Pinho's (c42-certificate @009120a,
@@ -804,10 +804,11 @@ Pinho's profile (C42_compact_best.json). Log: `logs/S5/finite_n_claim.log`.
 - **Not done.** No human mathematician has checked Theorem A, Lemma C1 or §6. Before the bound is treated as
   established, a human should read at least these.
 
-## AI use
+## Credits and AI use
 
-The search, both certifiers, their derivation, the referee report and this text were produced by AI agents
-(Claude Code, Anthropic), directed by Nikolaos Vatopoulos. Checker #2 and REVIEW.md were written blind, from this
-file and the certificate format only. The mathematics of Sections 1–4 is by Bakeas (with AI assistance, per his
-notes), Harcos and Pinho. Nothing in Sections 5–8 has been reviewed by a human mathematician. Corrections are
-welcome.
+Nikolaos Vatopoulos ran the project, set its goals, made the decisions between stages, ran and checked all
+computations, and takes responsibility for the submission. The mathematics of Sections 1–4 is by Harcos, Bakeas
+(with AI assistance, per his notes) and Pinho. The search, the new material of Sections 5–8, both certifiers,
+the referee report and this text were produced with Claude (Anthropic) agents under his direction. Checker #2 and
+REVIEW.md were written blind, by a separate Claude agent working from this file and the certificate format only.
+No human mathematician has yet checked the argument (§9). Corrections are welcome.
