@@ -7,3 +7,6 @@
 [   79.8s]   collocation max|R/t| at the nodes (float) = 2.042e-10
 [  142.4s]   GMRES: info=3, inner iterations=100
 [  142.4s] exact residual (pass 1)
+[  167.1s]   collocation max|R/t| at the nodes (float) = 1.300e-14
+[  176.4s]   GMRES: info=3, inner iterations=15
+[  176.4s] exact residual (pass 2)
