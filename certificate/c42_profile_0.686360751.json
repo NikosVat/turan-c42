@@ -79,11 +79,12 @@
  ],
  "checker": {
   "program": "checkers/rigorous_check.py",
-  "N": 18432,
-  "P": 14,
+  "N": 36864,
+  "P": 10,
   "refine": 1,
   "bits": 256,
-  "Pk": 20
+  "Pk": 20,
+  "env": "OPENBLAS_NUM_THREADS=1"
  },
  "origin": "33-piece candidate of session S2 (results/candidate_33pc.json, run A_G4_24), phases unchanged; only T set to C."
 }

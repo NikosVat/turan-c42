@@ -1,7 +1,7 @@
 #!/bin/bash
 # Corruption tests for the claimed certificate (certificate/c42_profile_0.686360751.json).
 # Usage: checkers/corruptions/claim/run_claim.sh [list-file]   (default: list.txt)
-# Every line: file N P expected.  Runs 2 jobs in parallel (each ~2.3 GB at N=18432, P=14).
+# Every line: file N P expected.  Runs 2 jobs in parallel (each ~3.7 GB at N=36864, P=10).
 # Full checker outputs go to checkers/corruptions/claim/out/<name>.json.  Runtime ~6 min per job.
 cd "$(dirname "$0")/../../.."
 export OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1
