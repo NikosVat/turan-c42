@@ -506,3 +506,38 @@ independently in a separate session, review of NOTES_CERTIFIER.md, and re-optimi
 - Thread dependence: witness bits depend on BLAS threads; at N=36864 P=10 4-thread vs 1-thread F_upper differ by
   5e-22, at N=18432 P=14 by 8e-11. Verdicts unaffected. README tells verifiers to set OPENBLAS_NUM_THREADS=1.
 - **Status: C42 ≤ 0.686360751 is certified by checker #1 only. Not a public claim until checker #2 (S6) agrees.**
+
+## S4 — 2026-11-03/04 (exactness of the reduction; finite-n study; FINDINGS.md)
+
+Branch `claude/harcos-reduction-findings-53k0p2`. Machine: 4 vCPU, 15 GB.
+
+- **Exactness of Harcos's reduction: PROVED** (FINDINGS.md §2, elementary).
+  - R_n = min_s max(‖s‖, F_n(s)), equivalently R_n = the unique fixed point of G_n(T) = min_{‖s‖≤T} F_n.
+  - Float cross-check (`src/reduction_crosscheck.py`): identity (★) to 3.5e-16 on 2000 random tuples. Direct
+    z-space multistart agrees with the first-half minimum at n = 2..7 to 8 digits.
+- **S1 wording corrected.**
+  - 0.69465442 at n = 400 is a local min of F_400 on the torus at T_0 = 0.68637. It is not R_400.
+  - The fixed point gives R_400 ≤ 0.690120597996 (Arb).
+  - S1's free-modulus "stuck" runs were mostly a polar-coordinate artifact (ρ_k = 0 is a spurious KKT point).
+    They were redone with the disk map s = T·2w/(1+|w|²).
+- **`src/finite_n_study.py`**, n = 200, 283, 400, 566, 800, 1131, 1600, 2263, 3200. The full table is in
+  `logs/finite_n_fit.txt`.
+  - 1404/1404 constant-modulus starts end at one minimiser (± conjugation).
+  - 470/484 free-modulus starts end at ρ ≡ 1. The remaining 14 are worse, with 1–5 of the s_k ≈ 0.
+  - ∂F/∂ρ_k < 0 for all k at every n.
+  - Arb: R_n ≤ 0.692648924532 (200) … 0.687129252420 (3200).
+- **Trends.**
+  - Δ(T_0) ≈ 0.070 n^−0.79.
+  - Δ* = T*_smooth(Pinho φ) − T*_free ≈ 0.058 n^−0.88, with local exponents rising to 0.92.
+  - The expected exponents are 1−a, 1, 2−a with a = Re g(0) (0.166 for Bakeas, 0.112 for Pinho).
+  - Model exp3 was validated on the φ-frozen smooth families (n to 102400, known limits 0.6863655395 and
+    0.6863607720): window error +3.5e-6 / +1.2e-5.
+  - Extrapolated free fixed point: 0.686356 – 0.686376.
+- **Boundary layer.** The deviation is fixed in k (−0.16 rad at k = 1), and the u-scale part shrinks. Grafting the
+  k ≤ 8 layer: gain −3.6e-4 (n=400) → −2.3e-5 (n=25600).
+- **Verdict.**
+  - No evidence for non-smooth or varying-modulus first halves. B, C and D add nothing beyond A (proved for
+    β ≥ ½, numerical otherwise).
+  - Conditional on local = global and on the trend: lim R_n ≈ 0.68636 ± 2e-5.
+- Caveat: the background limit-reference job hit the 30-min tool limit once under CPU contention. It was rerun
+  cheaply (S1's F values + a fresh slope).
