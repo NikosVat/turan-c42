@@ -570,3 +570,20 @@ Machine: 4 vCPU, 15 GB. Record mode.
 - Removed 10 optimizer checkpoint/snapshot files (`results/*_ckpt.json`, `*_snap.json`; final JSONs kept).
 - Reruns (memory-aware queue, ≤ 13 GB, 4 single-threaded jobs, OPENBLAS_NUM_THREADS=1): both checkers at all
   certificate settings, all corruption lists of both checkers, checker #2 self-test. Results below.
+- **Results (all 12 queue jobs rc = 0):**
+  - checker #1 (SHA 93fdcf68): N=73728 P=10 PASS F ∈ [0.6863607494206, 0.6863607494291] (780 s, 6.78 GB);
+    N=36864 P=12 PASS [0.6863607494100, 0.6863607494397] (398 s, 3.84 GB); N=36864 P=10 PASS
+    [0.6863607487772, 0.6863607500725] (416 s, 3.64 GB). All identical to S5 to 25 digits; only the radius of
+    p̃(1) grew (2e-31 → 2e-30) from the conservative tail.
+  - checker #2 (SHA 26e12388, unchanged): N=73728 P=12 PASS F ≤ 0.6863607494249 (612 s, 2.90 GB); N=36864 P=12
+    PASS F ≤ 0.6863607494323 (236 s, 1.50 GB); N=36864 P=10 PASS F ≤ 0.6863607500744 (171 s, 1.35 GB). Same as
+    S6 to ≤ 1e-17. Self-test OK.
+  - Corruptions: checker #1 claim lists 14/14 as expected (list 4, list2 2, list3 8), run_all.sh 8/8;
+    checker #2 28/28. Every FAIL of checker #1 has F_lower > C.
+  - Times measured with up to 4 single-threaded jobs at once.
+- Fresh clone of `certificate` @ e6ffc94 → README commands: sha256sum OK; checker #2 PASS 238 s / 1.50 GB;
+  checker #1 PASS 393 s / 3.64 GB; both outputs identical to the committed expected outputs.
+- NOTES §8.2 now leads with the tightest PASS of both checkers; §8.3 tables from S7 runs, with outward rounding
+  (the S5 tables had rounded some F_upper values down in the last digit; display only).
+- README.md, submission/ (42a.md on top of PR #305 head bac1d85, README row 42 + Recent-progress line,
+  PR_DRAFT.md), PR_DRAFT.md pointer at root.

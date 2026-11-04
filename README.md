@@ -46,24 +46,19 @@ All runs are on the certificate below (SHA-256 `d015a829…5652`), with the chec
 
 ## Method
 
-- **Linearization (Harcos, Bakeas).** Prescribe the first ⌊n/2⌋ power sums as s_k = T e^{iφ(k/n)}, with T = C and
-  φ piecewise linear through 34 exact rational knots in [0, ½]. Harcos's linearization chooses the remaining power
-  sums with a common modulus F_n so that z = 1 is a root. This gives R_n ≤ max(T, F_n).
-- **Limit (Theorem A).** Bakeas's Theorem A shows F_n → F = |p(1)| / ∫_0^{1/2} |p(t)| dt/(1−t), where p is built
-  from the bounded solution ρ of the Volterra equation t ρ(t) = d(t) + ∫_0^t d(u) ρ(t−u) du, with d = γ − T e^{iφ}
-  on (0, ½]. Its hypotheses are sup|d| < 1, which makes the Volterra operator a contraction, and Re γ ≥ 0.
-- **The profile.** A float adjoint-gradient search (session S2) found a 33-piece profile whose fixed point
-  T = F is ≈ 0.6863607503. The knots are j²/1152, six dyadic knots near 0 and four greedy insertions.
-- **The certifier.**
-  - It takes a trial function ρ̃ that is a discontinuous piecewise polynomial on a uniform grid aligned with all
-    knots.
-  - It computes the residual of the Volterra equation *exactly* on every cell, by an identity for convolutions
-    of piecewise polynomials, and bounds it by Chebyshev coefficients.
-  - The a posteriori bounds of Bakeas and Pinho (Lemma 3 and its integrated form) turn this residual into
-    rigorous bounds on p(1) and on the denominator.
-  - The kernel singularity is handled in closed form.
-- **Result.** F is certified to about 10⁻¹¹ with under 7 GB of memory. For comparison, Pinho's certificate needed
-  14 million cells and 95 GB for a one-sided gap of 3·10⁻⁸.
+Following Harcos and Bakeas, prescribe the first ⌊n/2⌋ power sums as s_k = T e^{iφ(k/n)}, with T = C and φ
+piecewise linear through 34 exact rational knots in [0, ½]. Harcos's linearization then chooses the remaining
+power sums with a common modulus F_n so that 1 is one of the z_i, which gives R_n ≤ max(T, F_n). Bakeas's
+Theorem A shows that F_n → F = |p(1)| / ∫_0^{1/2} |p(t)| dt/(1−t). Here p is built from the bounded solution ρ of
+the Volterra equation t ρ(t) = d(t) + ∫_0^t d(u) ρ(t−u) du, with d = γ − T e^{iφ} on (0, ½]. The hypotheses are
+sup|d| < 1, which makes the operator a contraction, and Re γ ≥ 0. The 33-piece profile was found by a
+floating-point adjoint-gradient search; its knots are j²/1152, six dyadic knots near 0 and four greedy
+insertions, and its fixed point T = F is ≈ 0.6863607503. The new certifier takes a trial function ρ̃ that is a
+discontinuous piecewise polynomial on a uniform grid aligned with all knots. It computes the residual of the
+Volterra equation *exactly* on every cell, by an identity for convolutions of piecewise polynomials, and turns it
+into rigorous bounds on p(1) and on the denominator with the a posteriori bounds of Bakeas and Pinho; the kernel
+singularity is handled in closed form. This certifies F to about 10⁻¹¹ with under 7 GB of memory. For
+comparison, Pinho's certificate needed 14 million cells and 95 GB for a one-sided gap of 3·10⁻⁸.
 
 ## How to verify
 

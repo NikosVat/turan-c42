@@ -271,3 +271,25 @@ The self-test takes about 15 s; the corruption run about 25 minutes with 3 jobs.
    as the headline numbers, rather than the loosest PASS.
 4. State the hypothesis of Theorem A uniformly (a ≥ 0 in NOTES, 0 < a < 1 in README).
 5. Before a public claim, a human should read Theorem A (Bakeas) and Lemma C1/§6; both checkers rest on them.
+
+---
+
+## 7. Response (appended in session S7; not part of the S6 report)
+
+How each point above was handled. Details are in LOG.md (S7).
+
+| REVIEW point | what S7 did |
+|---|---|
+| §2 clarification 1 (cell 0: exact zero before dividing by θ) | Checker #1 already used the exact `acb(0)` for d_{Q,0}(0), and it forms R_0/θ by shifting coefficients, with no division. An assertion was added. NOTES §5.3 states the requirement. |
+| §2 clarification 2 (balls vs rounding of the coefficients of d) | NOTES §5.3: checker #1 uses Arb balls, so no extra term is needed; rounding to dyadics would need one, which checker #2 adds. |
+| §6.2 ambiguity ("after L terms") | Checker #1 keeps l = 0..L, so its old tail n'^{−(L+1)} was correct. It now uses the conservative n'^{−L}, valid under either reading. NOTES §6.2 states both. |
+| §3: hypothesis on a stated differently in NOTES and README | The same sentence now appears in NOTES §3/§7 and README: Theorem A needs a ≥ 0; the checkers certify 0 < a < 1. |
+| §3: κ̂ instead of κ | Remark added in NOTES §3, including why checker #1's ball κ̂ = T is valid. |
+| §7 wording ("piecewise linear") | Fixed in NOTES §7. |
+| §1 min vs inf | Note added in NOTES §1. |
+| §8 / §6 rec. 3: headline = tightest PASS | NOTES §8.2 and README lead with N = 73728 (both checkers). |
+| §6 rec. 1: README and NOTES §9 | Updated: checker #2 exists and agrees. |
+| §6 rec. 5: human reading | Still open; stated in README, NOTES §9 and the PR draft. |
+
+After the change to checker #1, both checkers and all corruption tests were rerun (S7). All verdicts are
+unchanged, and checker #1's enclosures are identical to 25 digits.

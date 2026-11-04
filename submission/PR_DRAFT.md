@@ -47,7 +47,7 @@ unchanged. Two things are new:
 - **Checker #1** (`checkers/rigorous_check.py`, python-flint 0.9.0, 256-bit Arb):
   `OPENBLAS_NUM_THREADS=1 python checkers/rigorous_check.py certificate/c42_profile_0.686360751.json --N 73728 --P 10 --refine 1`
   gives PASS with F ∈ [0.6863607494206, 0.6863607494291] (13.0 min, 6.8 GB). The
-  quick setting `--N 36864 --P 10` gives PASS, F ≤ 0.6863607500725, in 6.9 min and
+  quick setting `--N 36864 --P 10` gives PASS, F ≤ 0.6863607500725, in about 6.5 min and
   3.6 GB.
 - **Checker #2** (`checkers/independent_check.py`, 448-bit Arb) was written in a separate session from the note
   and the certificate-format specification only, without access to the search code or checker #1.
@@ -57,9 +57,10 @@ unchanged. Two things are new:
     closed form for p̃(1) with no truncation, and a linear-minorant lower bound for the denominator.
   - It shares the mathematics of Theorem A and Lemma 3.
 - **Corruption tests.** Perturbed phases, a lowered T = C, and claims 1e-9 below the certified enclosure all FAIL.
-  Each FAIL is certifiably false, because checker #1's lower bound exceeds C. The 1e-9-above controls PASS.
-  Hypothesis violations (C < T, a < 0, a misaligned grid, malformed input) are REFUSED. Checker #2 gives the
-  expected verdict on all 28 cases, and checker #1 on all of its cases.
+  For the corrupted copies of this certificate, each FAIL is certifiably false, because checker #1's lower bound
+  exceeds C. The 1e-9-above controls PASS. Hypothesis violations (C < T, a < 0, a misaligned grid, malformed
+  input) are REFUSED. Checker #1 gives the expected verdict on all 22 of its cases, and checker #2 on all 28 of
+  its cases.
 - A floating-point cross-check that uses no limit theorem: the exact finite-n construction on the same profile,
   at n up to 4·10⁶, is monotone and consistent with the certified limit. Its error at these n (~5e-6) is far
   larger than the margin, so this is a consistency check only.

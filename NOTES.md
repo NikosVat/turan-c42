@@ -709,25 +709,41 @@ float value 0.6863607502855 ± 9e-11. So C is ≈ 7e-10 above T*, and 4.40e-8 be
 - This is why the settings used are N ≥ 36864 with P = 10 or 12. At N = 36864, P = 10 the witness is well
   conditioned: 29 GMRES iterations and collocation residual 5e-11.
 
-**Corruption tests** (`checkers/corruptions/claim/`, N = 36864, P = 10; outputs in `out/`, summary in
-`out/SUMMARY.txt`):
+**Corruption tests, checker #1** (session S7, current checker; N = 36864, P = 10). The inputs are in
+`checkers/corruptions/claim/`, the lists in `list.txt`, `list2.txt` and `list3.txt`, and the outputs and
+`summary_list*.txt` in `out/`. F_lower is rounded down and F_upper up in the last digit.
 
 | corrupted certificate | expected | got | F_lower | F_upper |
 |---|---|---|---|---|
-| T = C = 0.68636074 (below T*) | FAIL | FAIL | 0.6863607622291 | 0.6863607635243 |
-| T = C = 0.68636075 (3e-10 below T*) | FAIL | FAIL | 0.6863607500001 | 0.6863607512953 |
-| ψ_5 + 0.002 (float F ≈ 0.6863607537) | FAIL | FAIL | 0.6863607530854 | 0.6863607543815 |
-| ψ_12 + 0.005 (float F ≈ 0.6863608512) | FAIL | FAIL | 0.6863608506045 | 0.6863608519008 |
-| T = 0.68636074, C = F_lower − 1e-9 = 0.686360761229 | FAIL | FAIL | 0.6863607622291 | 0.6863607635243 |
-| T = 0.68636074, C = F_upper + 1e-9 = 0.686360764525 (resolution control) | PASS | PASS | 0.6863607622291 | 0.6863607635243 |
+| T = C = 0.68636074 (below T*) | FAIL | FAIL | 0.6863607622291 | 0.6863607635244 |
+| T = C = 0.68636075 (3e-10 below T*) | FAIL | FAIL | 0.6863607500001 | 0.6863607512954 |
+| T = C = 0.686360749 (list3) | FAIL | FAIL | 0.6863607512230 | 0.6863607525183 |
+| ψ_5 + 0.002 (float F ≈ 0.6863607537) | FAIL | FAIL | 0.6863607530854 | 0.6863607543816 |
+| ψ_12 + 0.005 (float F ≈ 0.6863608512) | FAIL | FAIL | 0.6863608506045 | 0.6863608519009 |
+| ψ_20 + 0.001 (list3) | FAIL | FAIL | 0.6863607596708 | 0.6863607609663 |
+| T = 0.68636074, C = F_lower − 1e-9 = 0.686360761229 | FAIL | FAIL | 0.6863607622291 | 0.6863607635244 |
+| T = 0.68636074, C = F_upper + 1e-9 = 0.686360764525 (resolution control) | PASS | PASS | 0.6863607622291 | 0.6863607635244 |
+| C = 0.68636075 < T (list3) | REFUSED | REFUSED | – | – |
+| C = 1 (list3) | REFUSED | REFUSED | – | – |
+| all phases − 0.2, so a = −0.035 < 0 (list3) | REFUSED | REFUSED | – | – |
+| u_1 = 1/18433, not on the grid N = 36864 (list3) | REFUSED | REFUSED | – | – |
+| one phase missing (list3) | REFUSED | REFUSED | – | – |
+| u_2 and u_3 swapped (list3) | REFUSED | REFUSED | – | – |
 
 - In every FAIL row F_lower > C, so each corrupted claim is certifiably false, not merely uncertified.
   - The closest case is T = C = 0.68636075: F_lower exceeds it by 1.3e-13, so that T is rigorously below the
     fixed point.
-- The last two rows show that the checker resolves a claim to 1e-9 at a fixed profile: 1e-9 below the enclosure
-  FAILs, 1e-9 above PASSes.
-- Hypothesis violations (C < T, a ≤ 0, misaligned grid) are REFUSED. This was tested in S3
-  (`checkers/corruptions/run_all.sh`), and the checks are unchanged.
+- The two resolution rows show that the checker resolves a claim to 1e-9 at a fixed profile: 1e-9 below the
+  enclosure FAILs, 1e-9 above PASSes.
+- `checkers/corruptions/run_all.sh` (S3 files: corrupted Bakeas and Pinho profiles, including a < 0, C < T and a
+  Pinho resolution pair) gives 8/8 as expected (S7 rerun; `checkers/corruptions/run_all_out.txt`).
+- The list3 inputs are copies of the certificate corruptions that checker #2's runner generates.
+- Checker #1 reads JSON numbers (rather than strings) as their exact binary values. Checker #2 instead refuses
+  them (`new/T_as_float`). Both behaviours are sound; the certificate uses strings throughout.
+
+**Corruption tests, checker #2** (S7 rerun of `python checkers/independent_corruptions.py --jobs 2`; summary in
+`checkers/independent_out/corruptions/SUMMARY.txt`). All 28 verdicts are as expected; the table is in REVIEW.md
+§4. Every checker #2 upper bound is ≥ the corresponding checker #1 lower bound above.
 
 ### 8.4 Finite-n cross-check (floating point, not part of the proof)
 
@@ -755,10 +771,10 @@ Pinho's profile (C42_compact_best.json). Log: `logs/S5/finite_n_claim.log`.
   larger than the margin, so this is a consistency check only, not evidence at the 1e-9 level.
 
 
-## 9. What is new and unreviewed
+## 9. What is new, and how it was reviewed
 
 - **Not new:** Lemmas 1–3 and Theorem A (Bakeas); the arbitrary-knot form of Theorem A and Lemma 3' (Pinho).
-- **New and unreviewed:**
+- **New, and not reviewed by a human** (reviewed only by the AI referee of REVIEW.md):
   - Lemma C1 and its use for the residual (§5) and for p̃ (§6.3);
   - the closed forms for kernel cell 0, and the singular-part bookkeeping;
   - the denominator via inequality S, and the geometric treatment of knot cells;

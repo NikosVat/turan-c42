@@ -127,3 +127,12 @@ The remaining work for a record is: re-optimize at the lower T (search), a secon
   ≤ 6.5e-9 more. Not worth it before checker #2 exists.
 - Next (S6): independent checker #2 written from NOTES.md, certificate/ and README "Certificate format" only.
   Then PR_DRAFT.md.
+
+## S7 outcome (package, branch `certificate`, 2026-11-04)
+
+- REVIEW.md points addressed (NOTES §§1, 3, 5.3, 6.2, 7, 8, 9; README). Checker #1: exact-zero assertion on cell 0
+  and conservative series tail (no change in F to 25 digits).
+- Both checkers rerun at all settings and on all corruptions: everything as expected. Fresh-clone reproduction OK.
+- No C42 claim below 0.686360751 in teorth/optimizationproblems (4 Nov 2026).
+- Remaining before a public claim: a human reading of Theorem A, Lemma C1 and NOTES §6; then submit
+  `submission/` (fill `<REPO_URL>`, `<COMMIT>`).

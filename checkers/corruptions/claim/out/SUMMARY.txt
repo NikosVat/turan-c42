@@ -1,6 +1,19 @@
-OK  T_0.68636074_C_eq_T.json  N=36864 P=10  expected=FAIL got=FAIL  F in [0.6863607622291324540223673, 0.6863607635243554068562103]  C=34318037/50000000
-OK  T_0.68636075_below_fixed_point.json  N=36864 P=10  expected=FAIL got=FAIL  F in [0.6863607500001306061915480, 0.6863607512953546036015938]  C=2745443/4000000
-OK  phase5_plus_0.002.json  N=36864 P=10  expected=FAIL got=FAIL  F in [0.6863607530854493180521992, 0.6863607543815785027620527]  C=686360751/1000000000
-OK  phase12_plus_0.005.json  N=36864 P=10  expected=FAIL got=FAIL  F in [0.6863608506045673181546679, 0.6863608519008270161291382]  C=686360751/1000000000
-OK  T74_claim_1e-9_below_F.json  N=36864 P=10  expected=FAIL got=FAIL  F in [0.6863607622291324540223673, 0.6863607635243554068562103]  C=686360761229/1000000000000
-OK  T74_claim_1e-9_above_F.json  N=36864 P=10  expected=PASS got=PASS  F in [0.6863607622291324540223673, 0.6863607635243554068562103]  C=27454430581/40000000000
+# checker #1 corruption tests, session S7 (checker SHA-256 93fdcf68...6c7d). Sources: summary_list.txt, summary_list2.txt, summary_list3.txt
+## list.txt
+OK  T_0.68636074_C_eq_T.json  N=36864 P=10 expected=FAIL got=FAIL [0.6863607635243554068562103 +/- 1.32e-26] [0.6863607622291324540223673 +/- 3.67e-26] 34318037/50000000 
+OK  T_0.68636075_below_fixed_point.json  N=36864 P=10 expected=FAIL got=FAIL [0.6863607512953546036015938 +/- 2.40e-26] [0.6863607500001306061915480 +/- 2.72e-27] 2745443/4000000 
+OK  phase5_plus_0.002.json  N=36864 P=10 expected=FAIL got=FAIL [0.6863607543815785027620527 +/- 3.42e-26] [0.6863607530854493180521992 +/- 3.83e-26] 686360751/1000000000 
+OK  phase12_plus_0.005.json  N=36864 P=10 expected=FAIL got=FAIL [0.6863608519008270161291382 +/- 2.32e-26] [0.6863608506045673181546679 +/- 3.54e-26] 686360751/1000000000 
+## list2.txt
+OK  T74_claim_1e-9_below_F.json  N=36864 P=10 expected=FAIL got=FAIL [0.6863607635243554068562103 +/- 1.32e-26] [0.6863607622291324540223673 +/- 3.67e-26] 686360761229/1000000000000 
+OK  T74_claim_1e-9_above_F.json  N=36864 P=10 expected=PASS got=PASS [0.6863607635243554068562103 +/- 1.32e-26] [0.6863607622291324540223673 +/- 3.67e-26] 27454430581/40000000000 
+## list3.txt
+OK  cert_C_eq_1.json  N=36864 P=10 expected=REFUSED got=REFUSED None None None ValueError: claim C must satisfy T <= C < 1
+OK  cert_C_below_T.json  N=36864 P=10 expected=REFUSED got=REFUSED None None None ValueError: claim C must satisfy T <= C < 1
+OK  cert_misaligned_knot.json  N=36864 P=10 expected=REFUSED got=REFUSED None None None ValueError: N=36864 must be even and align every knot (lcd 169878528)
+OK  cert_a_negative.json  N=36864 P=10 expected=REFUSED got=REFUSED None None None ArithmeticError: hypothesis of Theorem A not certified: {'0 < a = Re gamma': False, 'a < 1': True, 'kappa < 1': True, 'T < 1': True}
+OK  cert_phase_count_mismatch.json  N=36864 P=10 expected=REFUSED got=REFUSED None None None ValueError: knots must run from 0 to 1/2, one phase per knot
+OK  cert_knots_not_increasing.json  N=36864 P=10 expected=REFUSED got=REFUSED None None None ValueError: knots must be strictly increasing
+OK  cert_phase20_plus_1e-3.json  N=36864 P=10 expected=FAIL got=FAIL [0.6863607609662202655888836 +/- 4.88e-28] [0.6863607596708612157364536 +/- 2.04e-26] 686360751/1000000000 
+OK  cert_T_C_0.686360749.json  N=36864 P=10 expected=FAIL got=FAIL [0.6863607525182543857584064 +/- 1.66e-26] [0.6863607512230310797608936 +/- 1.47e-26] 686360749/1000000000 
+TOTAL: 14 as expected, 0 mismatches
