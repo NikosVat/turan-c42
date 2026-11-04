@@ -1,0 +1,29 @@
+n=1131 (a) 20/100 best 0.6901459026  59s
+n=1131 (a) 40/100 best 0.6901459026  126s
+n=1131 (a) 60/100 best 0.6901459026  196s
+n=1131 (a) 80/100 best 0.6901459026  264s
+n=1131 (a) 100/100 best 0.6901459026  330s
+n=1131 (a) done: {'best': 0.6901459026386151, 'n_starts': 100, 'n_within_1e-8_of_best': 100, 'n_same_minimiser_or_conj(dist<1e-4)': 100, 'worst': 0.6901459026386167, 'distinct_values_1e-8': [0.6901459]}
+n=1131 (b) 10/40 best 0.6901459026  382s
+n=1131 (b) 20/40 best 0.6901459026  425s
+n=1131 (b) 30/40 best 0.6901459026  526s
+n=1131 (b) 40/40 best 0.6901459026  606s
+n=1131 (b) done: {'best': 0.6901459026386143, 'beats_const_modulus_by_>1e-9': False, 'n_reaching_const_optimum_1e-8': 37, 'n': 40, 'worst': 0.6949309766936185, 'distinct_values_1e-6': [0.690146, 0.692378, 0.694515, 0.694931]}
+n=1131 (d) free fixed point T*=0.6880762784  613s
+n=1131 (f) Arb: R_n <= 0.688076278412  F_n ball [0.6880762784052715418756665 +/- 1.42e-26]  total 681s
+n=1600 (a) 20/80 best 0.6892638369  277s
+n=1600 (a) 40/80 best 0.6892638369  558s
+n=1600 (a) 60/80 best 0.6892638369  819s
+n=1600 (a) 80/80 best 0.6892638369  1108s
+n=1600 (a) done: {'best': 0.6892638369274239, 'n_starts': 80, 'n_within_1e-8_of_best': 80, 'n_same_minimiser_or_conj(dist<1e-4)': 80, 'worst': 0.689263836927425, 'distinct_values_1e-8': [0.68926384]}
+n=1600 (b) 10/32 best 0.6892638369  1249s
+n=1600 (b) 20/32 best 0.6892638369  1386s
+n=1600 (b) 30/32 best 0.6892638369  1433s
+n=1600 (b) done: {'best': 0.689263836927423, 'beats_const_modulus_by_>1e-9': False, 'n_reaching_const_optimum_1e-8': 31, 'n': 32, 'worst': 0.7041259806586622, 'distinct_values_1e-6': [0.689264, 0.704126]}
+n=1600 (d) free fixed point T*=0.6876758286  1448s
+n=1600 (f) Arb: R_n <= 0.687675828651  F_n ball [0.6876758286440723621370387 +/- 2.33e-26]  total 1486s
+n=2263 (a) done: {'best': 0.6885798062263387, 'n_starts': 16, 'n_within_1e-8_of_best': 16, 'n_same_minimiser_or_conj(dist<1e-4)': 16, 'worst': 0.6885798062263397, 'distinct_values_1e-8': [0.68857981]}
+n=2263 (b) done: {'best': 0.6885798062263381, 'beats_const_modulus_by_>1e-9': False, 'n_reaching_const_optimum_1e-8': 6, 'n': 8, 'worst': 0.69402527843253, 'distinct_values_1e-6': [0.68858, 0.691572, 0.694025]}
+n=2263 (d) free fixed point T*=0.6873669817  320s
+n=2263 (f) Arb: R_n <= 0.687366981675  F_n ball [0.6873669816682843415829254 +/- 9.62e-27]  total 390s
+n=3200 (a) done: {'best': 0.6880543109739906, 'n_starts': 8, 'n_within_1e-8_of_best': 8, 'n_same_minimiser_or_conj(dist<1e-4)': 8, 'worst': 0.6880543109739962, 'distinct_values_1e-8': [0.68805431]}

@@ -1,0 +1,95 @@
+{
+ "n": 3200,
+ "K": 1600,
+ "T0": 0.68637,
+ "status": "FLOAT SEARCH (local optimisation); only 'arb' entries are rigorous",
+ "a_smooth_bakeas_F_T0": 0.6881758820765638,
+ "a_from_smooth": {
+  "F": 0.6880543109739906,
+  "nit": 19,
+  "gradnorm": 3.432224076767919e-10
+ },
+ "a_runs": [
+  {
+   "kind": "iid",
+   "F": 0.688054310973991,
+   "nit": 32,
+   "gradnorm": 3.6670265312636077e-10,
+   "dist_best": 2.982035236414389,
+   "dist_conj_best": 2.4104860596452227e-07
+  },
+  {
+   "kind": "smooth",
+   "F": 0.6880543109739962,
+   "nit": 32,
+   "gradnorm": 4.006309006439518e-09,
+   "dist_best": 2.982035671434503,
+   "dist_conj_best": 1.1494464504200046e-06
+  },
+  {
+   "kind": "linear",
+   "F": 0.6880543109739923,
+   "nit": 58,
+   "gradnorm": 4.249624523904178e-10,
+   "dist_best": 1.7164356402865621e-07,
+   "dist_conj_best": 2.9820352167788675
+  },
+  {
+   "kind": "rough",
+   "F": 0.6880543109739912,
+   "nit": 42,
+   "gradnorm": 3.5712827476678713e-10,
+   "dist_best": 1.365479380448367e-07,
+   "dist_conj_best": 2.9820351908618123
+  },
+  {
+   "kind": "iid",
+   "F": 0.6880543109739918,
+   "nit": 33,
+   "gradnorm": 4.772594412260907e-10,
+   "dist_best": 1.5166752420636698e-07,
+   "dist_conj_best": 2.982035239666835
+  },
+  {
+   "kind": "smooth",
+   "F": 0.6880543109739908,
+   "nit": 41,
+   "gradnorm": 2.4933814783536917e-10,
+   "dist_best": 2.982035235272391,
+   "dist_conj_best": 7.655887632672357e-08
+  },
+  {
+   "kind": "linear",
+   "F": 0.6880543109739911,
+   "nit": 33,
+   "gradnorm": 5.563004920639903e-10,
+   "dist_best": 2.982035230087989,
+   "dist_conj_best": 1.8452134087354463e-07
+  },
+  {
+   "kind": "rough",
+   "F": 0.6880543109739918,
+   "nit": 32,
+   "gradnorm": 3.8492956577699945e-10,
+   "dist_best": 2.982035223796373,
+   "dist_conj_best": 1.0654022675193886e-07
+  }
+ ],
+ "a_summary": {
+  "best": 0.6880543109739906,
+  "n_starts": 8,
+  "n_within_1e-8_of_best": 8,
+  "n_same_minimiser_or_conj(dist<1e-4)": 8,
+  "worst": 0.6880543109739962,
+  "distinct_values_1e-8": [
+   0.68805431
+  ]
+ },
+ "c_kkt_rho": {
+  "F": 0.6880543109739906,
+  "max_dF_drho": -0.00036644707311769115,
+  "min_dF_drho": -0.0026331034030701306,
+  "n_positive": 0,
+  "grad_theta_norm": 3.432224076767919e-10
+ }
+}

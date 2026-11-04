@@ -50,27 +50,56 @@ loc2 = [np.log(Ds[i] / Ds[i + 1]) / np.log(ns[i + 1] / ns[i]) for i in range(len
 print(f"Delta* = T*_smooth(Pinho) - T*_free: {np.array2string(Ds, precision=4)}; power fit {c2:.3g} n^-{al2:.3f}; local exps {np.round(loc2,3).tolist()}")
 out["Delta_star"] = {"values": Ds.tolist(), "alpha": al2, "c": c2, "local_exponents": loc2}
 
-print("\n3-parameter fits X_n = L + c n^-alpha (all n, and n >= 400):")
-for name, y, known in (("T*_smooth(Pinho phi)", Tp, lim["pinho"]["T_star_limit"]),
-                       ("T*_smooth(Bakeas phi)", Tb, lim["bakeas"]["T_star_limit"]),
-                       ("T*_free", Tf, None)):
-    for lab, sl in (("all", slice(None)), ("n>=400", ns >= 400)):
-        if np.sum(np.ones_like(ns)[sl]) < 4:
+# ---------------- extrapolation models, validated on the smooth families (known limits, n up to 1e5)
+sm = json.load(open(os.path.join(R, "smooth_fixed_points.json")))
+for d in rows:   # merge the smooth fixed points computed inside finite_n_study.py (same quantity, JAX evaluator)
+    for fam in ("bakeas", "pinho"):
+        sm.setdefault(fam, {}).setdefault(str(d["n"]), {"T_star": d[f"e_fixed_point_smooth_{fam}"]["T_star"]})
+A_EXP = {"bakeas": 0.1660999005457025, "pinho": 0.11182659097634223}   # a = Re g(0) of each profile
+
+def fit_model(x, y, model, a):
+    if model == "pow3":
+        f = lambda n, L, c, al: L + c * n ** (-al)
+        p, cov = curve_fit(f, x, y, p0=[y[-1] - 0.005, 1.0, 0.8], maxfev=50000)
+        return p[0], {"alpha": p[2]}
+    ex = {"exp2": [1 - a, 1.0], "exp3": [1 - a, 1.0, 2 - a]}[model]
+    M = np.column_stack([np.ones_like(x)] + [x ** (-e) for e in ex])
+    coef = np.linalg.lstsq(M, y, rcond=None)[0]
+    return coef[0], {"exponents": ex}
+
+models = ["pow3", "exp2", "exp3"]
+lo, hi = ns.min(), ns.max()
+print(f"\nValidation of extrapolation models on the smooth phi-fixed families (fit window n in [{lo:.0f},{hi:.0f}],"
+      " the same window as the free data):")
+val = {}
+for fam in ("bakeas", "pinho"):
+    nn = np.array(sorted(int(k) for k in sm[fam]), float)
+    yy = np.array([sm[fam][str(int(k))]["T_star"] for k in nn])
+    known = lim[fam]["T_star_limit"]
+    w = (nn >= lo) & (nn <= hi)
+    print(f"  {fam}: known limit T* = {known:.10f}; largest-n value T*_{int(nn[-1])} = {yy[-1]:.10f} "
+          f"(diff {yy[-1]-known:+.2e})")
+    for m in models:
+        if np.sum(w) < 5:
             continue
-        p, e = lfit(ns, y, sl)
-        err = f"  (known limit {known:.10f}, fit error {p[0]-known:+.2e})" if known else ""
-        print(f"  {name:22s} [{lab}]: L = {p[0]:.8f} +- {e[0]:.1e}, alpha = {p[2]:.3f}{err}")
-        out.setdefault("fits", []).append({"series": name, "range": lab, "L": p[0], "L_se": e[0], "c": p[1],
-                                           "alpha": p[2], "known_limit": known})
-# difference fit with offset
-for lab, sl in (("all", slice(None)), ("n>=400", ns >= 400)):
-    f = lambda n, d0, c, al: d0 + c * n ** (-al)
-    try:
-        p, cov = curve_fit(f, ns[sl], Ds[sl], p0=[0, 0.05, 0.8], maxfev=20000)
-        print(f"  Delta* = d_inf + c n^-alpha [{lab}]: d_inf = {p[0]:.2e} +- {np.sqrt(cov[0,0]):.1e}, alpha = {p[2]:.3f}")
-        out.setdefault("fits", []).append({"series": "Delta*", "range": lab, "d_inf": p[0], "alpha": p[2]})
-    except Exception as ex:
-        print("  Delta* offset fit failed:", ex)
+        L, info = fit_model(nn[w], yy[w], m, A_EXP[fam])
+        Lall, _ = fit_model(nn, yy, m, A_EXP[fam])
+        print(f"    {m:5s}: window fit L = {L:.8f} (error {L-known:+.2e});  fit over all n<= {int(nn[-1])}: "
+              f"L = {Lall:.10f} (error {Lall-known:+.2e})  {info}")
+        val[(fam, m)] = L - known
+out["validation"] = {f"{k[0]}:{k[1]}": v for k, v in val.items()}
+
+print("\nExtrapolation of the free fixed points T*_free (local optima) with the same models:")
+for m in models:
+    for fam in ("pinho", "bakeas"):
+        L, info = fit_model(ns, Tf, m, A_EXP[fam])
+        Ld, _ = fit_model(ns, Ds, m, A_EXP[fam])
+        if (fam, m) not in val:
+            continue
+        print(f"  {m:5s} (a from {fam}): L_free = {L:.8f};  Delta* -> {Ld:+.2e}   "
+              f"[validation error of this model on smooth {fam}: {val[(fam, m)]:+.1e}]")
+        out.setdefault("free_extrapolation", []).append({"model": m, "a_from": fam, "L_free": L, "Delta_star_limit": Ld,
+                                                         "validation_error": val[(fam, m)]})
 
 # boundary-layer structure of the free optimum at T0 relative to the smooth Bakeas profile
 bak = load_profile(BAKEAS)
@@ -84,7 +113,7 @@ for d in rows:
     dev = np.angle(np.exp(1j * (th - th0)))
     if np.max(np.abs(dev)) > 1:   # conjugate minimiser
         dev = np.angle(np.exp(1j * (-th - th0)))
-    ks = [1, 2, 4, 8, 16, 32]; us = [int(round(x * n)) for x in (0.1, 0.25, 0.4, 0.5)]
+    ks = [1, 2, 4, 8, 16, 32]; us = [min(int(round(x * n)), K) for x in (0.1, 0.25, 0.4, 0.5)]
     vals = [dev[k - 1] for k in ks] + [dev[k - 1] for k in us]
     bl.append({"n": n, "dev": vals})
     print(f"  {n} | " + " | ".join(f"{v:+.4f}" for v in vals))
