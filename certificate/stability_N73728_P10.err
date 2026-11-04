@@ -8,3 +8,5 @@
 {"stage": "propagation", "seconds": 504.88, "eps_inf": "[3.3406e-11 +/- 3.86e-16]", "EN": "[1.3177e-13 +/- 4.40e-18]", "ED": "[5.5563e-14 +/- 2.23e-19]"}
 {"stage": "numerator", "seconds": 517.13, "p1": "[0.13064442213562333468 +/- 1.89e-21] + [-0.17721912722560877600 +/- 4.35e-21]j"}
 {"stage": "denominator: kernel U product", "seconds": 618.99}
+{"stage": "denominator: kernel V product", "seconds": 723.62}
+{"stage": "denominator: certified", "seconds": 779.5, "n_geo": "51", "D_low": "[0.320778022672931 +/- 4.11e-16]", "err": "[1.708e-12 +/- 1.73e-16]", "E_kern": "[2.464e-12 +/- 3.09e-16]"}
