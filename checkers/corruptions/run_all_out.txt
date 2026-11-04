@@ -2,3 +2,4 @@ OK  bakeas_phase0_plus_5e-2.json  expected=FAIL got=FAIL
 OK  bakeas_T_0.68636.json  expected=FAIL got=FAIL
 OK  bakeas_shift_a_negative.json  expected=REFUSED got=REFUSED
 OK  pinho_claim_below_T.json  expected=REFUSED got=REFUSED
+OK  pinho_T_below_fixed_point.json  expected=FAIL got=FAIL

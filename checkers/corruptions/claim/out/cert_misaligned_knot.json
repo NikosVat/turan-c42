@@ -1,0 +1,7 @@
+{
+ "verdict": "REFUSED",
+ "reason": "ValueError: N=36864 must be even and align every knot (lcd 169878528)",
+ "max_rss_GB": 0.078,
+ "certificate_sha256": "c576c0369a614ac7bcad979ebb1e6b937356814ccb9a5175705e0337315c3a7a",
+ "checker_sha256": "93fdcf68c94578ee47ab2cacabe1df7b458ae27f61f1b24a36c86def918e6c7d"
+}

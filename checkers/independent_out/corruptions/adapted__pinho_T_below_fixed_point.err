@@ -16,3 +16,11 @@
 [  193.0s] EN: integrated 3.8558e-15, sup 1.2009e-14 ; ED: integrated 1.3020e-15, sup 3.4364e-15
 [  199.1s] p~(1) = [0.14845499902863366191 +/- 3.58e-21] + [-0.19796138919720402747 +/- 4.83e-23]j
 [  205.7s] kernel polynomials built (Pk = 30), E_kern <= 2.741e-17
+[  232.0s] kernel convolution done (stride 43)
+[  232.2s]   denominator cells 1..3 done (fit degree 20, v degree 65), running sum [0.000337258906641638 +/- 3.49e-19]
+[  232.2s]   denominator cells 4..15 done (fit degree 14, v degree 47), running sum [0.00113692649652562 +/- 4.88e-18]
+[  232.4s]   denominator cells 16..127 done (fit degree 9, v degree 32), running sum [0.00672829550141805 +/- 4.62e-19]
+[  233.5s]   denominator cells 128..1023 done (fit degree 6, v degree 23), running sum [0.0370695132865613 +/- 4.81e-17]
+[  246.6s]   denominator cells 1024..18431 done (fit degree 4, v degree 17), running sum [0.360513181819679 +/- 4.56e-18]
+[  246.6s] float estimate of int|p~|w minus D~_low (cells >= 1; diagnostic): -5.551e-17
+[  246.6s] D~_low = [0.36051318181967896805 +/- 2.46e-21]

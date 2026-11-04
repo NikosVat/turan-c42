@@ -1,0 +1,7 @@
+{
+ "verdict": "REFUSED",
+ "reason": "ValueError: knots must run from 0 to 1/2, one phase per knot",
+ "max_rss_GB": 0.078,
+ "certificate_sha256": "ec2dc0a689944d6bb0c7e7993b8f0caac91c11972c009ae6449643d772193c0e",
+ "checker_sha256": "93fdcf68c94578ee47ab2cacabe1df7b458ae27f61f1b24a36c86def918e6c7d"
+}
