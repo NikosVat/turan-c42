@@ -26,7 +26,7 @@
  "EN_int": "[1.594e-10 +/- 7.03e-15]",
  "ED_sup": "[7.300e-9 +/- 4.42e-13]",
  "ED_int": "[6.723e-11 +/- 2.22e-15]",
- "p_tilde_1": "[0.130491706533813244429447683903 +/- 6.05e-31] + [-0.177113182505876316243566831213 +/- 7.26e-31]j",
+ "p_tilde_1": "[0.13049170653381324442944768390 +/- 5.04e-30] + [-0.17711318250587631624356683121 +/- 5.85e-30]j",
  "numerator_upper": "[0.2199935566365608968021212 +/- 6.82e-27]",
  "denominator_trial_lower": "[0.3205217140130400575961450 +/- 3.08e-27]",
  "denominator_lower": "[0.3205217139458122701460984 +/- 4.10e-26]",
@@ -36,7 +36,7 @@
  "F_lower": "[0.6863608506045673181546679 +/- 3.54e-26]",
  "enclosure_width": "[1.29626e-9 +/- 3.03e-16]",
  "trial_sha256": "40f6125577be7ebcfc06d2e82a2d89033d5f47b266a4e5a64f4aa42db29955c2",
- "seconds": 344.0,
+ "seconds": 398.9,
  "log": [
   {
    "stage": "hypotheses",
@@ -46,65 +46,65 @@
   },
   {
    "stage": "witness",
-   "seconds": 10.21,
+   "seconds": 11.84,
    "gmres": "26",
    "coll": "2.69e-11"
   },
   {
    "stage": "refine",
-   "seconds": 105.32,
+   "seconds": 115.05,
    "it": "0",
    "max_nodal_R_over_t": "4.560e-10"
   },
   {
    "stage": "residual: d coefficients",
-   "seconds": 112.09,
+   "seconds": 123.08,
    "Q": "13"
   },
   {
    "stage": "residual: U product",
-   "seconds": 169.18
+   "seconds": 184.78
   },
   {
    "stage": "residual: V product",
-   "seconds": 225.1
+   "seconds": 249.17
   },
   {
    "stage": "residual: certified",
-   "seconds": 233.98,
+   "seconds": 260.96,
    "sup": "[7.2783e-9 +/- 3.92e-14]",
    "worst": "2"
   },
   {
    "stage": "propagation",
-   "seconds": 234.66,
+   "seconds": 261.75,
    "eps_inf": "[2.3206e-8 +/- 1.65e-13]",
    "EN": "[1.5941e-10 +/- 2.98e-15]",
    "ED": "[6.7228e-11 +/- 2.13e-16]"
   },
   {
    "stage": "numerator",
-   "seconds": 238.84,
+   "seconds": 267.02,
    "p1": "[0.13049170653381324443 +/- 5.53e-22] + [-0.17711318250587631624 +/- 3.57e-21]j"
   },
   {
    "stage": "denominator: kernel U product",
-   "seconds": 276.99
+   "seconds": 315.43
   },
   {
    "stage": "denominator: kernel V product",
-   "seconds": 315.37
+   "seconds": 360.63
   },
   {
    "stage": "denominator: certified",
-   "seconds": 343.72,
+   "seconds": 398.56,
    "n_geo": "69",
    "D_low": "[0.320521714013040 +/- 5.77e-17]",
    "err": "[3.186e-12 +/- 4.42e-16]",
    "E_kern": "[4.596e-12 +/- 4.00e-16]"
   }
  ],
- "max_rss_GB": 3.638,
+ "max_rss_GB": 3.641,
  "certificate_sha256": "37af38bbcda82ca4d9fb499581a8f47e35cfc11b47749c9b3ae58f659f59624f",
- "checker_sha256": "510b9f04e239c75d7190e60eb688143b7264891e4c843f80d0cd644413ae7451"
+ "checker_sha256": "93fdcf68c94578ee47ab2cacabe1df7b458ae27f61f1b24a36c86def918e6c7d"
 }

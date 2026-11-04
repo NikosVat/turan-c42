@@ -35,10 +35,10 @@ All runs are on the certificate below (SHA-256 `d015a829…5652`), with the chec
 
 - Checker #1 also certifies a lower bound F_lower (a diagnostic; the claim uses only F_upper). Its tightest
   enclosure is F ∈ [0.6863607494206, 0.6863607494291], of width 8.38e-12.
-- Every checker #2 upper bound lies inside that interval or above it. The margin C − F ≈ 1.6·10⁻⁹ is about 200
+- Every checker #2 upper bound lies inside that interval or above it. The margin C − F ≈ 1.6·10⁻⁹ is about 190
   times the enclosure width.
-- Times: one core of a 4-vCPU cloud machine, measured with four jobs running at once (session S7). A run on an
-  otherwise idle machine is faster; see the timed reproduction below.
+- Times: one core of a 4-vCPU cloud machine, measured with up to four jobs running at once (session S7). With
+  less contention runs are faster; see the timed reproduction below.
 - Once converged, refining moves F_upper by about 10⁻¹¹. Checker #2 moves by 7.4·10⁻¹² from N = 36864 to 73728
   at P = 12. Checker #1 moves by 1.1·10⁻¹¹ from (N, P) = (36864, 12) to (73728, 10).
 - The N = 36864, P = 10 runs are the loosest PASSes (margin 9.3·10⁻¹⁰), but they are the cheapest to reproduce.
@@ -50,8 +50,8 @@ All runs are on the certificate below (SHA-256 `d015a829…5652`), with the chec
   φ piecewise linear through 34 exact rational knots in [0, ½]. Harcos's linearization chooses the remaining power
   sums with a common modulus F_n so that z = 1 is a root. This gives R_n ≤ max(T, F_n).
 - **Limit (Theorem A).** Bakeas's Theorem A shows F_n → F = |p(1)| / ∫_0^{1/2} |p(t)| dt/(1−t), where p is built
-  from the bounded solution ρ of the Volterra equation t ρ(t) = d(t) + ∫_0^t d(u) ρ(t−u) du. Its hypotheses are
-  that d = γ − T e^{iφ} is a contraction, sup|d| < 1, and that Re γ ≥ 0.
+  from the bounded solution ρ of the Volterra equation t ρ(t) = d(t) + ∫_0^t d(u) ρ(t−u) du, with d = γ − T e^{iφ}
+  on (0, ½]. Its hypotheses are sup|d| < 1, which makes the Volterra operator a contraction, and Re γ ≥ 0.
 - **The profile.** A float adjoint-gradient search (session S2) found a 33-piece profile whose fixed point
   T = F is ≈ 0.6863607503. The knots are j²/1152, six dyadic knots near 0 and four greedy insertions.
 - **The certifier.**
@@ -63,7 +63,7 @@ All runs are on the certificate below (SHA-256 `d015a829…5652`), with the chec
     rigorous bounds on p(1) and on the denominator.
   - The kernel singularity is handled in closed form.
 - **Result.** F is certified to about 10⁻¹¹ with under 7 GB of memory. For comparison, Pinho's certificate needed
-  14 million cells and 95 GB for 3·10⁻⁸.
+  14 million cells and 95 GB for a one-sided gap of 3·10⁻⁸.
 
 ## How to verify
 
@@ -78,13 +78,13 @@ pip install python-flint==0.9.0 numpy scipy mpmath
 sha256sum -c certificate/SHA256SUMS
 ```
 
-Checker #2 (blind, independent), quick setting. Measured at 3.9 min and 1.5 GB:
+Checker #2 (blind, independent), quick setting. About 4 min and 1.5 GB:
 
 ```bash
 OPENBLAS_NUM_THREADS=1 python checkers/independent_check.py certificate/c42_profile_0.686360751.json --N 36864 --P 12 --out result2.json
 ```
 
-Checker #1, quick setting. Measured at 6.9 min and 3.6 GB:
+Checker #1, quick setting. About 6.5 min and 3.6 GB:
 
 ```bash
 OPENBLAS_NUM_THREADS=1 python checkers/rigorous_check.py certificate/c42_profile_0.686360751.json --N 36864 --P 10 --refine 1 > result1.json
@@ -96,8 +96,13 @@ OPENBLAS_NUM_THREADS=1 python checkers/rigorous_check.py certificate/c42_profile
 - The expected outputs are `certificate/expected_N36864_P10.json` (checker #1) and
   `checkers/independent_out/cert_N36864_P12.json` (checker #2).
 
-Timed reproduction from a fresh clone (session S7, one job at a time on an idle machine):
-@@REPRO@@
+Timed reproduction from a fresh clone (session S7). The clone was of commit `e6ffc94`; later commits change only
+documentation and recorded outputs. The commands were run one after another as above, while two other
+single-threaded jobs used two of the four cores:
+- `sha256sum -c`: all four files OK.
+- Checker #2: PASS in 238 s, peak 1.50 GB. `F_ball` is identical to `checkers/independent_out/cert_N36864_P12.json`.
+- Checker #1: PASS in 393 s, peak 3.64 GB. F_upper, F_lower and p̃(1) are identical to
+  `certificate/expected_N36864_P10.json`.
 
 Tightest settings (the headline numbers above):
 
