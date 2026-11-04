@@ -27,3 +27,6 @@ n=2263 (b) done: {'best': 0.6885798062263381, 'beats_const_modulus_by_>1e-9': Fa
 n=2263 (d) free fixed point T*=0.6873669817  320s
 n=2263 (f) Arb: R_n <= 0.687366981675  F_n ball [0.6873669816682843415829254 +/- 9.62e-27]  total 390s
 n=3200 (a) done: {'best': 0.6880543109739906, 'n_starts': 8, 'n_within_1e-8_of_best': 8, 'n_same_minimiser_or_conj(dist<1e-4)': 8, 'worst': 0.6880543109739962, 'distinct_values_1e-8': [0.68805431]}
+n=3200 (b) done: {'best': 0.6880543109739908, 'beats_const_modulus_by_>1e-9': False, 'n_reaching_const_optimum_1e-8': 4, 'n': 4, 'worst': 0.688054310973992, 'distinct_values_1e-6': [0.688054]}
+n=3200 (d) free fixed point T*=0.6871292524  320s
+n=3200 (f) Arb: R_n <= 0.687129252420  F_n ball [0.6871292524127174884473766 +/- 9.12e-27]  total 358s
