@@ -1,8 +1,8 @@
-# C42 ≤ C_CLAIM: proof and computer verification
+# C42 ≤ 0.686360751: proof and computer verification
 
 **Main result.** For Turán's pure power sum problem,
 
-  limsup_{n→∞} R_n ≤ C_CLAIM,   R_n = inf_{z_1 = 1, z_2..z_n ∈ ℂ} max_{1≤k≤n} |Σ_j z_j^k|.
+  limsup_{n→∞} R_n ≤ 0.686360751,   R_n = inf_{z_1 = 1, z_2..z_n ∈ ℂ} max_{1≤k≤n} |Σ_j z_j^k|.
 
 **Status: unrefereed. Written with AI assistance (see the end of the file).**
 - Sections 1–3 (Lemmas 1–2, Theorem A) are Bakeas's (turan-c42-bound v1.1.0, commit dc9c491, MIT). They are
@@ -515,7 +515,101 @@ By Theorem A, a PASS proves limsup R_n ≤ max(T, F) ≤ max(T, C) = C.
 
 ## 8. The certificate
 
-CERT_SECTION
+### 8.1 The profile
+
+File `certificate/c42_profile_0.686360751.json` (SHA-256 in `certificate/SHA256SUMS`):
+- T = C = 0.686360751 = 686360751/10⁹;
+- K = 33 pieces, with the exact knots u_j and exact decimal phases ψ_j (radians) below. The least common
+  denominator of the knots is 18432.
+
+| j | u_j | ψ_j |
+|---|---|---|
+| 0 | 0 | -1.422143609677031 |
+| 1 | 1/18432 | -1.388783825383378 |
+| 2 | 1/9216 | -1.381084544438781 |
+| 3 | 1/4608 | -1.368351615437954 |
+| 4 | 1/2304 | -1.354497472120591 |
+| 5 | 1/1152 | -1.33879324681703 |
+| 6 | 1/768 | -1.32889661088203 |
+| 7 | 1/576 | -1.319911449156991 |
+| 8 | 1/288 | -1.297988460091246 |
+| 9 | 13/2304 | -1.28028980383792 |
+| 10 | 1/128 | -1.266590112297936 |
+| 11 | 25/2304 | -1.251202931199948 |
+| 12 | 1/72 | -1.238411064787167 |
+| 13 | 41/2304 | -1.224388301760243 |
+| 14 | 25/1152 | -1.211779864148879 |
+| 15 | 1/32 | -1.186173465289945 |
+| 16 | 49/1152 | -1.161121902414134 |
+| 17 | 1/18 | -1.136007953927681 |
+| 18 | 9/128 | -1.110646152046127 |
+| 19 | 25/288 | -1.084806526597323 |
+| 20 | 121/1152 | -1.058306952419107 |
+| 21 | 1/8 | -1.030970091538424 |
+| 22 | 169/1152 | -1.002621341389417 |
+| 23 | 49/288 | -0.9730792935981849 |
+| 24 | 25/128 | -0.9421494103796814 |
+| 25 | 2/9 | -0.9096171352870314 |
+| 26 | 289/1152 | -0.8752405215067437 |
+| 27 | 9/32 | -0.8387413359444171 |
+| 28 | 361/1152 | -0.7997941834415409 |
+| 29 | 25/72 | -0.7580116838145782 |
+| 30 | 49/128 | -0.7129266622002852 |
+| 31 | 121/288 | -0.6639595265100425 |
+| 32 | 529/1152 | -0.610401510709484 |
+| 33 | 1/2 | -0.5512784196680292 |
+
+Origin. These are the knots and phases of session S2's 33-piece candidate (`results/candidate_33pc.json`, run
+A_G4_24, optimized in float at T = 0.68636076). Its float fixed point is T* = 0.6863607503 ± 9e-11. Only T was
+changed, to C. Re-optimizing the phases at T = 0.68636075 (S5) moved T* by 2e-14, so the phases were kept.
+
+Knot structure:
+- dyadic knots 1/18432, …, 1/576;
+- the quadratic knots j²/1152 for j ≥ 2 (Pinho's family with 24 pieces);
+- adjoint-greedy insertions 13/2304, 25/2304, 41/2304.
+
+Theorem A inputs (certified by the program):
+- a = Re γ = T cos ψ_0 = 0.1016540375610781… ∈ (0,1);
+- E = max_j|ψ_j − ψ_0| = 0.87087 < π, so sup_{(0,½]}|d| = 2T sin(E/2) = 0.57902;
+- κ = max(T, 0.57902) = T = 0.686360751 < 1;
+- the slopes satisfy 1.2 ≤ |β_j| ≤ 615 (not used by the proof).
+
+### 8.2 Certified result (checker #1)
+
+`python checkers/rigorous_check.py certificate/c42_profile_0.686360751.json --N 18432 --P 14 --refine 1`
+(256-bit Arb, python-flint 0.9.0, Python 3.13; Q = 14, P_k = 20):
+
+| quantity | value |
+|---|---|
+| sup_t \|R(t)/t\| ≤ max_m r_m | 2.86e-9 (worst cell m = 1) |
+| ‖ρ̃‖_∞ | 423.6 |
+| ε_∞ = sup\|R/t\|/(1−κ) | 9.10e-9 |
+| EN (integrated; sup form 1.01e-8) | 2.17e-10 |
+| ED (integrated; sup form 2.86e-9) | 9.15e-11 |
+| p̃(1) | 0.1306444221355682 − 0.1772191272255947 i |
+| \|p̃(1)\| + EN ≤ | 0.22016944425862 |
+| D̃_low (91 knot cells) | 0.32077802266863 |
+| D̃_low − ED ≥ | 0.32077802257710 |
+| **F ≤ F_upper** | **0.6863607503088875** |
+| F ≥ F_lower (diagnostic) | 0.6863607485407850 |
+| **C − F_upper** | **6.91e-10** |
+| runtime, peak memory | 432 s, 2.15 GB |
+
+The claim C is an exact decimal with 9 digits. The fixed point T* of this phase vector (F(T*) = T*) satisfies
+T* ∈ [0.6863607499, 0.6863607507]. This follows from the enclosure of F(C) above, linearized with the float
+slope dF/dT = −1.2229; it is an estimate, not a proof step. So C is ≈ 5e-10 above T*, and 4.40e-8 below Pinho's
+0.6863607950.
+
+### 8.3 Stability, resolution and corruption tests
+
+STABILITY_TABLE
+
+CORRUPTION_TABLE
+
+### 8.4 Finite-n cross-check (floating point, not part of the proof)
+
+FINITE_N
+
 
 ## 9. What is new and unreviewed
 
