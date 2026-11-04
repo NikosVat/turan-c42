@@ -1,0 +1,17 @@
+residual checks (|R/t| vs rigorous r):
+  t=0.040144  |R/t| = 1.134e-11   r = 1.367e-11
+  t=0.019610  |R/t| = 3.778e-09   r = 7.265e-09
+  t=0.996265  |R/t| = 3.760e-16   r = 4.043e-16
+  t=0.994556  |R/t| = 3.284e-16   r = 3.485e-16
+  t=0.048342  |R/t| = 1.613e-13   r = 2.645e-13
+  t=0.013958  |R/t| = 7.361e-16   r = 8.670e-16
+p~ representation checks:
+  m=5 th=0.433  |direct - repr| = 6.25e-17  (|p|=1.105)
+  m=31 th=0.767  |direct - repr| = 1.39e-16  (|p|=0.526)
+  m=17 th=0.445  |direct - repr| = 1.11e-16  (|p|=0.762)
+  m=17 th=0.802  |direct - repr| = 0.00e+00  (|p|=0.755)
+  m=8 th=0.945  |direct - repr| = 5.55e-17  (|p|=0.969)
+  m=3 th=0.031  |direct - repr| = 2.22e-16  (|p|=1.248)
+p~(1): direct (0.278333696637535333 - 0.267891823063561166j), checker [0.278333696637535333 +/- 4.97e-19] + [-0.267891823063561166 +/- 2.53e-19]j, diff 2.28e-17
+denominator: GL estimate 0.560700350126842, certified D_low [0.5607003495353766 +/- 3.60e-17], estimate - D_low = 5.91e-10
+SELFTEST OK
