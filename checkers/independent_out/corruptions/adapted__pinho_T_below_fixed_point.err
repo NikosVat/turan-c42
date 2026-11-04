@@ -1,26 +1,18 @@
 [    0.0s] certificate /home/user/turan-c42/checkers/independent_out/corruptions/adapted/pinho_T_below_fixed_point.json: T = 17159019/25000000, C = 17159019/25000000, 48 pieces
 [    0.0s] a = [0.111826585274 +/- 9.70e-14], E = 0.856099, sup_(0,1/2]|d| <= [0.56981292 +/- 4.65e-9], kappa_hat = 17159019/25000000
-[    2.5s] d^ built: Q = 11, Lambda = 195.619, eps_max = 7.85e-37
-[    3.3s] float solve: N=36864, P=12, Q=11, stride S=24, FFT length 1769472
-[   86.1s]   GMRES: info=0, inner iterations=83
-[   86.2s] exact residual (pass 0)
-[  114.4s]   collocation max|R/t| at the nodes (float) = 7.483e-12
-[  199.0s]   GMRES: info=3, inner iterations=99
-[  199.1s] exact residual (pass 1)
-[  217.5s]   collocation max|R/t| at the nodes (float) = 1.354e-14
-[  220.6s]   GMRES: info=0, inner iterations=7
-[  220.6s] exact residual (pass 2)
-[  237.9s]   collocation max|R/t| at the nodes (float) = 3.247e-15
-[  238.5s] ||rho~||_inf <= 134.343189
-[  243.1s] sup |R/t| <= 3.3453e-15 (worst piece t in [7.579e-04, 7.595e-04])
-[  245.0s] EN: integrated 3.8558e-15, sup 1.2009e-14 ; ED: integrated 1.3020e-15, sup 3.4364e-15
-[  249.9s] p~(1) = [0.14845499902863366191 +/- 3.58e-21] + [-0.19796138919720402747 +/- 4.83e-23]j
-[  256.2s] kernel polynomials built (Pk = 30), E_kern <= 2.741e-17
-[  291.7s] kernel convolution done (stride 43)
-[  291.9s]   denominator cells 1..3 done (fit degree 20, v degree 65), running sum [0.000337258906641638 +/- 3.49e-19]
-[  291.9s]   denominator cells 4..15 done (fit degree 14, v degree 47), running sum [0.00113692649652562 +/- 4.88e-18]
-[  292.1s]   denominator cells 16..127 done (fit degree 9, v degree 32), running sum [0.00672829550141805 +/- 4.62e-19]
-[  293.1s]   denominator cells 128..1023 done (fit degree 6, v degree 23), running sum [0.0370695132865613 +/- 4.81e-17]
-[  306.8s]   denominator cells 1024..18431 done (fit degree 4, v degree 17), running sum [0.360513181819679 +/- 4.56e-18]
-[  306.8s] float estimate of int|p~|w minus D~_low (cells >= 1; diagnostic): -5.551e-17
-[  306.8s] D~_low = [0.36051318181967896805 +/- 2.46e-21]
+[    2.9s] d^ built: Q = 11, Lambda = 195.619, eps_max = 7.85e-37
+[    3.1s] float solve: N=36864, P=12, Q=11, stride S=24, FFT length 1769472
+[   50.2s]   GMRES: info=0, inner iterations=77
+[   50.3s] exact residual (pass 0)
+[   73.1s]   collocation max|R/t| at the nodes (float) = 2.370e-12
+[  136.4s]   GMRES: info=3, inner iterations=101
+[  136.4s] exact residual (pass 1)
+[  157.8s]   collocation max|R/t| at the nodes (float) = 1.033e-14
+[  162.2s]   GMRES: info=0, inner iterations=7
+[  162.2s] exact residual (pass 2)
+[  184.9s]   collocation max|R/t| at the nodes (float) = 3.247e-15
+[  185.5s] ||rho~||_inf <= 134.343189
+[  191.3s] sup |R/t| <= 3.3453e-15 (worst piece t in [7.579e-04, 7.595e-04])
+[  193.0s] EN: integrated 3.8558e-15, sup 1.2009e-14 ; ED: integrated 1.3020e-15, sup 3.4364e-15
+[  199.1s] p~(1) = [0.14845499902863366191 +/- 3.58e-21] + [-0.19796138919720402747 +/- 4.83e-23]j
+[  205.7s] kernel polynomials built (Pk = 30), E_kern <= 2.741e-17
