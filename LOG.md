@@ -471,3 +471,19 @@ independently in a separate session, review of NOTES_CERTIFIER.md, and re-optimi
 | 18432 | 12 | 1 | FAIL | 7.27e-8 | 2.82e-9 | 1.19e-9 | 0.6863607607554 | 0.6863607380943 | 2.3e-8 | 242 | 2.02 |
 | **36864** | **10** | 1 | **PASS** | 7.28e-9 | 1.59e-10 | 6.72e-11 | **0.6863607500725** | 0.6863607487772 | 1.3e-9 | 349 | 3.65 |
 - Margin C − F_upper = 9.28e-10. Margin below Pinho: 0.6863607950 − 0.686360751 = 4.4e-8.
+| 18432 | **14** | 1 | **PASS** | 2.86e-9 | 2.17e-10 | 9.15e-11 | **0.6863607503089** | 0.6863607485408 | 1.8e-9 | 432 | 2.15 |
+| 18432 | 16 | 1 | FAIL | 2.28e-5 (cell 0) | 5.7e-6 | 2.4e-6 | 0.6863835 | 0.6863380 | 4.6e-5 | 1281 | 2.41 |
+- **N = 18432 (the smallest aligned grid) with P = 14 PASSes**, margin C − F_upper = 6.91e-10. This is the
+  primary setting (certificate "checker" field; file SHA changed only through that field).
+- P = 16: the float witness breaks down at cell 0 (monomial-basis conditioning; GMRES/refinement cannot fix it).
+  The rigorous bound is correct but loose. Not a rigor problem; P ≤ 14 is the usable range of this witness.
+- N = 36864, P = 14: witness GMRES needed 225 iterations, collocation residual 2.8e-8 (vs 4.7e-11 at P=10):
+  conditioning starts to bite at P = 14. Run interrupted by a container restart; requeued.
+
+### 00:12 Finite-n cross-check (float), `logs/S5/finite_n_claim.log`
+- n = 125k…4M at T = 0.686360751: F_n decreasing monotonically (0.68645191 → 0.68636552); our profile below
+  Pinho's at every n (−1.2e-7 … −1.9e-7). Aitken extrapolates still rising (ours 0.68636068, Pinho 0.68636074
+  at the top level); last difference −5.5e-8 vs expected limit difference −4.8e-8. Consistent.
+
+### 00:15 Container restart (all processes killed). Requeued with `checkers/run_queue.sh` (resumable, 2 jobs,
+1 BLAS thread each; load had been ~10 on 4 vCPU).

@@ -28,11 +28,15 @@ sha256sum -c certificate/SHA256SUMS
 ```
 
 ```bash
-python checkers/rigorous_check.py certificate/c42_profile_0.686360751.json --N 18432 --P 14 --refine 1
+OPENBLAS_NUM_THREADS=1 python checkers/rigorous_check.py certificate/c42_profile_0.686360751.json --N 18432 --P 14 --refine 1
 ```
 
 The last command must print `"verdict": "PASS"` and exit with code 0. Expected output: `certificate/expected_N18432_P14.json`.
-Runtime: about 7 min single-threaded on a 4-vCPU cloud machine, peak memory 2.2 GB. The output includes the
+Runtime: about 5 min on one core of a 4-vCPU cloud machine, peak memory 2.3 GB.
+
+The trial function ρ̃ is computed in floating point (GMRES), so its last bits depend on the BLAS thread count.
+Each run then certifies its own ρ̃ rigorously. With a different thread count, F_upper may differ in the 11th
+digit; e.g. 0.6863607503089 with 4 threads vs 0.6863607502330 with 1. The verdict does not change. The output includes the
 certified enclosure `F_lower ≤ F ≤ F_upper` and the full error budget.
 
 Stability reruns (same verdict; the enclosures overlap):

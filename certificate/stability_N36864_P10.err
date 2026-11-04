@@ -1,0 +1,2 @@
+{"stage": "hypotheses", "seconds": 0.0, "a": "[0.101654037561 +/- 7.82e-14]", "kappa": "[0.686360751000 +/- 3e-17]"}
+{"stage": "witness", "seconds": 10.82, "gmres": "28", "coll": "1.78e-10"}
