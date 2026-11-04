@@ -4,3 +4,5 @@ OK  cert_misaligned_knot.json  N=36864 P=10 expected=REFUSED got=REFUSED None No
 OK  cert_a_negative.json  N=36864 P=10 expected=REFUSED got=REFUSED None None None ArithmeticError: hypothesis of Theorem A not certified: {'0 < a = Re gamma': False, 'a < 1': True, 'kappa < 1': True, 'T < 1': True}
 OK  cert_phase_count_mismatch.json  N=36864 P=10 expected=REFUSED got=REFUSED None None None ValueError: knots must run from 0 to 1/2, one phase per knot
 OK  cert_knots_not_increasing.json  N=36864 P=10 expected=REFUSED got=REFUSED None None None ValueError: knots must be strictly increasing
+OK  cert_phase20_plus_1e-3.json  N=36864 P=10 expected=FAIL got=FAIL [0.6863607609662202655888836 +/- 4.88e-28] [0.6863607596708612157364536 +/- 2.04e-26] 686360751/1000000000 
+OK  cert_T_C_0.686360749.json  N=36864 P=10 expected=FAIL got=FAIL [0.6863607525182543857584064 +/- 1.66e-26] [0.6863607512230310797608936 +/- 1.47e-26] 686360749/1000000000 
