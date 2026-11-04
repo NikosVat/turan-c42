@@ -1,3 +1,3 @@
-# claim-resolution tests at T = 0.68636074 (F in [0.6863607617992753040341318, 0.6863607639542054392949733] from list.txt's reference run)
+# claim-resolution tests at T = 0.68636074; reference enclosure F in [0.6863607622291324540223673, 0.6863607635243554068562103] (N=36864, P=10)
 T74_claim_1e-9_below_F.json 36864 10 FAIL
 T74_claim_1e-9_above_F.json 36864 10 PASS

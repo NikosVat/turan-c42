@@ -28,28 +28,33 @@ sha256sum -c certificate/SHA256SUMS
 ```
 
 ```bash
-OPENBLAS_NUM_THREADS=1 python checkers/rigorous_check.py certificate/c42_profile_0.686360751.json --N 18432 --P 14 --refine 1
+OPENBLAS_NUM_THREADS=1 python checkers/rigorous_check.py certificate/c42_profile_0.686360751.json --N 36864 --P 10 --refine 1
 ```
 
-The last command must print `"verdict": "PASS"` and exit with code 0. Expected output: `certificate/expected_N18432_P14.json`.
-Runtime: about 5 min on one core of a 4-vCPU cloud machine, peak memory 2.3 GB.
+The last command must print `"verdict": "PASS"` and exit with code 0. Expected output:
+`certificate/expected_N36864_P10.json`, with F ∈ [0.6863607487772, 0.6863607500725] and C − F_upper = 9.3e-10.
+Runtime: about 6 min on one core of a 4-vCPU cloud machine, peak memory 3.7 GB.
 
-The trial function ρ̃ is computed in floating point (GMRES), so its last bits depend on the BLAS thread count.
-Each run then certifies its own ρ̃ rigorously. With a different thread count, F_upper may differ in the 11th
-digit; e.g. 0.6863607503089 with 4 threads vs 0.6863607502330 with 1. The verdict does not change. The output includes the
-certified enclosure `F_lower ≤ F ≤ F_upper` and the full error budget.
+The trial function ρ̃ is computed in floating point (GMRES), so its last bits can depend on the BLAS thread
+count. Each run then certifies its own ρ̃ rigorously, so the verdict is unaffected, but the last digits of F_upper
+may change. Our 4-thread and 1-thread runs at these settings differed by only 5e-22
+(0.68636075007245447 vs 0.68636075007245403). At N = 18432, P = 14 they differed by 8e-11.
 
-Stability reruns (same verdict; the enclosures overlap):
+Stability reruns (PASS, enclosures nested inside the one above):
 
 ```bash
-python checkers/rigorous_check.py certificate/c42_profile_0.686360751.json --N 36864 --P 14 --refine 1
+OPENBLAS_NUM_THREADS=1 python checkers/rigorous_check.py certificate/c42_profile_0.686360751.json --N 36864 --P 12 --refine 1
 ```
 
 ```bash
-python checkers/rigorous_check.py certificate/c42_profile_0.686360751.json --N 36864 --P 10 --refine 1
+OPENBLAS_NUM_THREADS=1 python checkers/rigorous_check.py certificate/c42_profile_0.686360751.json --N 73728 --P 10 --refine 1
 ```
 
-Corruption tests (all must FAIL; about 30 min):
+They give F ∈ [0.6863607494100, 0.6863607494397] (6 min, 3.8 GB) and F ∈ [0.6863607494207, 0.6863607494290]
+(13 min, 6.8 GB). See NOTES.md §8.3 for all runs, including coarser settings that FAIL because the bound is
+too loose.
+
+Corruption tests (each must give the expected verdict; about 25 min):
 
 ```bash
 checkers/corruptions/claim/run_claim.sh
@@ -59,7 +64,7 @@ checkers/corruptions/claim/run_claim.sh
 checkers/corruptions/claim/run_claim.sh checkers/corruptions/claim/list2.txt
 ```
 
-`checkers/grid_check.py certificate/c42_profile_0.686360751.json 18432` checks, in exact arithmetic, that every
+`python checkers/grid_check.py certificate/c42_profile_0.686360751.json 36864` checks, in exact arithmetic, that every
 knot, ½ and every sum of up to three knots lies on the grid.
 
 ## Certificate format
@@ -104,7 +109,7 @@ bounds for any trial function ρ̃. §§5–7 describe one way to evaluate every
 - κ = T (attained on (½,1]; the largest |d| on (0,½] is 2T sin(E/2) with E = max|ψ_j − ψ_0| = 0.8709 < π);
 - |p̃(1)| ≈ 0.2201694;
 - ∫_0^{1/2}|p| dt/(1−t) ≈ 0.3207780;
-- F ∈ [0.68636074854, 0.68636075031] (N = 18432, P = 14).
+- F ∈ [0.6863607494207, 0.6863607494290] (N = 73728, P = 10, the tightest enclosure).
 
 ## Files
 

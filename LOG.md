@@ -487,3 +487,22 @@ independently in a separate session, review of NOTES_CERTIFIER.md, and re-optimi
 
 ### 00:15 Container restart (all processes killed). Requeued with `checkers/run_queue.sh` (resumable, 2 jobs,
 1 BLAS thread each; load had been ~10 on 4 vCPU).
+
+### 00:20–01:20 Final runs (1 BLAS thread each; `checkers/run_queue.sh`, resumable)
+- N = 18432 only passes at P = 14 (P = 12, 13 FAIL loosely; P = 16 witness breakdown), and N = 36864 at P = 14
+  is loose (witness: 318 GMRES iterations, collocation residual 4e-8). So **primary moved to N = 36864, P = 10**
+  (well-conditioned witness). Certificate `checker` field updated; earlier runs moved to certificate/runs_superseded.
+- Final file SHA-256 d015a829…5652 (certificate/SHA256SUMS; matches the expected output's certificate_sha256).
+
+| run | N | P | verdict | F_lower | F_upper | s | GB |
+|---|---|---|---|---|---|---|---|
+| primary | 36864 | 10 | PASS | 0.6863607487772 | 0.6863607500725 | 359 | 3.64 |
+| different P | 36864 | 12 | PASS | 0.6863607494100 | 0.6863607494397 | 346 | 3.84 |
+| doubled N | 73728 | 10 | PASS | 0.6863607494207 | 0.6863607494290 | 748 | 6.78 |
+- Nested enclosures, all < C. Margin C − F_upper(primary) = 9.28e-10; tightest F ≈ 0.68636074942 (float 0.6863607494).
+- Corruptions at N = 36864, P = 10 (`checkers/corruptions/claim/out/SUMMARY.txt`): T=C=0.68636074 FAIL;
+  T=C=0.68636075 FAIL (F_lower > T by 1.3e-13); ψ_5+0.002 FAIL; ψ_12+0.005 FAIL; T=0.68636074 with
+  C = F_lower − 1e-9 FAIL; with C = F_upper + 1e-9 PASS (control). All as expected.
+- Thread dependence: witness bits depend on BLAS threads; at N=36864 P=10 4-thread vs 1-thread F_upper differ by
+  5e-22, at N=18432 P=14 by 8e-11. Verdicts unaffected. README tells verifiers to set OPENBLAS_NUM_THREADS=1.
+- **Status: C42 ≤ 0.686360751 is certified by checker #1 only. Not a public claim until checker #2 (S6) agrees.**

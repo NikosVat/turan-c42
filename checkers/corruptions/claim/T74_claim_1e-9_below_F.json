@@ -2,7 +2,7 @@
  "constant": "C_42",
  "framework": "Bakeas Theorem A (Harcos linearization; s_k = T exp(i phi(k/n)) for k <= floor(n/2)); constant modulus T; phi piecewise linear through (breaks[j], phases[j]); F = |p(1)| / int_0^{1/2} |p(t)| dt/(1-t). Claim: F < C and T <= C, hence limsup R_n <= max(T,F) <= C.",
  "exact_note": "All numbers are exact: T, C and phases are exact decimals, breaks are exact rationals. The profile is defined by these strings, not by any floating-point value.",
- "C": "0.686360760799",
+ "C": "0.686360761229",
  "T": "0.68636074",
  "breaks": [
   "0",
@@ -77,5 +77,5 @@
   "-0.5512784196680292"
  ],
  "why": "reference run at T below T*: gives the enclosure used to build the 1e-9 claim tests; must FAIL",
- "corruption": "T=0.68636074, C=F_lower-1e-9 rounded down (0.686360760799); must FAIL"
+ "corruption": "T=0.68636074, C = F_lower - 1e-9 rounded down = 0.686360761229 (F_lower from the N=36864 P=10 reference run); must FAIL"
 }

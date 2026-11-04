@@ -117,3 +117,13 @@ The remaining work for a record is: re-optimize at the lower T (search), a secon
 - Tools added: `src/fastsolve.py` (O(N log² N) forward/adjoint), `src/opt2.py` (driver + fixed point),
   `src/knotgrad.py` (knot gradients and insertion scores), `src/finite_n_check.py`, `src/export_candidate.py`,
   `src/summarize.py`.
+
+## S5 outcome (certificate, branch `certificate`, 2026-11-04)
+
+- **Checker #1 certifies C42 ≤ C = 0.686360751** (33-piece S2 profile, T = C) at N = 36864, P = 10:
+  F ∈ [0.6863607487772, 0.6863607500725], margin 9.3e-10. Stable: N = 73728 (P 10) and P = 12 give nested
+  enclosures around F ≈ 0.68636074942. Corruptions all as expected. 4.40e-8 below Pinho's 0.6863607950.
+- 40pc / 101pc not certified: they need N ≥ 147456 / 294912 (est. ≥ 13 GB / ≥ 26 GB at P = 10) and would gain
+  ≤ 6.5e-9 more. Not worth it before checker #2 exists.
+- Next (S6): independent checker #2 written from NOTES.md, certificate/ and README "Certificate format" only.
+  Then PR_DRAFT.md.

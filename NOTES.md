@@ -576,35 +576,80 @@ Theorem A inputs (certified by the program):
 
 ### 8.2 Certified result (checker #1)
 
-`python checkers/rigorous_check.py certificate/c42_profile_0.686360751.json --N 18432 --P 14 --refine 1`
-(256-bit Arb, python-flint 0.9.0, Python 3.13; Q = 14, P_k = 20):
+`OPENBLAS_NUM_THREADS=1 python checkers/rigorous_check.py certificate/c42_profile_0.686360751.json --N 36864 --P 10 --refine 1`
+(256-bit Arb, python-flint 0.9.0, Python 3.13; Q = 13, P_k = 20; full output in
+`certificate/expected_N36864_P10.json`):
 
 | quantity | value |
 |---|---|
-| sup_t \|R(t)/t\| ≤ max_m r_m | 2.86e-9 (worst cell m = 1) |
-| ‖ρ̃‖_∞ | 423.6 |
-| ε_∞ = sup\|R/t\|/(1−κ) | 9.10e-9 |
-| EN (integrated; sup form 1.01e-8) | 2.17e-10 |
-| ED (integrated; sup form 2.86e-9) | 9.15e-11 |
-| p̃(1) | 0.1306444221355682 − 0.1772191272255947 i |
-| \|p̃(1)\| + EN ≤ | 0.22016944425862 |
-| D̃_low (91 knot cells) | 0.32077802266863 |
-| D̃_low − ED ≥ | 0.32077802257710 |
-| **F ≤ F_upper** | **0.6863607503088875** |
-| F ≥ F_lower (diagnostic) | 0.6863607485407850 |
-| **C − F_upper** | **6.91e-10** |
-| runtime, peak memory | 432 s, 2.15 GB |
+| sup_t \|R(t)/t\| ≤ max_m r_m | 7.27826e-9 (worst cell m = 2) |
+| ‖ρ̃‖_∞ ≤ | 422.819 |
+| ε_∞ = sup\|R/t\|/(1−κ) | 2.32058e-8 |
+| EN (integrated form; sup form 2.583e-8) | 1.59407e-10 |
+| ED (integrated form; sup form 7.300e-9) | 6.72278e-11 |
+| p̃(1) | 0.130644422135623288746790986588 − 0.177219127225608731395717733545 i |
+| \|p̃(1)\| + EN ≤ | 0.2201694442013934931421864 |
+| D̃_low (69 knot cells; bookkeeping error 3.18633e-12) | 0.3207780226714513265564244 |
+| D̃_low − ED ≥ | 0.3207780226042235570125772 |
+| **F ≤ F_upper** | **0.6863607500724540266028192** |
+| F ≥ F_lower (diagnostic) | 0.6863607487772309291757098 |
+| **C − F_upper** | **9.275e-10** |
+| runtime, peak memory | 359.2 s, 3.638 GB |
 
-The claim C is an exact decimal with 9 digits. The fixed point T* of this phase vector (F(T*) = T*) satisfies
-T* ∈ [0.6863607499, 0.6863607507]. This follows from the enclosure of F(C) above, linearized with the float
-slope dF/dT = −1.2229; it is an estimate, not a proof step. So C is ≈ 5e-10 above T*, and 4.40e-8 below Pinho's
-0.6863607950.
+The claim C is an exact decimal with 9 digits. The tightest enclosure (§8.3, N = 36864, P = 12) is
+F(C) ∈ [0.68636074941002, 0.68636074943967]. Linearized with the float slope dF/dT = −1.2229, this puts the fixed
+point at T* ≈ 0.6863607503. That agrees with S2's float value 0.6863607502855 ± 9e-11. This is an estimate, not a
+proof step. So C is ≈ 7e-10 above T*, and 4.40e-8 below Pinho's 0.6863607950.
 
 ### 8.3 Stability, resolution and corruption tests
 
-STABILITY_TABLE
+**Stability.** All runs use the certificate file with C = T = 0.686360751, refine = 1 and 256 bits. The runs
+in `certificate/runs_superseded/` were made on an earlier copy of the file that differed only in the descriptive
+`checker` field.
 
-CORRUPTION_TABLE
+| run | N | P | verdict | F_lower | F_upper | width | s | GB |
+|---|---|---|---|---|---|---|---|---|
+| **primary** | 36864 | 10 | PASS | 0.6863607487772 | 0.6863607500724 | 1.29522e-9 | 359.2 | 3.638 |
+| different P | 36864 | 12 | PASS | 0.6863607494100 | 0.6863607494396 | 2.96471e-11 | 345.7 | 3.84 |
+| doubled N | 73728 | 10 | PASS | 0.6863607494206 | 0.6863607494290 | 8.37737e-12 | 748.2 | 6.778 |
+| coarse grid (superseded primary) | 18432 | 14 | PASS | 0.6863607486167 | 0.6863607502330 | 1.61629e-9 | 295.6 | 2.272 |
+| coarse grid | 18432 | 13 | FAIL | 0.6863607474421 | 0.6863607514075 | 3.96545e-9 | 275.4 | 2.077 |
+| high P | 36864 | 14 | FAIL | 0.6863607422378 | 0.6863607566116 | 1.43739e-8 | 571.3 | 4.088 |
+| coarse grid | 18432 | 12 | FAIL | 0.6863607380942 | 0.6863607607554 | 2.26612e-8 | 241.5 | 2.022 |
+| coarse grid, high P | 18432 | 16 | FAIL | 0.6863379598988 | 0.6863835394937 | 4.55796e-5 | 1280.7 | 2.413 |
+
+- The three PASS runs give nested enclosures:
+  [0.6863607494207, 0.6863607494290] ⊂ [0.6863607494100, 0.6863607494397] ⊂ [0.6863607487772, 0.6863607500725].
+  All lie below C.
+- Every FAIL row is a *loose* but valid bound: its enclosure contains the PASS enclosures, and only its upper end
+  exceeds C. No pair of enclosures is disjoint.
+- Two causes of looseness:
+  - N = 18432 is a coarse grid: one cell per first-knot spacing. It passes only at P = 14.
+  - At P = 14 on N = 36864, and at P = 16 on N = 18432, the floating-point witness degrades (monomial-basis
+    conditioning; at N = 36864, P = 14 GMRES needs 318 iterations and the collocation residual is 4e-8). The
+    checker then certifies a poorer ρ̃.
+- This is why the primary setting is N = 36864, P = 10. There the witness is well conditioned: 29 GMRES
+  iterations and collocation residual 5e-11.
+
+**Corruption tests** (`checkers/corruptions/claim/`, N = 36864, P = 10; outputs in `out/`, summary in
+`out/SUMMARY.txt`):
+
+| corrupted certificate | expected | got | F_lower | F_upper |
+|---|---|---|---|---|
+| T = C = 0.68636074 (below T*) | FAIL | FAIL | 0.6863607622291 | 0.6863607635243 |
+| T = C = 0.68636075 (3e-10 below T*) | FAIL | FAIL | 0.6863607500001 | 0.6863607512953 |
+| ψ_5 + 0.002 (float F ≈ 0.6863607537) | FAIL | FAIL | 0.6863607530854 | 0.6863607543815 |
+| ψ_12 + 0.005 (float F ≈ 0.6863608512) | FAIL | FAIL | 0.6863608506045 | 0.6863608519008 |
+| T = 0.68636074, C = F_lower − 1e-9 = 0.686360761229 | FAIL | FAIL | 0.6863607622291 | 0.6863607635243 |
+| T = 0.68636074, C = F_upper + 1e-9 = 0.686360764525 (resolution control) | PASS | PASS | 0.6863607622291 | 0.6863607635243 |
+
+- In every FAIL row F_lower > C, so each corrupted claim is certifiably false, not merely uncertified.
+  - The closest case is T = C = 0.68636075: F_lower exceeds it by 1.3e-13, so that T is rigorously below the
+    fixed point.
+- The last two rows show that the checker resolves a claim to 1e-9 at a fixed profile: 1e-9 below the enclosure
+  FAILs, 1e-9 above PASSes.
+- Hypothesis violations (C < T, a ≤ 0, misaligned grid) are REFUSED. This was tested in S3
+  (`checkers/corruptions/run_all.sh`), and the checks are unchanged.
 
 ### 8.4 Finite-n cross-check (floating point, not part of the proof)
 
